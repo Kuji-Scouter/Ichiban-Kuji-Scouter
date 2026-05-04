@@ -730,6 +730,26 @@ const ANIMES = [
 ];
  
 const MONTH_IDX = {January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11};
+
+// Fixed JPY -> USD conversion rate used only for ranking-by-value calculations.
+// The on-page price columns still display each marketplace in its native
+// currency (Mercari ¥, eBay $); this constant exists purely so figures whose
+// only price signal is a Mercari JP yen average can be compared against
+// figures with an eBay USD average. Update this single number to refresh the
+// conversion across the whole app.
+const JPY_PER_USD = 157;
+
+// Returns the figure's "value in USD" used for ranking, or null if no price
+// signal exists. Prefers the eBay USD average; falls back to the Mercari JP
+// yen average converted at JPY_PER_USD. The second return value indicates the
+// source ('ebay' | 'mercari' | null) so callers can label or format the value
+// appropriately (e.g. show '$X' vs '~$X (¥Y)').
+function figureValueUsd(d){
+  if(d && d.ebay)    return {usd: d.ebay,                source: 'ebay'};
+  if(d && d.mercari) return {usd: d.mercari / JPY_PER_USD, source: 'mercari'};
+  return {usd: null, source: null};
+}
+
  
 // Tag constants for terse override syntax. "?" suffix = uncertain mapping.
 const S = {
@@ -1129,7 +1149,7 @@ const RAW_SETS = [
     ["Prize E", "Super Saiyan Son Goku & Super Saiyan 2 Son Gohan", 3353305, 69.99, _, _, S.AND, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-z-ichibansho-goku-gohan-spectacle-battle-figure-184398?variation=362888&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://static.myfigurecollection.net/upload/items/1/3353305-20c8b.jpg"],
     ["LOP", "Super Saiyan Son Goku & Super Saiyan 2 Son Gohan", 3363178, 94.99, _, _, S.NAM, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-z-ichibansho-super-saiyan-goku-spectacle-battle-figure-184406?variation=362898&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://static.myfigurecollection.net/upload/items/1/3363178-da150.jpg"],
   ]},
-  {set:"Masterlise Outside", dateStr:"February 2026", type:"masterlise", saga:S.MOV, anime:A.DBS, prizes:[
+  {set:"Masterlise Outside", dateStr:"July 2026", type:"masterlise", saga:S.MOV, anime:A.DBS, prizes:[
     ["Prize A", "Ultra Instinct Son Goku & Son Gohan Beast", 2878584, _, _, _, _, _, _, "https://static.myfigurecollection.net/upload/items/1/2878584-71967.jpg"],
   ]},
   {set:"Battle of the Super Saiyan", dateStr:"January 2026", type:"masterlise", saga:S.BUU+"?", anime:A.DBZ, prizes:[
@@ -1240,7 +1260,7 @@ const RAW_SETS = [
   ]},
  
   // ── 40TH ANNIVERSARY ────────────────────────────────────────────────────
-  {set:"Ichiban Kuji DRAGON BALL 40th — Part 1", dateStr:"October 2024", type:"40th", saga:S.NAM+"?", anime:A.DBZ, prizes:[
+  {set:"Ichiban Kuji DRAGON BALL 40th — Part 1", dateStr:"October 2025", type:"40th", saga:S.NAM+"?", anime:A.DBZ, prizes:[
     ["Prize A", "Volume 1 Comics Vignette (Goku as a kid)", 2851787, _, _, 44, S.DB, A.DB, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_A_6929b30735cf5.jpg", {"ebayUpdated":"2026-05-01"}],
     ["Prize B", "Volume 42 Comics Vignette (Adult Goku)", 2851796, _, _, 171, S.BUU, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_B_6929b30736142.jpg", {"ebayUpdated":"2026-05-01"}],
     ["LOP", "SSJ Goku Giga Manga Structure (Last One Ver.)", 2851814, _, _, 116, S.NAM, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_LO_6929b30738b41.jpg", {"ebayUpdated":"2026-05-01"}],
@@ -1436,28 +1456,57 @@ function updatedNoteHtml(iso){
 function renderStats(){
   const sets = new Set(DATA.map(d=>d.set));
   const total = DATA.length;
-  const withEbay = DATA.filter(d=>d.ebay);
-  const maxItem = withEbay.reduce((a,b)=>(b.ebay>a.ebay?b:a), {ebay:0, character:'—'});
+  // Rank by value-in-USD so figures with only a Mercari JP price are eligible.
+  // figureValueUsd() returns {usd, source}: 'ebay' for native USD, 'mercari'
+  // for converted yen, null when neither marketplace has a price.
+  let maxItem = null, maxUsd = 0, maxSource = null;
+  DATA.forEach(d=>{
+    const {usd, source} = figureValueUsd(d);
+    if(usd!==null && usd>maxUsd){ maxUsd = usd; maxItem = d; maxSource = source; }
+  });
   document.getElementById('stat-sets').textContent = sets.size;
   document.getElementById('stat-figs').textContent = total;
-  document.getElementById('stat-max-price').textContent = maxItem.ebay ? '$'+maxItem.ebay.toLocaleString() : '—';
-  document.getElementById('stat-max-name').textContent = maxItem.character;
+  if(maxItem){
+    // eBay-backed stays as '$X'; Mercari-backed shows '~$X' to flag conversion.
+    const prefix = maxSource === 'mercari' ? '~$' : '$';
+    document.getElementById('stat-max-price').textContent = prefix + Math.round(maxUsd).toLocaleString();
+    document.getElementById('stat-max-name').textContent = maxItem.character;
+  } else {
+    document.getElementById('stat-max-price').textContent = '—';
+    document.getElementById('stat-max-name').textContent = '—';
+  }
 }
  
 // ── Top 10 ─────────────────────────────────────────────────────────────
 function renderTop10(){
-  const top = [...DATA].filter(d=>d.ebay).sort((a,b)=>b.ebay-a.ebay).slice(0,10);
+  // Build (figure, value-in-USD, source) triples. Figures with neither an
+  // eBay USD nor a Mercari JP price are excluded. eBay wins ties because
+  // figureValueUsd() prefers eBay when both are present (current behaviour).
+  const ranked = DATA
+    .map(d => {
+      const {usd, source} = figureValueUsd(d);
+      return usd === null ? null : {item: d, usd, source};
+    })
+    .filter(Boolean)
+    .sort((a,b) => b.usd - a.usd)
+    .slice(0,10);
   const medals = {0:'🥇',1:'🥈',2:'🥉'};
   const list = document.getElementById('top10-list');
-  list.innerHTML = top.map((item,i)=>`
+  list.innerHTML = ranked.map(({item, usd, source}, i) => {
+    // Mercari-derived USD is approximate; flag with '~$' so users know it
+    // came from a yen conversion at the JPY_PER_USD rate.
+    const prefix = source === 'mercari' ? '~$' : '$';
+    const display = prefix + Math.round(usd).toLocaleString();
+    return `
     <div class="top10-item">
       <div class="top10-rank ${i<3?'rank-'+(i+1):'rank-other'}">${medals[i]||'#'+(i+1)}</div>
       <div class="top10-info">
         <div class="top10-char">${esc(item.character)}</div>
         <div class="top10-meta">${esc(item.set)} · ${esc(item.prize)}</div>
       </div>
-      <div class="top10-price">$${item.ebay.toLocaleString()}</div>
-    </div>`).join('');
+      <div class="top10-price">${display}</div>
+    </div>`;
+  }).join('');
 }
 document.getElementById('top10-toggle').addEventListener('click',function(){
   this.classList.toggle('open');
