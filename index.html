@@ -127,6 +127,14 @@ body{
 .top10-price{font-family:'Bebas Neue',cursive;font-size:18px;color:var(--orange);white-space:nowrap}
  
 /* ── Controls ── */
+/* Sizing here is reverted to the upstream live-site values so both rows
+   of the controls strip share identical typography (label font, input
+   font, padding, gaps, and divider). The structural changes that survive
+   are: Reset is folded into the same ctrl-group as the LOP/Grail toggles
+   (so it can never wrap to its own row), and the row-2 ctrl-groups (range
+   groups + Prize Filter) opt into flex-grow via the .range-group and
+   .prize-filter-group modifier classes below so they fill the available
+   width once the top-row controls have been placed. */
 #controls{
   max-width:var(--container-max);margin:0 auto 14px;padding:0 clamp(12px,1.2vw,28px);
   display:flex;flex-wrap:wrap;gap:clamp(8px,0.8vw,14px);align-items:flex-end;
@@ -153,12 +161,40 @@ select option{background:#0d0d15}
 .price-range{display:flex;gap:6px;align-items:center}
 .price-range span{color:var(--grey);font-size:12px}
 input[type=number]{width:80px}
-#lop-toggle{
+/* Bottom-row layout — eBay/Mercari/MSRP range groups and the Prize Filter
+   group all grow to fill the leftover width once the top-row controls
+   have been placed. Without flex-grow these groups would sit at their
+   min-content width and leave a large empty gap on the right of row 2.
+   Each .range-group internally lets its two number inputs flex into the
+   available width rather than staying stuck at the global 80px. */
+.range-group{flex:1 1 0;min-width:170px}
+.range-group .price-range{flex:1}
+.range-group .price-range input[type=number]{flex:1;min-width:0;width:auto}
+.prize-filter-group{flex:1.4 1 0;min-width:240px}
+/* In a wider Prize Filter group, push Reset to the right edge so it
+   reads as a separate "global action" rather than a third toggle next
+   to LOP/Grail. */
+.prize-filter-group .prize-filter-buttons{width:100%}
+.prize-filter-group #reset-btn{margin-left:auto}
+
+#lop-toggle,
+#grail-toggle{
   padding:7px 16px;background:#0d0d15;border:1px solid #2a2a3a;border-radius:6px;
   color:var(--grey);font-family:'Nunito',sans-serif;font-size:12px;
   font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;
 }
 #lop-toggle.active{background:var(--lop-bg);border-color:var(--gold);color:var(--gold)}
+/* Grail toggle active state — neutral "lit-up" appearance. The grail
+   colour scheme was removed (the 💎 prefix on the prize letter is the
+   only grail indicator now), so the active state intentionally avoids
+   any palette accent that could be read as "grails are X-coloured". */
+#grail-toggle.active{background:#2a2a3a;border-color:#888;color:var(--white)}
+/* Wrapper that keeps LOP, Grail, and Reset together inside the single
+   Prize Filter ctrl-group so Reset can never wrap to its own row. The
+   parent ctrl-group is column-flex; this nested row-flex keeps the
+   buttons aligned horizontally and is allowed to wrap to a second line
+   only at very narrow widths. */
+.prize-filter-buttons{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 #reset-btn{
   padding:7px 14px;background:#0d0d15;border:1px solid #333;border-radius:6px;
   color:var(--grey);font-family:'Nunito',sans-serif;font-size:12px;
@@ -203,12 +239,31 @@ tr.set-header .sh-name{
   font-family:'Bebas Neue',cursive;
   font-size:clamp(22px,2.4vw,36px);
   font-weight:700;
-  color:var(--gold);
+  /* Title colour now tracks the set type, matching the existing left-
+     border + badge accent for that type. Default rule below is the
+     Masterlise case (orange); per-type overrides below switch the title
+     to purple / cyan / green for Non-Masterlise / SMSP / 40th rows. The
+     text-shadow glow is recoloured per type so the soft halo behind the
+     title also matches. Kept distinct from the LOP gold so a set header
+     never collides visually with an LOP prize letter on the same row. */
+  color:var(--orange);
   letter-spacing:1.2px;
   line-height:1.1;
-  text-shadow:0 0 18px rgba(255,215,0,.18);
+  text-shadow:0 0 18px rgba(255,107,0,.18);
   display:inline-block;
   vertical-align:middle;
+}
+tr.set-header.nm-row .sh-name{
+  color:var(--purple);
+  text-shadow:0 0 18px rgba(187,136,255,.18);
+}
+tr.set-header.smsp-row .sh-name{
+  color:var(--cyan);
+  text-shadow:0 0 18px rgba(110,220,255,.18);
+}
+tr.set-header.fortieth-row .sh-name{
+  color:var(--green);
+  text-shadow:0 0 18px rgba(136,221,136,.18);
 }
 tr.set-header .sh-meta{
   display:inline-block;
@@ -246,6 +301,10 @@ tr.data-row:hover td:first-child{border-left:2px solid var(--orange)}
 tr.data-row.lop-row td{background:var(--lop-bg)}
 tr.data-row.lop-row:hover td{background:#2a2200}
 tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
+/* The grail-row class on the <tr> still drives the ★ Grail filter and
+   is reserved for any future row-level styling, but no colour scheme is
+   applied — grail figures are signalled solely by the 💎 prefix on the
+   prize letter. */
  
 /* Image col */
 .col-thumb{width:88px;min-width:88px;padding:4px 6px !important;text-align:center}
@@ -526,6 +585,10 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
     <div class="stat-value" id="stat-max-price">—</div>
     <div class="stat-sub" id="stat-max-name">—</div>
   </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Grails</div>
+    <div class="stat-value" id="stat-grails">—</div>
+  </div>
 </div>
  
 <!-- Top 10 -->
@@ -540,7 +603,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 <div id="controls">
   <div class="ctrl-group" style="flex:1;min-width:180px">
     <label class="ctrl-label">Search</label>
-    <input type="text" id="search-input" placeholder="Character or set name…"/>
+    <input type="text" id="search-input" placeholder="Search anything…"/>
   </div>
   <div class="ctrl-group" style="flex:1;min-width:180px">
     <label class="ctrl-label">Character</label>
@@ -572,7 +635,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
     <label class="ctrl-label">Anime</label>
     <select id="filter-anime" style="min-width:150px"><option value="">All Anime</option></select>
   </div>
-  <div class="ctrl-group">
+  <div class="ctrl-group range-group">
     <label class="ctrl-label">eBay Range ($)</label>
     <div class="price-range">
       <input type="number" id="min-price" placeholder="Min" min="0"/>
@@ -580,7 +643,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
       <input type="number" id="max-price" placeholder="Max" min="0"/>
     </div>
   </div>
-  <div class="ctrl-group">
+  <div class="ctrl-group range-group">
     <label class="ctrl-label">Mercari Range (¥)</label>
     <div class="price-range">
       <input type="number" id="min-mercari" placeholder="Min" min="0"/>
@@ -588,7 +651,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
       <input type="number" id="max-mercari" placeholder="Max" min="0"/>
     </div>
   </div>
-  <div class="ctrl-group">
+  <div class="ctrl-group range-group">
     <label class="ctrl-label">MSRP Range ($)</label>
     <div class="price-range">
       <input type="number" id="min-msrp" placeholder="Min" min="0"/>
@@ -596,13 +659,13 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
       <input type="number" id="max-msrp" placeholder="Max" min="0"/>
     </div>
   </div>
-  <div class="ctrl-group">
+  <div class="ctrl-group prize-filter-group">
     <label class="ctrl-label">Prize Filter</label>
-    <button id="lop-toggle">★ LOP Only</button>
-  </div>
-  <div class="ctrl-group" style="justify-content:flex-end">
-    <label class="ctrl-label">&nbsp;</label>
-    <button id="reset-btn">↺ Reset</button>
+    <div class="prize-filter-buttons">
+      <button id="lop-toggle">★ LOP</button>
+      <button id="grail-toggle">★ Grail</button>
+      <button id="reset-btn">↺ Reset</button>
+    </div>
   </div>
 </div>
  
@@ -660,7 +723,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
     </div>
   </div>
   <div class="disclaimer">
-    <p>Set type colour key: <span style="color:var(--orange)">Masterlise</span> · <span style="color:var(--purple)">Non-Masterlise</span> · <span style="color:var(--cyan)">SMSP</span> · <span style="color:var(--green)">40th Anniversary</span>. Mercari Japan shows the recent average sold price in JPY (¥); eBay shows the recent average sold price in USD ($) — both are <strong>read-only snapshots</strong>. The 🔍 button next to each price opens a fresh search on Mercari JP / eBay (sold-listings filter) for live verification. The BBTS / MSRP cell links to the live BBTS product page when the figure is currently listed and shows the original retail price as plain text when known; cells without a recorded MSRP are left blank. Reference data originally compiled by Myk; figure-image catalogue courtesy of <a href="http://db-kuji.com" style="color:var(--orange)" target="_blank">db-kuji.com</a>.</p>
+    <p>Set type colour key: <span style="color:var(--orange)">Masterlise</span> · <span style="color:var(--purple)">Non-Masterlise</span> · <span style="color:var(--cyan)">SMSP</span> · <span style="color:var(--green)">40th Anniversary</span>. Grail figures are flagged with a 💎 next to the prize letter. Mercari Japan shows the recent average sold price in JPY (¥); eBay shows the recent average sold price in USD ($) — both are <strong>read-only snapshots</strong>. The 🔍 button next to each price opens a fresh search on Mercari JP / eBay (sold-listings filter) for live verification. The BBTS / MSRP cell links to the live BBTS product page when the figure is currently listed and shows the original retail price as plain text when known; cells without a recorded MSRP are left blank. Reference data originally compiled by Myk; figure-image catalogue courtesy of <a href="http://db-kuji.com" style="color:var(--orange)" target="_blank">db-kuji.com</a>.</p>
     <p>Some links on this site (notably to Big Bad Toy Store) are affiliate links. If you click through and make a purchase, MatchesPeaches may earn a small commission at no extra cost to you. This helps support the channel and keeps this tracker free.</p>
   </div>
 </div>
@@ -769,6 +832,70 @@ const A = {
  
 // Helpers for tuple terseness
 const _ = null;
+
+// ── Grail figures ──────────────────────────────────────────────────────
+// Lookup: data set-name → list of grail prize tokens. Each list entry is
+// either:
+//   • a short letter — "A".."G" or "LOP" — for sets whose prizes follow
+//     the standard "Prize A" / "LOP" naming convention, OR
+//   • a full prize-name string — used for SMSP sets and any other set
+//     whose prize names aren't lettered (e.g. "01 The Brush",
+//     "1.5 Original II"). Full-name entries are matched verbatim.
+// Sources are matched at DATA-build time, so any set name here MUST be
+// exactly the value used in RAW_SETS[i].set (note the two name-variants
+// the user spec used differ from the canonical data names: "Strong Chains"
+// → "Strong Chains!!", and "Dragon Ball vs Omnibus" — the original set
+// with no suffix — → "Dragon Ball VS Omnibus"). Every other entry below
+// matches its data-set name verbatim.
+const GRAIL_FIGURES = {
+  "Dragon Ball Memories":                ["A","B","C","LOP"],
+  "The Greatest Saiyan":                 ["A","B","C","LOP"],
+  "Extreme Saiyan":                      ["A","B","C","LOP"],
+  "History of Rivals":                   ["B","LOP"],
+  "Ultimate Variation":                  ["LOP"],
+  "Strong Chains!!":                     ["A","B","C","D","LOP"],
+  "Dragon Ball VS Omnibus":              ["B","E","F","LOP"],
+  "Super Dragon Ball Heroes Saga":       ["LOP"],
+  "EX: Warriors Who Protect the Earth":  ["C","D","LOP"],
+  "Dragon Ball vs Omnibus Z":            ["D","LOP"],
+  "EX: Super Decisive Battle of the World": ["A","C"],
+  "Back to the Film":                    ["A","F","LOP"],
+  "Super Dragon Ball Heroes: 3rd Mission": ["E"],
+  "Dragon Ball vs Omnibus Super":        ["A","D","E","F","LOP"],
+  "EX: Fear of Androids":                ["B","D","E"],
+  "Dragon Ball Super: Super Hero":       ["LOP"],
+  "History of the Film":                 ["LOP"],
+  "Dragon Ball vs Omnibus Ultra":        ["LOP"],
+  "EX: Fear!! Frieza Army":              ["B"],
+  "Dragon Ball vs Omnibus Brave":        ["C","E"],
+  "Super Dragon Ball Heroes: 5th Mission": ["D"],
+  "EX: Temple Above the Clouds":         ["LOP"],
+  "Dragon Ball vs Omnibus Cross":        ["D"],
+  // SMSP sets — prize names are the full strings as they appear in the
+  // data tuples (e.g. "02 The Original"), not letters.
+  "SMSP — The Vegeta":                   ["02 The Original","03 The Tones"],
+  "SMSP — The Son Goku (DBZ)":           ["01 The Brush","02 The Original","04 Two Dimensions","1.5 Original II"]
+};
+
+// Resolve a prize-tuple's prize-name string to its short letter token, so
+// it can be looked up against GRAIL_FIGURES. "LOP" passes through; "Prize
+// X" → "X"; anything else (Collab Prize, SMSP themed-version names, etc.)
+// returns null and is therefore handled by the full-name branch below.
+function _grailLetter(prizeName){
+  if(prizeName === 'LOP') return 'LOP';
+  const m = /^Prize ([A-Z])$/.exec(prizeName);
+  return m ? m[1] : null;
+}
+function isGrailFigure(setName, prizeName){
+  const entries = GRAIL_FIGURES[setName];
+  if(!entries) return false;
+  // Direct full-name match — SMSP and other non-lettered sets fall through
+  // to this branch since _grailLetter() returns null for their prize names.
+  if(entries.indexOf(prizeName) !== -1) return true;
+  // Lettered fallback for sets that follow the "Prize X" / "LOP" scheme.
+  const letter = _grailLetter(prizeName);
+  return letter !== null && entries.indexOf(letter) !== -1;
+}
  
 const RAW_SETS = [
   // ── MASTERLISE ──────────────────────────────────────────────────────────
@@ -1153,12 +1280,12 @@ const RAW_SETS = [
     ["Prize A", "Ultra Instinct Son Goku & Son Gohan Beast", 2878584, _, _, _, _, _, _, "https://static.myfigurecollection.net/upload/items/1/2878584-71967.jpg"],
   ]},
   {set:"Battle of the Super Saiyan", dateStr:"January 2026", type:"masterlise", saga:S.BUU+"?", anime:A.DBZ, prizes:[
-    ["Prize A", "Super Saiyan 3 Goku", 3007380, 69.99, _, 246, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/Product/VariationDetails/334384?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_A_6971a75198494.webp", {"ebayHistory":[{"date":"2026-02-07","price":167.35},{"date":"2026-02-15","price":134.26},{"date":"2026-02-20","price":196.15},{"date":"2026-03-01","price":132.2},{"date":"2026-03-08","price":149.97},{"date":"2026-03-15","price":203.34},{"date":"2026-03-22","price":109.5},{"date":"2026-03-24","price":144.51},{"date":"2026-04-05","price":131.98},{"date":"2026-04-12","price":163.86},{"date":"2026-04-18","price":148.26},{"date":"2026-04-21","price":137.77}],"ebayUpdated":"2026-05-03"}],
-    ["Prize B", "Super Saiyan Goku", 3007381, 69.99, _, 114, S.NAM, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-goku-battle-super-saiyan-figure-169192?variation=334387&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_B_6971a75199347.webp", {"ebayUpdated":"2026-05-01"}],
-    ["Prize C", "Frieza (Final Form)", 3007382, 69.99, _, _, S.NAM, A.DBZ, "https://www.bigbadtoystore.com/Product/VariationDetails/334389?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_C_6971a75199b81.webp"],
-    ["Prize D", "Goten & Trunks", 3007383, 74.99, _, _, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/Product/VariationDetails/334392?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_D_6971a7519a255.webp"],
-    ["Prize E", "Babidi", 3007385, 49.99, _, _, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/Product/VariationDetails/334394?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_E_6971a7519a804.webp"],
-    ["LOP", "Majin Buu (Fat)", 3007386, 104.99, _, _, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-majin-buu-battle-super-saiyan-figure-169196?variation=334396&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_LO_6971a7519c35c.webp"],
+    ["Prize A", "Super Saiyan 3 Goku", 3007380, 69.99, 17270, 246, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/Product/VariationDetails/334384?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_A_6971a75198494.webp", {"ebayHistory":[{"date":"2026-02-07","price":167.35},{"date":"2026-02-15","price":134.26},{"date":"2026-02-20","price":196.15},{"date":"2026-03-01","price":132.2},{"date":"2026-03-08","price":149.97},{"date":"2026-03-15","price":203.34},{"date":"2026-03-22","price":109.5},{"date":"2026-03-24","price":144.51},{"date":"2026-04-05","price":131.98},{"date":"2026-04-12","price":163.86},{"date":"2026-04-18","price":148.26},{"date":"2026-04-21","price":137.77}],"ebayUpdated":"2026-05-03"}],
+    ["Prize B", "Super Saiyan Goku", 3007381, 69.99, 7065, 114, S.NAM, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-goku-battle-super-saiyan-figure-169192?variation=334387&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_B_6971a75199347.webp", {"ebayUpdated":"2026-05-01"}],
+    ["Prize C", "Frieza (Final Form)", 3007382, 69.99, 2355, _, S.NAM, A.DBZ, "https://www.bigbadtoystore.com/Product/VariationDetails/334389?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_C_6971a75199b81.webp"],
+    ["Prize D", "Goten & Trunks", 3007383, 74.99, 11775, _, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/Product/VariationDetails/334392?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_D_6971a7519a255.webp"],
+    ["Prize E", "Babidi", 3007385, 49.99, 5495, _, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/Product/VariationDetails/334394?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_E_6971a7519a804.webp"],
+    ["LOP", "Majin Buu (Fat)", 3007386, 104.99, 12560, _, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-majin-buu-battle-super-saiyan-figure-169196?variation=334396&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_LO_6971a7519c35c.webp"],
   ]},
  
   // ── NON-MASTERLISE ──────────────────────────────────────────────────────
@@ -1192,11 +1319,11 @@ const RAW_SETS = [
     ["LOP", "Son Goku & Chi-Chi", 3056209, 74.99, 14137, 179, S.DB, A.DB, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-goku-chichi-fantastic-adventure-2-figure-172067?variation=339327&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-fantastic-adventure-2/main_LO_69a213edca54a.webp", {"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
   ]},
   {set:"Dragonball Snap Collection 2", dateStr:"November 2025", type:"non-masterlise", saga:S.DB+"?", anime:A.DB, prizes:[
-    ["Prize A", "Son Goku & Chi-Chi (Snap Figure)", 2902801, 79.99, _, 107, S.T23, _, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-goku-chichi-snap-collection-2-figure-165612?variation=326804&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_A_6929b3064c107.jpg", {"ebayUpdated":"2026-05-01"}],
-    ["Prize B", "Son Goku (Snap Figure)", 2902802, 49.99, _, _, S.RRA, A.DB, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-goku-snap-collection-2-figure-165613?variation=326810&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_B_6929b3064c86c.jpg"],
-    ["Prize C", "Master Roshi (Kame-Sennin) (Snap Figure)", 2902803, 59.99, _, _, S.T21, A.DB, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-kamesennin-snap-collection-2-figure-165614?variation=326812&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_C_6929b3064d025.jpg"],
-    ["Prize D", "Son Gohan (Snap Figure)", 2902807, 59.99, _, _, S.SAI, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-gohan-snap-collection-2-figure-165615?variation=326814&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_D_6929b3064d73f.jpg"],
-    ["LOP", "Son Gohan & Videl (Snap Figure)", 2902809, 79.99, _, 112, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-gohan-videl-snap-collection-2-figure-165616?variation=326816&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_LO_6929b3064fb76.jpg", {"ebayUpdated":"2026-05-01"}],
+    ["Prize A", "Son Goku & Chi-Chi (Snap Figure)", 2902801, 79.99, 7065, 107, S.T23, _, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-goku-chichi-snap-collection-2-figure-165612?variation=326804&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_A_6929b3064c107.jpg", {"ebayUpdated":"2026-05-01"}],
+    ["Prize B", "Son Goku (Snap Figure)", 2902802, 49.99, 3925, _, S.RRA, A.DB, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-goku-snap-collection-2-figure-165613?variation=326810&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_B_6929b3064c86c.jpg"],
+    ["Prize C", "Master Roshi (Kame-Sennin) (Snap Figure)", 2902803, 59.99, 2355, _, S.T21, A.DB, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-kamesennin-snap-collection-2-figure-165614?variation=326812&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_C_6929b3064d025.jpg"],
+    ["Prize D", "Son Gohan (Snap Figure)", 2902807, 59.99, 1570, _, S.SAI, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-gohan-snap-collection-2-figure-165615?variation=326814&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_D_6929b3064d73f.jpg"],
+    ["LOP", "Son Gohan & Videl (Snap Figure)", 2902809, 79.99, 7850, 112, S.BUU, A.DBZ, "https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-gohan-videl-snap-collection-2-figure-165616?variation=326816&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches", "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection-2/main_LO_6929b3064fb76.jpg", {"ebayUpdated":"2026-05-01"}],
   ]},
  
   // ── SMSP (Super Master Stars Piece) ─────────────────────────────────────
@@ -1261,17 +1388,17 @@ const RAW_SETS = [
  
   // ── 40TH ANNIVERSARY ────────────────────────────────────────────────────
   {set:"Ichiban Kuji DRAGON BALL 40th — Part 1", dateStr:"October 2025", type:"40th", saga:S.NAM+"?", anime:A.DBZ, prizes:[
-    ["Prize A", "Volume 1 Comics Vignette (Goku as a kid)", 2851787, _, _, 44, S.DB, A.DB, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_A_6929b30735cf5.jpg", {"ebayUpdated":"2026-05-01"}],
-    ["Prize B", "Volume 42 Comics Vignette (Adult Goku)", 2851796, _, _, 171, S.BUU, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_B_6929b30736142.jpg", {"ebayUpdated":"2026-05-01"}],
-    ["LOP", "SSJ Goku Giga Manga Structure (Last One Ver.)", 2851814, _, _, 116, S.NAM, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_LO_6929b30738b41.jpg", {"ebayUpdated":"2026-05-01"}],
+    ["Prize A", "Volume 1 Comics Vignette (Goku as a kid)", 2851787, _, 18840, 44, S.DB, A.DB, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_A_6929b30735cf5.jpg", {"ebayUpdated":"2026-05-01"}],
+    ["Prize B", "Son Goku & Majin Buu", 2851796, _, 12560, 171, S.BUU, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_B_6929b30736142.jpg", {"ebayUpdated":"2026-05-01"}],
+    ["LOP", "SSJ Goku Giga Manga Structure (Last One Ver.)", 2851814, _, 7850, 116, S.NAM, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-1/main_LO_6929b30738b41.jpg", {"ebayUpdated":"2026-05-01"}],
   ]},
   {set:"Ichiban Kuji DRAGON BALL 40th — Part 2", dateStr:"December 2025", type:"40th", saga:S.BUU+"?", anime:A.DBZ, prizes:[
-    ["Prize A", "40th Anniversary Figure — Son Goku", 2964844, _, _, 114, S.BUU, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_A_6929b3052c14d.webp", {"ebayUpdated":"2026-05-01"}],
-    ["Prize B", "40th Anniversary Figure — Vegeta", 2964846, _, _, 69, S.BUU, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_B_6929b3052c568.webp", {"ebayUpdated":"2026-05-01"}],
-    ["Prize C", "40th Anniversary Figure — Son Gohan", 2964847, _, _, 94, S.AND, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_C_6929b3052c91f.webp", {"ebayUpdated":"2026-05-01"}],
-    ["Prize D", "40th Anniversary Figure — Piccolo", 2964848, _, _, 124, S.AND, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_D_6929b3052cc1e.webp", {"ebayUpdated":"2026-05-01"}],
-    ["Prize E", "40th Anniversary Figure — Krillin", 2964849, _, _, 105, S.SAI, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_E_6929b3052ceeb.webp", {"ebayUpdated":"2026-05-01"}],
-    ["LOP", "Shenron", 2964850, _, _, 123, S.DB, A.DB, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_LO_6929b3052dee2.webp", {"ebayUpdated":"2026-05-01"}],
+    ["Prize A", "40th Anniversary Figure — Son Goku", 2964844, _, 6280, 114, S.BUU, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_A_6929b3052c14d.webp", {"ebayUpdated":"2026-05-01"}],
+    ["Prize B", "40th Anniversary Figure — Vegeta", 2964846, _, 4710, 69, S.BUU, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_B_6929b3052c568.webp", {"ebayUpdated":"2026-05-01"}],
+    ["Prize C", "40th Anniversary Figure — Son Gohan", 2964847, _, 5495, 94, S.AND, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_C_6929b3052c91f.webp", {"ebayUpdated":"2026-05-01"}],
+    ["Prize D", "40th Anniversary Figure — Piccolo", 2964848, _, 7850, 124, S.AND, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_D_6929b3052cc1e.webp", {"ebayUpdated":"2026-05-01"}],
+    ["Prize E", "40th Anniversary Figure — Krillin", 2964849, _, 6280, 105, S.SAI, A.DBZ, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_E_6929b3052ceeb.webp", {"ebayUpdated":"2026-05-01"}],
+    ["LOP", "Shenron", 2964850, _, 7850, 123, S.DB, A.DB, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_LO_6929b3052dee2.webp", {"ebayUpdated":"2026-05-01"}],
   ]},
 ];
  
@@ -1326,7 +1453,8 @@ RAW_SETS.forEach(s=>{
       anime, animeUncertain,
       dbKujiImg: dbKujiImg||null,
       setImg: s.setImg||null,
-      isLOP: prizeName==='LOP'
+      isLOP: prizeName==='LOP',
+      isGrail: isGrailFigure(s.set, prizeName)
     });
   });
 });
@@ -1338,6 +1466,7 @@ const userEdits = {}; // {id: {mercari:'', ebay:'', bbts:''}}
 let sortCol = null;
 let sortDir = 'asc';
 let lopOnly = false;
+let grailOnly = false;
  
 // ── Helpers ────────────────────────────────────────────────────────────
 function esc(str){
@@ -1475,6 +1604,12 @@ function renderStats(){
     document.getElementById('stat-max-price').textContent = '—';
     document.getElementById('stat-max-name').textContent = '—';
   }
+  // Total Grails — count of figures matching the GRAIL_FIGURES table.
+  // Computed off the static dataset (not the filtered view) so the card
+  // stays a stable "this many grails exist" headline rather than fluctuating
+  // with whatever filter the user currently has on.
+  const grailCount = DATA.reduce((n,d)=>n + (d.isGrail?1:0), 0);
+  document.getElementById('stat-grails').textContent = grailCount;
 }
  
 // ── Top 10 ─────────────────────────────────────────────────────────────
@@ -1550,7 +1685,17 @@ function getFiltered(){
   const maxMs = parseFloat(document.getElementById('max-msrp').value)||Infinity;
  
   return DATA.filter(d=>{
-    if(lopOnly && !d.isLOP) return false;
+    // Prize-filter buttons. LOP and Grail toggle independently; when BOTH
+    // are active we show the UNION (LOP OR Grail) — a row passes if it is
+    // either LOP or grail-flagged. When only one is active we restrict to
+    // that subset; when neither is active the filter is a no-op.
+    if(lopOnly && grailOnly){
+      if(!d.isLOP && !d.isGrail) return false;
+    } else if(lopOnly){
+      if(!d.isLOP) return false;
+    } else if(grailOnly){
+      if(!d.isGrail) return false;
+    }
     if(yr && d.year!==+yr) return false;
     if(st && d.set!==st) return false;
     if(tp && d.type!==tp) return false;
@@ -1569,7 +1714,18 @@ function getFiltered(){
       if(p<minMs || p>maxMs) return false;
     }
     if(cq && !d.character.toLowerCase().includes(cq)) return false;
-    if(q && !d.character.toLowerCase().includes(q) && !d.set.toLowerCase().includes(q)) return false;
+    // Generalised search — matches across set name, prize letter,
+    // character, saga, anime, and year so the "Search anything…" placeholder
+    // is accurate. d.prize is the full token ("Prize A" / "LOP" / "Collab
+    // Prize" / etc.); searching against it as a string lets the user type
+    // either "lop" or "prize a" and have it land.
+    if(q){
+      const hay = [d.character, d.set, d.prize, d.saga, d.anime, String(d.year)]
+        .filter(v => v != null && v !== '')
+        .join(' ')
+        .toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
     return true;
   });
 }
@@ -1633,7 +1789,12 @@ function renderTable(){
     const dateStr = d.dateStr;
     const ed = userEdits[d.id]||{};
     const lopClass = d.isLOP?'lop-row':'';
+    const grailClass = d.isGrail?'grail-row':'';
     const prizeClass = d.isLOP?'prize-lop':d.prize.startsWith('Collab')?'prize-collab':'prize-normal';
+    // Set-name HTML — bare text. Grail figures are signalled by the 💎
+    // prefix on the prize letter (see col-prize cell below); no colour
+    // scheme is applied to grail rows beyond that.
+    const setNameHtml = esc(sn);
  
     // Image: prefer prize-specific dbKujiImg, fall back to set-level setImg,
     // then a clean empty placeholder. No letter fallback; no MFC fallback.
@@ -1709,12 +1870,12 @@ function renderTable(){
     const typeTagMap = {'non-masterlise':'<span class="set-tag tag-nm">NON-ML</span>','smsp':'<span class="set-tag tag-smsp">SMSP</span>','40th':'<span class="set-tag tag-40th">40TH</span>'};
     const typeTag = typeTagMap[d.type] || '';
  
-    return `<tr class="data-row ${lopClass}" data-id="${d.id}">
+    return `<tr class="data-row ${lopClass} ${grailClass}" data-id="${d.id}">
       <td class="col-thumb">${thumbHtml}</td>
-      <td class="col-set">${esc(sn)} <span style="color:#444;font-size:10px">(${esc(dateStr)})</span>${typeTag}
+      <td class="col-set">${setNameHtml} <span style="color:#444;font-size:10px">(${esc(dateStr)})</span>${typeTag}
         <div class="col-meta-line">${sagaTag}${animeTag}</div>
       </td>
-      <td class="col-prize"><span class="${prizeClass}">${esc(d.prize)}</span></td>
+      <td class="col-prize"><span class="${prizeClass}">${d.isGrail?'💎 ':''}${esc(d.prize)}</span></td>
       <td class="col-char">${esc(d.character)}</td>
       <td class="col-mfc"><a class="${mfcClass}" href="${mfcHref}" target="_blank" rel="noopener">${mfcLabel}</a></td>
       <td class="col-year">${d.year}</td>
@@ -1893,12 +2054,21 @@ document.getElementById('lop-toggle').addEventListener('click',function(){
   this.classList.toggle('active',lopOnly);
   renderTable();
 });
+// Grail toggle — independent of LOP. When both are on, getFiltered()
+// returns the union (LOP OR Grail) rather than the intersection.
+document.getElementById('grail-toggle').addEventListener('click',function(){
+  grailOnly=!grailOnly;
+  this.classList.toggle('active',grailOnly);
+  renderTable();
+});
  
 document.getElementById('reset-btn').addEventListener('click',()=>{
   ['search-input','character-input','filter-year','filter-set','filter-type','filter-saga','filter-anime','min-price','max-price','min-mercari','max-mercari','min-msrp','max-msrp']
     .forEach(id => document.getElementById(id).value = '');
   lopOnly=false;
+  grailOnly=false;
   document.getElementById('lop-toggle').classList.remove('active');
+  document.getElementById('grail-toggle').classList.remove('active');
   sortCol=null; sortDir='asc';
   document.querySelectorAll('thead th.sortable').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
   renderTable();
