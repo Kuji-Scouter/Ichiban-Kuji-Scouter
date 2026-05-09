@@ -224,15 +224,15 @@ select option{background:#0d0d15}
 .price-range{display:flex;gap:6px;align-items:center}
 .price-range span{color:var(--grey);font-size:12px}
 input[type=number]{width:80px}
-/* Bottom-row layout — range groups grow to absorb leftover width on
-   row 2 so Anime/Secondary/MSRP fill the left side, and Prize Filter
-   + View pack tight at the right end at content width. The range
-   min-width is set to 170px so the "Secondary Market ($)" /
-   "MSRP ($)" labels stay on a single line even at the floor — the
-   $ chip would wrap below ~155px otherwise. Stacking Watchlist +
-   Collection saved ~110px of row-2 width, which is exactly what
-   buys the ranges this extra room without forcing a 3rd row. */
-.range-group{flex:1 1 0;min-width:170px}
+/* Bottom-row layout — range groups grow to absorb leftover width up
+   to a cap, so Anime / Secondary / MSRP fill the left side without
+   ballooning unboundedly on wide monitors. Cap matches the natural
+   width range users would actually need: 170px floor (so the
+   "Secondary Market ($)" / "MSRP ($)" labels don't wrap) and a 260px
+   ceiling (more than enough for "9999 - 9999" min/max input pairs).
+   Any leftover row width beyond the cap appears as empty space at
+   the row-end — same look on every viewport size. */
+.range-group{flex:1 1 0;min-width:170px;max-width:260px}
 .range-group .price-range{flex:1}
 .range-group .price-range input[type=number]{flex:1;min-width:0;width:auto}
 .prize-filter-group{flex:0 1 auto;min-width:0}
