@@ -224,15 +224,14 @@ select option{background:#0d0d15}
 .price-range{display:flex;gap:6px;align-items:center}
 .price-range span{color:var(--grey);font-size:12px}
 input[type=number]{width:80px}
-/* Bottom-row layout — range groups grow to absorb leftover width up
-   to a cap, so Anime / Secondary / MSRP fill the left side without
-   ballooning unboundedly on wide monitors. Cap matches the natural
-   width range users would actually need: 170px floor (so the
-   "Secondary Market ($)" / "MSRP ($)" labels don't wrap) and a 260px
-   ceiling (more than enough for "9999 - 9999" min/max input pairs).
-   Any leftover row width beyond the cap appears as empty space at
-   the row-end — same look on every viewport size. */
-.range-group{flex:1 1 0;min-width:170px;max-width:260px}
+/* Bottom-row layout — range groups share row-2 slack with the other
+   flex-grow ctrl-groups (Saga / Anime / Set Type). Range floor of
+   170px keeps "Secondary Market ($)" / "MSRP ($)" labels on one line;
+   ceiling of 360px is generous enough to absorb significant slack on
+   wide monitors so row 2 fills without leaving an awkward gap on the
+   right. Combined with the flex-grow now applied to the categorical
+   selects, both rows stay full from left to right at any viewport. */
+.range-group{flex:1 1 0;min-width:170px;max-width:360px}
 .range-group .price-range{flex:1}
 .range-group .price-range input[type=number]{flex:1;min-width:0;width:auto}
 .prize-filter-group{flex:0 1 auto;min-width:0}
@@ -1019,21 +1018,21 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
      row, so the filter strip reads as a uniform 2-row block of
      identically-styled inputs and buttons. -->
 <section id="controls" aria-label="Search and filter controls">
-  <div class="ctrl-group" style="flex:1;min-width:180px;max-width:300px">
+  <div class="ctrl-group" style="flex:1;min-width:180px;max-width:380px">
     <label class="ctrl-label" for="search-input">Search</label>
     <input type="text" id="search-input" placeholder="Search anything…"/>
   </div>
-  <div class="ctrl-group" style="flex:1;min-width:170px;max-width:240px">
+  <div class="ctrl-group" style="flex:1;min-width:170px;max-width:320px">
     <label class="ctrl-label" for="character-input">Character</label>
     <input type="text" id="character-input" placeholder="Filter by character…"/>
   </div>
-  <div class="ctrl-group" style="max-width:110px">
+  <div class="ctrl-group" style="flex:0 0 110px;max-width:110px">
     <label class="ctrl-label" for="filter-year">Year</label>
     <select id="filter-year"><option value="">All Years</option></select>
   </div>
-  <div class="ctrl-group">
+  <div class="ctrl-group" style="flex:1;min-width:120px;max-width:280px">
     <label class="ctrl-label" for="filter-set">Kuji Set</label>
-    <select id="filter-set" style="min-width:120px;max-width:200px"><option value="">All Sets</option></select>
+    <select id="filter-set"><option value="">All Sets</option></select>
   </div>
   <!-- Prize Filter promoted to row 1 — swapped with Set Type. -->
   <div class="ctrl-group prize-filter-group">
@@ -1061,20 +1060,20 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   <div class="row-break" aria-hidden="true"></div>
   <!-- Saga is the first item of row 2 by source order, so it lands
        immediately after the row-break above. -->
-  <div class="ctrl-group">
+  <div class="ctrl-group" style="flex:1;min-width:130px;max-width:220px">
     <label class="ctrl-label" for="filter-saga">Saga</label>
-    <select id="filter-saga" style="min-width:130px;max-width:170px"><option value="">All Sagas</option></select>
+    <select id="filter-saga"><option value="">All Sagas</option></select>
   </div>
-  <div class="ctrl-group">
+  <div class="ctrl-group" style="flex:1;min-width:90px;max-width:180px">
     <label class="ctrl-label" for="filter-anime">Anime</label>
-    <select id="filter-anime" style="min-width:80px;max-width:130px"><option value="">All Anime</option></select>
+    <select id="filter-anime"><option value="">All Anime</option></select>
   </div>
   <!-- Set Type sits to the left of the secondary-market range so the
        categorical filters (Saga / Anime / Set Type) cluster together
        at the start of row 2 and the price ranges follow. -->
-  <div class="ctrl-group">
+  <div class="ctrl-group" style="flex:1;min-width:140px;max-width:220px">
     <label class="ctrl-label" for="filter-type">Set Type</label>
-    <select id="filter-type" style="min-width:140px;max-width:170px">
+    <select id="filter-type">
       <option value="">All Types</option>
       <option value="masterlise">Masterlise</option>
       <option value="non-masterlise">Non-Masterlise</option>
