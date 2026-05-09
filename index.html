@@ -180,92 +180,124 @@ body{
 .top10-meta{font-size:10px;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top10-price{font-family:'Bebas Neue',cursive;font-size:18px;color:var(--orange);white-space:nowrap}
  
-/* ── Controls ── */
-/* Sizing here is reverted to the upstream live-site values so both rows
-   of the controls strip share identical typography (label font, input
-   font, padding, gaps, and divider). The structural changes that survive
-   are: Reset is folded into the same ctrl-group as the LOP/Grail toggles
-   (so it can never wrap to its own row), and the row-2 ctrl-groups (range
-   groups + Prize Filter) opt into flex-grow via the .range-group and
-   .prize-filter-group modifier classes below so they fill the available
-   width once the top-row controls have been placed. */
+/* ── Controls (filter strip) ──
+   Refactored 2026-05 for consistent rendering across resolutions.
+
+   The previous layout pinned each ctrl-group with a hard max-width
+   (Search 380, Character 320, Year 110, Kuji Set 280, ranges 360,
+   etc.) and left Prize Filter / View / Reset clusters at content-
+   width via flex:0 1 auto. As soon as the container grew past the
+   sum of those caps — which happens easily on 1440p+ monitors — the
+   rows could no longer fill, leaving an empty gap on the right edge
+   that varied by viewport width.
+
+   The new layout drops every max-width cap and gives each group a
+   proportional flex weight (flex:N 1 0). Whatever the container's
+   width is, the weights sum to fill the row exactly. A shared
+   sizing rule (.fc-control) standardises every input / select /
+   button to identical height (36px), padding (0 12px), and font
+   (Nunito 13px) so the strip reads as one uniform block of
+   identically-shaped controls. Button clusters use flex:1 inside
+   the cluster so Prize Filter / View / Reset pills also stretch to
+   fill their slot. */
 #controls{
   max-width:var(--container-max);margin:0 auto 14px;padding:0 clamp(12px,1.2vw,28px);
   display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;
 }
-.ctrl-group{display:flex;flex-direction:column;gap:4px}
-/* Hard flex-break used to pin the controls strip to a fixed
-   "5 on row 1, 6 on row 2" layout no matter how wide the viewport.
-   The element takes 100% of the remaining row width, then has zero
-   height + zero border so it's invisible — every following ctrl-
-   group is forced onto the next flex line. */
+.ctrl-group{display:flex;flex-direction:column;gap:4px;flex:1 1 0;min-width:0}
+/* Hard flex-break — pins the layout to "6 controls on row 1, 6 on row 2"
+   regardless of viewport width. Takes 100% of remaining row width with
+   zero height so every following ctrl-group flows onto the next line. */
 .row-break{flex-basis:100%;height:0;margin:0;padding:0;border:0}
-/* Subtle vertical dividers between adjacent filter controls so each
-   one reads as its own control rather than running together. Padding
-   is fixed (not clamped) so the gap is visually identical between
-   every pair of controls regardless of viewport width — the previous
-   clamp() introduced subtle inconsistencies between groups whose
-   neighbours had different intrinsic widths. */
-.ctrl-group:not(:last-child){
-  padding-right:8px;
-  border-right:1px solid #2a2a3a;
+/* Subtle vertical dividers between adjacent filter controls. */
+.ctrl-group:not(:last-child){padding-right:8px;border-right:1px solid #2a2a3a}
+.ctrl-label{
+  font-size:12px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--grey);font-weight:700;line-height:1.2;
 }
-.ctrl-label{font-size:clamp(10px,0.65vw + 5px,13px);text-transform:uppercase;letter-spacing:1px;color:var(--grey);font-weight:700}
-#search{flex:1;min-width:200px}
-input[type=text],select,input[type=number]{
-  background:#0d0d15;border:1px solid #2a2a3a;border-radius:6px;
-  color:var(--white);font-family:'Nunito',sans-serif;
-  font-size:clamp(13px,0.6vw + 9px,16px);
-  padding:clamp(6px,0.55vw,10px) clamp(9px,0.8vw,14px);
-  outline:none;transition:border-color .2s;width:100%;
-}
-input[type=text]:focus,select:focus,input[type=number]:focus{border-color:var(--orange)}
-select option{background:#0d0d15}
-.price-range{display:flex;gap:6px;align-items:center}
-.price-range span{color:var(--grey);font-size:12px}
-input[type=number]{width:80px}
-/* Bottom-row layout — range groups share row-2 slack with the other
-   flex-grow ctrl-groups (Saga / Anime / Set Type). Range floor of
-   170px keeps "Secondary Market ($)" / "MSRP ($)" labels on one line;
-   ceiling of 360px is generous enough to absorb significant slack on
-   wide monitors so row 2 fills without leaving an awkward gap on the
-   right. Combined with the flex-grow now applied to the categorical
-   selects, both rows stay full from left to right at any viewport. */
-.range-group{flex:1 1 0;min-width:170px;max-width:360px}
-.range-group .price-range{flex:1}
-.range-group .price-range input[type=number]{flex:1;min-width:0;width:auto}
-.prize-filter-group{flex:0 1 auto;min-width:0}
-.prize-filter-group .prize-filter-buttons{width:auto;flex-wrap:nowrap}
 
-/* Prize Filter toggle pills (LOP / Grail) — sized a touch larger than
-   the View cluster's right column so they read as the prominent
-   row-1 action group, but still smaller than text inputs to register
-   as buttons rather than fields. */
-#lop-toggle,
-#grail-toggle{
-  padding:7px 14px;background:#0d0d15;border:1px solid #2a2a3a;border-radius:6px;
-  color:var(--grey);font-family:'Nunito',sans-serif;font-size:12px;
-  font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;
+/* ── Per-group flex weights ──
+   Weights tuned so each row fills proportionally without any single
+   group dwarfing the others. Row totals are roughly equal so both
+   rows have the same visual rhythm. */
+.ctrl-search    {flex:3 1 0}
+.ctrl-character {flex:2.4 1 0}
+.ctrl-year      {flex:1 1 0}
+.ctrl-kuji-set  {flex:2.2 1 0}
+.prize-filter-group {flex:1.6 1 0;min-width:0}
+.view-tab-group {flex:1.8 1 0;min-width:0}
+.ctrl-saga      {flex:1.6 1 0}
+.ctrl-anime     {flex:1.4 1 0}
+.ctrl-set-type  {flex:1.6 1 0}
+.range-group    {flex:2.4 1 0}
+.reset-group    {flex:1.5 1 0;min-width:0}
+
+/* ── Shared control sizing ──
+   Every input, select, and button in the controls strip uses the
+   exact same box (36px tall, fixed 13px Nunito, fixed 12px H-padding)
+   so no single filter looks larger or smaller than its neighbours. */
+#controls input[type=text],
+#controls select,
+#controls input[type=number],
+#controls .prize-filter-buttons button,
+#controls .view-tab,
+#controls .reset-buttons button{
+  box-sizing:border-box;
+  height:36px;
+  padding:0 12px;
+  font-family:'Nunito',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  background:#0d0d15;
+  border:1px solid #2a2a3a;
+  border-radius:6px;
+  color:var(--white);
+  outline:none;
+  transition:border-color .2s, color .2s, background .2s;
+  width:100%;
 }
+#controls input[type=text]:focus,
+#controls select:focus,
+#controls input[type=number]:focus{border-color:var(--orange)}
+#controls select option{background:#0d0d15}
+
+/* Range pair — two number inputs share their slot 50/50 with a dash. */
+.price-range{display:flex;gap:6px;align-items:center;width:100%}
+.price-range span{color:var(--grey);font-size:12px;flex:0 0 auto}
+.range-group .price-range input[type=number]{flex:1 1 0;min-width:0;padding:0 8px;text-align:right}
+
+/* Button-cluster wrappers — fill the ctrl-group; pills inside share
+   the slot evenly via flex:1 so they also stretch with the row. */
+.prize-filter-buttons,
+.view-tab-buttons,
+.reset-buttons{
+  display:flex;gap:6px;flex-wrap:nowrap;align-items:stretch;width:100%;
+}
+#controls .prize-filter-buttons button,
+#controls .view-tab,
+#controls .reset-buttons button{
+  flex:1 1 0;min-width:0;
+  cursor:pointer;white-space:nowrap;
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  color:var(--grey);
+}
+#controls .prize-filter-buttons button:hover,
+#controls .view-tab:hover,
+#controls .reset-buttons button:hover{border-color:var(--orange);color:var(--orange)}
+
+/* Active states — preserved palette from the previous design. */
 #lop-toggle.active{background:var(--lop-bg);border-color:var(--gold);color:var(--gold)}
-/* Grail toggle active state — neutral "lit-up" appearance. The grail
-   colour scheme was removed (the 💎 prefix on the prize letter is the
-   only grail indicator now), so the active state intentionally avoids
-   any palette accent that could be read as "grails are X-coloured". */
 #grail-toggle.active{background:#2a2a3a;border-color:#888;color:var(--white)}
-/* Wrapper that keeps LOP, Grail, and Reset together inside the single
-   Prize Filter ctrl-group so Reset can never wrap to its own row. The
-   parent ctrl-group is column-flex; this nested row-flex keeps the
-   buttons aligned horizontally and is allowed to wrap to a second line
-   only at very narrow widths. */
-.prize-filter-buttons{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-#reset-btn{
-  padding:7px 14px;background:#0d0d15;border:1px solid #333;border-radius:6px;
-  color:var(--grey);font-family:'Nunito',sans-serif;font-size:12px;
-  cursor:pointer;transition:all .2s;white-space:nowrap;
+.view-tab.active{background:rgba(255,107,0,.12);border-color:var(--orange);color:var(--orange)}
+
+/* Count chip on the View / Reset pills (e.g. "Wishlist 0", "All 362"). */
+.view-count{
+  display:inline-block;min-width:18px;padding:0 6px;
+  background:#000;border:1px solid #2a2a3a;border-radius:10px;
+  font-size:10px;color:var(--grey);font-weight:700;line-height:14px;text-align:center;
 }
-#reset-btn:hover{border-color:var(--orange);color:var(--orange)}
- 
+.view-tab.active .view-count{border-color:var(--orange);color:var(--orange)}
+
 /* ── Table Wrapper ── */
 #table-wrap{
   max-width:var(--container-max);margin:0 auto;
@@ -597,9 +629,11 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 @media(min-width:601px) and (max-width:900px){
   :root{--container-max:96vw}
   #controls{gap:10px}
-  .ctrl-group{flex:1 1 calc(50% - 10px)}
-  .ctrl-group:first-child,
-  .ctrl-group:nth-child(2){flex:1 1 100%}
+  /* At tablet width, override per-class weights so every group gets
+     ~50% of the row and wraps cleanly to as many lines as needed. */
+  #controls .ctrl-group{flex:1 1 calc(50% - 10px)!important}
+  #controls .ctrl-search,
+  #controls .ctrl-character{flex:1 1 100%!important}
   tr.set-header .sh-name{font-size:24px}
   tr.set-header .sh-meta{font-size:15px}
 }
@@ -611,7 +645,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
  
 /* Wide monitors — let the layout grow rather than sit cramped at 1400 */
 @media(min-width:1700px){
-  :root{--container-max:min(1750px, 92vw)}
+  :root{--container-max:min(1900px, 94vw)}
 }
  
 /* Ultrawide / 4K */
@@ -702,7 +736,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
    row 2. Both share identical typography with LOP/Grail (Nunito 12px,
    7×14 padding) so all three pill clusters read as one consistent
    pattern across the controls strip. */
-.view-tab-group, .reset-group{flex:0 1 auto;min-width:0}
+/* (View/Reset cluster flex weights are defined in the Controls block above.) */
 .view-tab-buttons, .reset-buttons{
   display:flex;gap:6px;flex-wrap:nowrap;align-items:center;
 }
@@ -1018,19 +1052,19 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
      row, so the filter strip reads as a uniform 2-row block of
      identically-styled inputs and buttons. -->
 <section id="controls" aria-label="Search and filter controls">
-  <div class="ctrl-group" style="flex:1;min-width:180px;max-width:380px">
+  <div class="ctrl-group ctrl-search">
     <label class="ctrl-label" for="search-input">Search</label>
     <input type="text" id="search-input" placeholder="Search anything…"/>
   </div>
-  <div class="ctrl-group" style="flex:1;min-width:170px;max-width:320px">
+  <div class="ctrl-group ctrl-character">
     <label class="ctrl-label" for="character-input">Character</label>
     <input type="text" id="character-input" placeholder="Filter by character…"/>
   </div>
-  <div class="ctrl-group" style="flex:0 0 110px;max-width:110px">
+  <div class="ctrl-group ctrl-year">
     <label class="ctrl-label" for="filter-year">Year</label>
     <select id="filter-year"><option value="">All Years</option></select>
   </div>
-  <div class="ctrl-group" style="flex:1;min-width:120px;max-width:280px">
+  <div class="ctrl-group ctrl-kuji-set">
     <label class="ctrl-label" for="filter-set">Kuji Set</label>
     <select id="filter-set"><option value="">All Sets</option></select>
   </div>
@@ -1060,18 +1094,18 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   <div class="row-break" aria-hidden="true"></div>
   <!-- Saga is the first item of row 2 by source order, so it lands
        immediately after the row-break above. -->
-  <div class="ctrl-group" style="flex:1;min-width:130px;max-width:220px">
+  <div class="ctrl-group ctrl-saga">
     <label class="ctrl-label" for="filter-saga">Saga</label>
     <select id="filter-saga"><option value="">All Sagas</option></select>
   </div>
-  <div class="ctrl-group" style="flex:1;min-width:90px;max-width:180px">
+  <div class="ctrl-group ctrl-anime">
     <label class="ctrl-label" for="filter-anime">Anime</label>
     <select id="filter-anime"><option value="">All Anime</option></select>
   </div>
   <!-- Set Type sits to the left of the secondary-market range so the
        categorical filters (Saga / Anime / Set Type) cluster together
        at the start of row 2 and the price ranges follow. -->
-  <div class="ctrl-group" style="flex:1;min-width:140px;max-width:220px">
+  <div class="ctrl-group ctrl-set-type">
     <label class="ctrl-label" for="filter-type">Set Type</label>
     <select id="filter-type">
       <option value="">All Types</option>
@@ -1109,7 +1143,6 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
        Filter / View so the right-end of every row reads as one
        uniform pill cluster. -->
   <div class="ctrl-group reset-group">
-    <label class="ctrl-label">Reset</label>
     <div class="reset-buttons">
       <button class="view-tab vt-all active" data-view="all" type="button">All <span class="view-count" id="count-all">—</span></button>
       <button id="reset-btn" type="button" title="Reset all filters">↺ Reset</button>
