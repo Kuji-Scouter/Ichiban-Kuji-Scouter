@@ -194,6 +194,12 @@ body{
   display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;
 }
 .ctrl-group{display:flex;flex-direction:column;gap:4px}
+/* Hard flex-break used to pin the controls strip to a fixed
+   "5 on row 1, 6 on row 2" layout no matter how wide the viewport.
+   The element takes 100% of the remaining row width, then has zero
+   height + zero border so it's invisible — every following ctrl-
+   group is forced onto the next flex line. */
+.row-break{flex-basis:100%;height:0;margin:0;padding:0;border:0}
 /* Subtle vertical dividers between adjacent filter controls so each
    one reads as its own control rather than running together. Padding
    is fixed (not clamped) so the gap is visually identical between
@@ -555,6 +561,12 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   transition:all .2s;
 }
 .footer-link:hover{border-color:var(--orange);color:var(--orange)}
+/* Buttons / labels styled to match .footer-link so the Export and
+   Import controls visually match the other footer "links" without
+   needing a separate look. */
+button.footer-link,label.footer-link{cursor:pointer;font-family:'Nunito',sans-serif}
+button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
+.footer-action:focus{outline:2px solid var(--orange);outline-offset:2px}
 .disclaimer{font-size:11px;color:#555;margin-top:16px;padding-top:12px;border-top:1px solid #1e1e2e;line-height:1.6}
  
 /* ── Result count ── */
@@ -636,10 +648,16 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
    can see the conversion target without tabbing back up to the toolbar. */
 .range-cur{color:var(--orange);font-weight:800}
 
-/* ── Toolbar strip (below the orange creator-bar border) ───────────── */
+/* ── Toolbar strip (below the orange creator-bar border) ──────────────
+   Spans the FULL viewport width (no max-width) so the currency picker
+   sits at the absolute right edge of the screen, mirroring how the
+   YouTube button in the creator-bar sits at the absolute right edge.
+   Previously this was capped at the same container max-width as the
+   stats / table sections, which on wide monitors left an awkward gap
+   between the picker and the right edge. */
 #toolbar{
-  max-width:var(--container-max);margin:0 auto;
-  padding:6px clamp(12px,1.4vw,28px);
+  margin:0;
+  padding:6px 20px;
   display:flex;align-items:center;justify-content:flex-end;
 }
 /* Currency picker — sized to match the YouTube channel button: same
@@ -747,6 +765,20 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   padding:0 clamp(12px,1.2vw,28px);
 }
 #result-info-line #result-info{margin:0;padding:0}
+
+/* ── Legend pill + backup buttons sit on a single flex row ─────────
+   The Legend & column-key pill is on the left; ↓ Export / ↑ Import
+   sit immediately to its right. Wraps to a new line on narrow
+   viewports. When the legend opens, its body drops below the row but
+   the backup buttons remain aligned with the legend's summary pill. */
+.footer-utility-row{
+  display:flex;align-items:flex-start;flex-wrap:wrap;gap:10px;
+  margin-bottom:14px;
+}
+.footer-utility-row > #legend-details{margin-bottom:0;flex:0 0 auto}
+#backup-section{
+  display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;
+}
 
 /* ── Legend & column key (lives in footer) ─────────────────────────── */
 #legend-details{
@@ -1038,9 +1070,13 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
       <button id="grail-toggle" type="button" aria-pressed="false">★ Grail</button>
     </div>
   </div>
-  <!-- Saga lives at the left end of row 2 (per user spec). It comes
-       first in the row-2 source order so flex-wrap drops it onto the
-       second row immediately after Prize Filter has filled out row 1. -->
+  <!-- Hard flex-break — pins the layout to exactly five controls on
+       row 1 regardless of viewport width. Without this, very wide
+       screens were squeezing 6–7 controls onto row 1, which made the
+       layout look different from what's seen on a standard desktop. -->
+  <div class="row-break" aria-hidden="true"></div>
+  <!-- Saga is the first item of row 2 by source order, so it lands
+       immediately after the row-break above. -->
   <div class="ctrl-group">
     <label class="ctrl-label" for="filter-saga">Saga</label>
     <select id="filter-saga" style="min-width:130px"><option value="">All Sagas</option></select>
@@ -1183,18 +1219,31 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   <!-- Legend & column key — moved here from above the table so it lives
        at the bottom of the site as a reference panel rather than
        interrupting the path from filters → results. -->
-  <details id="legend-details" class="footer-section">
-    <summary>Legend &amp; column key</summary>
-    <div class="legend-body">
-      <p><strong>Trend arrows</strong>: <span class="legend-up">▲</span> last 30-day avg ≥ +2% vs prior 60-day avg · <span class="legend-down">▼</span> last 30-day avg ≤ -2% vs prior 60-day avg · <span class="legend-flat">—</span> flat or insufficient history.</p>
-      <p><strong>Set type colour key</strong>: <span style="color:var(--orange)">Masterlise</span> · <span style="color:var(--purple)">Non-Masterlise</span> · <span style="color:var(--cyan)">SMSP</span> · <span style="color:var(--green)">40th Anniversary</span>. Grails are flagged with a 💎 next to the prize letter.</p>
-      <p><strong>Mercari/eBay</strong>: 3-month average sold price; click 🔍 to open a fresh sold-listings search. Mercari uses ¥, eBay uses $; switch with the currency toggle in the page header.</p>
+  <!-- Legend pill + backup buttons share one flex row so the two
+       Export/Import pills sit directly to the right of the
+       Legend & column key pill. When the legend is expanded, its body
+       drops below the row; the buttons stay aligned with the pill. -->
+  <div class="footer-utility-row">
+    <details id="legend-details" class="footer-section">
+      <summary>Legend &amp; column key</summary>
+      <div class="legend-body">
+        <p><strong>Trend arrows</strong>: <span class="legend-up">▲</span> last 30-day avg ≥ +2% vs prior 60-day avg · <span class="legend-down">▼</span> last 30-day avg ≤ -2% vs prior 60-day avg · <span class="legend-flat">—</span> flat or insufficient history.</p>
+        <p><strong>Set type colour key</strong>: <span style="color:var(--orange)">Masterlise</span> · <span style="color:var(--purple)">Non-Masterlise</span> · <span style="color:var(--cyan)">SMSP</span> · <span style="color:var(--green)">40th Anniversary</span>. Grails are flagged with a 💎 next to the prize letter.</p>
+        <p><strong>Prices</strong>: Mercari Japan and eBay show the rolling 3-month average sold price; MSRP is the original retail price. Switch the displayed currency (USD / JPY / EUR / GBP / AUD) with the picker at the top-right of the page — every price column converts in real time. Click 🔍 next to a Mercari or eBay price to open a fresh sold-listings search on that marketplace.</p>
+        <p><strong>Prize Filter</strong>: ★ LOP shows only Last-One-Prize figures (the consolation prize for the last ticket in a sealed set); ★ Grail shows only the rare-value figures flagged with 💎. Toggling both shows the union.</p>
+        <p><strong>Save figures</strong>: ★ on a row adds it to your Wishlist; ✓ marks it as Owned. Switch to the ★ Wishlist or ✓ Collection view (top-right of the filter strip) to see only your saved figures. Saved data lives in this browser only — use ↓ Export to back it up as a JSON file (the file contains only your save list) and ↑ Import on another browser to restore.</p>
+        <p><strong>Set pages</strong>: click any Kuji set name (in the table or the set-header rows) to open a focused page for that set, with all its prizes plus an EV-per-ticket calculator comparing average secondary value to average MSRP.</p>
+      </div>
+    </details>
+    <div id="backup-section">
+      <button id="export-data-btn" type="button" class="footer-link footer-action">↓ Export</button>
+      <label class="footer-link footer-action" for="import-data-input" tabindex="0">↑ Import</label>
+      <input id="import-data-input" type="file" accept="application/json,.json" hidden/>
     </div>
-  </details>
+  </div>
   <div class="disclaimer">
-    <p>Mercari Japan shows the recent average sold price in JPY (¥); eBay shows the recent average sold price in USD ($) — both are <strong>read-only snapshots</strong>. The 🔍 button next to each price opens a fresh search on Mercari JP / eBay (sold-listings filter) for live verification. The BBTS / MSRP cell links to the live BBTS product page when the figure is currently listed and shows the original retail price as plain text when known; cells without a recorded MSRP are left blank. Reference data originally compiled by Myk; figure-image catalogue courtesy of <a href="http://db-kuji.com" style="color:var(--orange)" target="_blank">db-kuji.com</a>.</p>
+    <p>Mercari Japan and eBay prices are <strong>read-only snapshots</strong> of recent sold-listing averages, not live data. BBTS cells link to the live product page when the figure is currently listed and otherwise show MSRP as plain text; cells without a recorded MSRP are left blank. Reference data originally compiled by Myk; figure-image catalogue courtesy of <a href="http://db-kuji.com" style="color:var(--orange)" target="_blank">db-kuji.com</a>.</p>
     <p>Some links on this site (notably to Big Bad Toy Store) are affiliate links. If you click through and make a purchase, MatchesPeaches may earn a small commission at no extra cost to you. This helps support the channel and keeps this tracker free.</p>
-    <p class="footer-meta" id="footer-meta">Your watchlist and collection are stored locally in this browser and persist across visits — they never leave this device. Clearing site data or switching browsers will reset them.</p>
   </div>
 </footer>
 
@@ -2064,25 +2113,27 @@ function mfcUrl(d){
 }
 function mercariJpSearchUrl(d){
   // Mercari Japan listings are titled in Japanese, so an English-only
-  // query like "ichiban kuji <Set> <Character>" routinely misses 80%+ of
+  // query like "ichiban kuji <Set> <Character>" routinely misses
   // matches. Strategy:
   //   • If the set carries a Japanese title (setNameJP, scraped from
-  //     MFC's "Original name" field), query that title verbatim — the
-  //     scraped names already start with "一番くじ" (or "アミューズメ
-  //     ント一番くじ" for the SMSP sets), so we deliberately DON'T
-  //     prepend our own prefix (which would produce a duplicate
-  //     "一番くじ 一番くじ <name>" query and depress recall).
-  //   • Otherwise, fall back to the original "一番くじ ドラゴンボール
-  //     <character>" form so figures whose set still lacks a JP name
-  //     keep working.
-  // We deliberately DO NOT include the English character name when
-  // setNameJP is present — Japanese listings rarely match against
-  // romaji and adding it tends to filter out more than it includes.
+  //     MFC's "Original name" field), query that title PLUS the
+  //     character's romaji name. The JP title gives high recall on
+  //     the set; the character name narrows the result to the
+  //     specific figure rather than every prize in the set. The
+  //     scraped JP titles already start with "一番くじ" (or
+  //     "アミューズメント一番くじ" for SMSP sets), so we don't
+  //     prepend our own prefix.
+  //   • Otherwise, fall back to "一番くじ ドラゴンボール <character>"
+  //     so figures whose set still lacks a JP name keep working.
+  // Parenthetical disambiguators on the character name (e.g. "(SS4)")
+  // are stripped before sending — they tend to be MFC-internal and
+  // rarely appear in Mercari listing titles.
+  const character = d.character.replace(/\s*\(.*?\)\s*/g,' ').trim();
   let q;
   if(d.setNameJP){
-    q = d.setNameJP;
+    q = d.setNameJP + ' ' + character;
   } else {
-    q = '一番くじ ドラゴンボール ' + d.character.replace(/\s*\(.*?\)\s*/g,' ').trim();
+    q = '一番くじ ドラゴンボール ' + character;
   }
   return 'https://jp.mercari.com/search/?keyword='+encodeURIComponent(q);
 }
@@ -2107,6 +2158,11 @@ function bbtsArchiveUrl(d){
 // values are JPY, eBay values are USD; we go to USD first then to display.
 const CURRENCY_SYMBOLS = {USD:'$', JPY:'¥', EUR:'€', GBP:'£', AUD:'A$'};
 const CURRENCY_DECIMALS = {USD:0, JPY:0, EUR:0, GBP:0, AUD:0};
+// Currencies whose symbol conventionally goes AFTER the number (with a
+// space). EUR is the obvious one — most European locales render
+// "100 €" rather than "€100". USD / JPY / GBP / AUD all keep the
+// symbol on the left ("$100", "¥100", "£100", "A$100").
+const CURRENCY_SYMBOL_AFTER = {EUR: true};
 
 function loadCachedFx(){
   try{
@@ -2176,7 +2232,10 @@ function formatCurrency(value, currency){
   if(value == null || !isFinite(value)) return '—';
   const sym = CURRENCY_SYMBOLS[currency] || '$';
   const dec = CURRENCY_DECIMALS[currency] || 0;
-  return sym + Number(value).toLocaleString(undefined, {minimumFractionDigits:dec, maximumFractionDigits:dec});
+  const num = Number(value).toLocaleString(undefined, {minimumFractionDigits:dec, maximumFractionDigits:dec});
+  // Per CURRENCY_SYMBOL_AFTER: EUR renders as "100 €", everything else
+  // sticks the symbol on the left ("$100", "¥100", "£100", "A$100").
+  return CURRENCY_SYMBOL_AFTER[currency] ? num + ' ' + sym : sym + num;
 }
 
 // ── 1.3 URL state persistence ────────────────────────────────────────
@@ -2379,6 +2438,56 @@ function setActiveTab(name){
     t.classList.toggle('active', t.dataset.view === name));
 }
 
+// ── Backup: export + import the user's Wishlist / Collection ────────
+// Format is a small JSON object with stable string keys (the same
+// "set|prize|character" form used in localStorage), versioned for
+// future migrations. Import is a UNION merge — saved figures from the
+// imported file are added on top of whatever's already in this
+// browser. To replace instead of merge, the user can clear site data
+// for this origin first, then import. Re-importing the same file is
+// a no-op since localStorage already has those keys.
+const BACKUP_VERSION = 1;
+function exportBackupData(){
+  const payload = {
+    version: BACKUP_VERSION,
+    source: 'Ichiban Kuji Scouter',
+    exportedAt: new Date().toISOString(),
+    watchlist: [...watchlist],
+    collection: [...collection],
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'kuji-scouter-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function importBackupData(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onerror = () => alert('Could not read that file. Try again, or pick a different backup.');
+  reader.onload = e => {
+    let obj;
+    try { obj = JSON.parse(e.target.result); }
+    catch(err){ alert('Import failed — that file is not valid JSON.'); return; }
+    if(!obj || obj.version !== BACKUP_VERSION){
+      alert('Import failed — backup-file format not recognised. Expected version ' + BACKUP_VERSION + '.');
+      return;
+    }
+    const wlAdd  = (Array.isArray(obj.watchlist)  ? obj.watchlist  : []).filter(k => typeof k === 'string');
+    const colAdd = (Array.isArray(obj.collection) ? obj.collection : []).filter(k => typeof k === 'string');
+    let wlNew = 0, colNew = 0;
+    wlAdd.forEach(k => { if(!watchlist.has(k))  { watchlist.add(k);  wlNew++;  } });
+    colAdd.forEach(k => { if(!collection.has(k)){ collection.add(k); colNew++; } });
+    saveFigureSet(WATCHLIST_KEY, watchlist);
+    saveFigureSet(COLLECTION_KEY, collection);
+    updateViewCounts();
+    renderTable();
+    alert('Imported successfully — added ' + wlNew + ' to Wishlist and ' + colNew + ' to Collection. (Items already saved on this browser were left alone.)');
+  };
+  reader.readAsText(file);
+}
 
 // Format an ISO date (YYYY-MM-DD) as a short, locale-aware label, e.g.
 // "Nov 3, 2025". Returns null for falsy/invalid inputs so callers can
@@ -2764,10 +2873,18 @@ function renderTable(){
     let bbtsCell;
     const userBbts = ed.bbts;
     const bbtsValRaw = userBbts || d.bbts || '';
-    if(bbtsValRaw && d.bbtsLink){
-      bbtsCell = `<a class="bbts-link" href="${esc(d.bbtsLink)}" target="_blank" rel="noopener">$${Number(bbtsValRaw).toLocaleString()}</a>`;
-    } else if(bbtsValRaw){
-      bbtsCell = `<span class="bbts-plain price-display ${userBbts?'has-value':''}" data-id="${d.id}" data-field="bbts">$${Number(bbtsValRaw).toLocaleString()}</span>`;
+    // MSRP / BBTS values are stored in USD, but we render them in the
+    // user's selected display currency (same conversion path used by
+    // Mercari and eBay above) so the column matches the currency
+    // picker at the top of the page.
+    if(bbtsValRaw){
+      const bbtsConverted = convertFromTo(+bbtsValRaw, 'USD', displayCurrency);
+      const bbtsFormatted = esc(formatCurrency(bbtsConverted, displayCurrency));
+      if(d.bbtsLink){
+        bbtsCell = `<a class="bbts-link" href="${esc(d.bbtsLink)}" target="_blank" rel="noopener">${bbtsFormatted}</a>`;
+      } else {
+        bbtsCell = `<span class="bbts-plain price-display ${userBbts?'has-value':''}" data-id="${d.id}" data-field="bbts">${bbtsFormatted}</span>`;
+      }
     } else {
       bbtsCell = `<span class="bbts-empty price-display" data-id="${d.id}" data-field="bbts"></span>`;
     }
@@ -2787,9 +2904,11 @@ function renderTable(){
     const mercariColorClass = mercariTrend === 'up' ? 'price-text-up'
                             : mercariTrend === 'down' ? 'price-text-down'
                             : 'price-text-neutral';
+    const mercariPlaceholder = CURRENCY_SYMBOL_AFTER[displayCurrency]
+      ? `— ${CURRENCY_SYMBOLS[displayCurrency]}` : `${CURRENCY_SYMBOLS[displayCurrency]} —`;
     const mercariDisplay = mercariConverted != null
       ? `<span class="price-display has-value ${mercariColorClass}" data-id="${d.id}" data-field="mercari">${esc(formatCurrency(mercariConverted, displayCurrency))}</span>`
-      : `<span class="price-display placeholder" data-id="${d.id}" data-field="mercari">${esc(CURRENCY_SYMBOLS[displayCurrency])} —</span>`;
+      : `<span class="price-display placeholder" data-id="${d.id}" data-field="mercari">${esc(mercariPlaceholder)}</span>`;
     const mercariNativeNote = mercariNative != null && displayCurrency !== 'JPY'
       ? `<span class="price-avg-note" style="opacity:.7">≈ ¥${mercariNative.toLocaleString()}</span>` : '';
     const mercariSearchBtn = `<a class="price-search-btn" title="Search Mercari Japan (sold listings)" href="${mercariJpSearchUrl(d)}" target="_blank" rel="noopener" aria-label="Search Mercari Japan for ${esc(d.character)}">🔍</a>`;
@@ -2806,9 +2925,11 @@ function renderTable(){
     const ebayColorClass = ebayTrend === 'up' ? 'price-text-up'
                          : ebayTrend === 'down' ? 'price-text-down'
                          : 'price-text-neutral';
+    const ebayPlaceholder = CURRENCY_SYMBOL_AFTER[displayCurrency]
+      ? `— ${CURRENCY_SYMBOLS[displayCurrency]}` : `${CURRENCY_SYMBOLS[displayCurrency]} —`;
     const ebayDisplay = ebayConverted != null
       ? `<span class="price-display has-value ${ebayColorClass}" data-id="${d.id}" data-field="ebay">${esc(formatCurrency(ebayConverted, displayCurrency))}</span>`
-      : `<span class="price-display placeholder" data-id="${d.id}" data-field="ebay">${esc(CURRENCY_SYMBOLS[displayCurrency])} —</span>`;
+      : `<span class="price-display placeholder" data-id="${d.id}" data-field="ebay">${esc(ebayPlaceholder)}</span>`;
     const ebayNativeNote = ebayNative != null && displayCurrency !== 'USD'
       ? `<span class="price-avg-note" style="opacity:.7">≈ $${ebayNative.toLocaleString()}</span>` : '';
     const ebayCell = `${ebayArrow}${ebayDisplay}<a class="price-search-btn" title="Search eBay (sold + completed listings)" href="${ebaySearchUrl(d)}" target="_blank" rel="noopener" aria-label="Search eBay for ${esc(d.character)}">🔍</a><span class="price-avg-note">Last 3-mo avg (eBay)</span>${ebayNativeNote}${updatedNoteHtml(d.ebayUpdated)}`;
@@ -3303,6 +3424,25 @@ window.addEventListener('popstate', () => {
   // Re-read URL state then re-render.
   applyHashRoute();
   renderTable();
+});
+
+// ── Backup buttons (Export + Import in the footer) ────────────────────
+document.getElementById('export-data-btn').addEventListener('click', exportBackupData);
+document.getElementById('import-data-input').addEventListener('change', e => {
+  const file = e.target.files && e.target.files[0];
+  importBackupData(file);
+  // Reset the input value so re-importing the same file fires `change` again.
+  e.target.value = '';
+});
+// Keyboard support for the <label> wrapping the file-input — without
+// this, Tab + Enter on the label does nothing because labels aren't
+// inherently focusable buttons. Tabindex=0 on the markup makes it
+// reachable; this listener triggers the file picker on Enter/Space.
+document.querySelector('label[for="import-data-input"]').addEventListener('keydown', e => {
+  if(e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    document.getElementById('import-data-input').click();
+  }
 });
 
 // ── Init ───────────────────────────────────────────────────────────────
