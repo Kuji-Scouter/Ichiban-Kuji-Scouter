@@ -697,54 +697,26 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
    user's request. The original flat #controls{display:flex} layout from
    the live site is preserved upstream; no overrides needed here.) */
 
-/* ── View tabs (in-row, bottom-right of the controls strip) ──────────
-   Layout: a 2×2 cluster.
-     LEFT  COLUMN (.vt-stack): Wishlist on top, Collection on bottom —
-       the two "primary" view toggles. Both use a larger 13px font so
-       they're emphasised relative to the right column.
-     RIGHT COLUMN (.vt-side): "All" on top (half-height of the left
-       cells), "↺ Reset" on bottom (the same half-height). Reset has
-       moved from the result-info line into this slot. Both are at
-       11px to match LOP/Grail typography. */
-.view-tab-group{flex:0 1 auto;min-width:0}
-.view-tab-buttons{display:flex;gap:6px;flex-wrap:nowrap;align-items:stretch}
-.view-tab{
-  background:#0d0d15;border:1px solid #2a2a3a;border-radius:6px;
-  color:var(--grey);font-family:'Nunito',sans-serif;font-weight:700;
+/* ── View + Reset clusters (right end of row 1 + row 2) ─────────────
+   The View cluster (Wishlist + Collection) lives at the right end of
+   row 1; the Reset cluster (All + ↺ Reset) lives at the right end of
+   row 2. Both share identical typography with LOP/Grail (Nunito 12px,
+   7×14 padding) so all three pill clusters read as one consistent
+   pattern across the controls strip. */
+.view-tab-group, .reset-group{flex:0 1 auto;min-width:0}
+.view-tab-buttons, .reset-buttons{
+  display:flex;gap:6px;flex-wrap:nowrap;align-items:center;
+}
+.view-tab,
+.reset-buttons #reset-btn{
+  padding:7px 14px;background:#0d0d15;border:1px solid #2a2a3a;
+  border-radius:6px;color:var(--grey);
+  font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
   cursor:pointer;transition:all .2s;white-space:nowrap;
   display:inline-flex;align-items:center;gap:5px;
 }
-/* Left column — Wishlist + Collection, the prominent toggles. The
-   internal gap matches the gap between the two columns (3px) so the
-   cluster reads as one tight 2×2 grid rather than two loose pairs. */
-.vt-stack{display:flex;flex-direction:column;gap:3px;min-width:0}
-.vt-stack .view-tab{
-  padding:4px 11px;font-size:13px;justify-content:space-between;flex:1;
-}
-/* Right column — All on top, Reset on bottom. Slightly smaller than
-   the left column (still half-height of the stacked Wishlist/
-   Collection cells), but font + padding pulled closer to vt-stack so
-   the four buttons read as a coherent unit, not "big primary" vs
-   "tiny afterthought". */
-.vt-side{display:flex;flex-direction:column;gap:3px;min-width:0}
-.vt-side .view-tab,
-.vt-side #reset-btn{
-  padding:3px 11px;font-size:12px;flex:1;justify-content:space-between;
-  display:inline-flex;align-items:center;gap:5px;
-}
-/* Match the gap between the two columns to the gap inside each one
-   so spacing is rhythmic across the whole cluster. */
-.view-tab-buttons{gap:3px}
-/* Reset inside View — keep its visual identity (border-radius, hover
-   state) consistent with the rest of the View cluster instead of the
-   standalone Reset look it had on the result-info line. */
-.vt-side #reset-btn{
-  background:#0d0d15;border:1px solid #2a2a3a;color:var(--grey);
-  font-family:'Nunito',sans-serif;font-weight:700;border-radius:6px;
-  cursor:pointer;transition:all .2s;white-space:nowrap;
-}
-.vt-side #reset-btn:hover{border-color:var(--orange);color:var(--orange)}
-.view-tab:hover{border-color:#444;color:var(--white)}
+.view-tab:hover,
+.reset-buttons #reset-btn:hover{border-color:var(--orange);color:var(--orange)}
 .view-tab.active{
   background:rgba(255,107,0,.12);border-color:var(--orange);color:var(--orange);
 }
@@ -947,14 +919,15 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 @media(max-width:700px){
   #table-wrap{display:none}
   .card-list{display:flex}
-  /* On phones the View ctrl-group takes its own row. Flatten the 2×2
-     grid into a single horizontal row of 4 equal cells (Wishlist,
-     Collection, All, Reset) so each button is touch-friendly. */
-  .view-tab-group{min-width:100%}
-  .view-tab-buttons{display:grid;grid-template-columns:repeat(4, 1fr);gap:6px;align-items:stretch}
-  .vt-stack,.vt-side{display:contents}
-  .view-tab,.vt-side #reset-btn{
-    padding:8px 6px;font-size:11px;justify-content:center;flex:none;
+  /* On phones the View + Reset ctrl-groups each take their own
+     full-width row. Buttons spread evenly across the row so each one
+     stays touch-friendly. */
+  .view-tab-group,.reset-group{min-width:100%}
+  .view-tab-buttons,.reset-buttons{
+    display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:stretch;
+  }
+  .view-tab,.reset-buttons #reset-btn{
+    padding:8px 6px;font-size:11px;justify-content:center;
   }
 }
 
@@ -1046,7 +1019,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
      row, so the filter strip reads as a uniform 2-row block of
      identically-styled inputs and buttons. -->
 <section id="controls" aria-label="Search and filter controls">
-  <div class="ctrl-group" style="flex:1;min-width:180px">
+  <div class="ctrl-group" style="flex:1;min-width:180px;max-width:300px">
     <label class="ctrl-label" for="search-input">Search</label>
     <input type="text" id="search-input" placeholder="Search anything…"/>
   </div>
@@ -1060,7 +1033,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   </div>
   <div class="ctrl-group">
     <label class="ctrl-label" for="filter-set">Kuji Set</label>
-    <select id="filter-set" style="min-width:120px"><option value="">All Sets</option></select>
+    <select id="filter-set" style="min-width:120px;max-width:200px"><option value="">All Sets</option></select>
   </div>
   <!-- Prize Filter promoted to row 1 — swapped with Set Type. -->
   <div class="ctrl-group prize-filter-group">
@@ -1070,27 +1043,38 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
       <button id="grail-toggle" type="button" aria-pressed="false">★ Grail</button>
     </div>
   </div>
-  <!-- Hard flex-break — pins the layout to exactly five controls on
+  <!-- View ctrl-group on row 1 — Wishlist + Collection live here. The
+       "All" view-toggle and the global Reset live in their own cluster
+       at the end of row 2, splitting the previous 2×2 grid into two
+       same-shape pill clusters that mirror Prize Filter's pattern. -->
+  <div class="ctrl-group view-tab-group">
+    <label class="ctrl-label">View</label>
+    <div class="view-tab-buttons" id="view-tabs" role="tablist" aria-label="View mode">
+      <button class="view-tab" data-view="watchlist" type="button">★ Wishlist <span class="view-count" id="count-watchlist">0</span></button>
+      <button class="view-tab" data-view="collection" type="button">✓ Collection <span class="view-count" id="count-collection">0</span></button>
+    </div>
+  </div>
+  <!-- Hard flex-break — pins the layout to exactly six controls on
        row 1 regardless of viewport width. Without this, very wide
-       screens were squeezing 6–7 controls onto row 1, which made the
+       screens were squeezing 7+ controls onto row 1, which made the
        layout look different from what's seen on a standard desktop. -->
   <div class="row-break" aria-hidden="true"></div>
   <!-- Saga is the first item of row 2 by source order, so it lands
        immediately after the row-break above. -->
   <div class="ctrl-group">
     <label class="ctrl-label" for="filter-saga">Saga</label>
-    <select id="filter-saga" style="min-width:130px"><option value="">All Sagas</option></select>
+    <select id="filter-saga" style="min-width:130px;max-width:170px"><option value="">All Sagas</option></select>
   </div>
   <div class="ctrl-group">
     <label class="ctrl-label" for="filter-anime">Anime</label>
-    <select id="filter-anime" style="min-width:80px"><option value="">All Anime</option></select>
+    <select id="filter-anime" style="min-width:80px;max-width:130px"><option value="">All Anime</option></select>
   </div>
   <!-- Set Type sits to the left of the secondary-market range so the
        categorical filters (Saga / Anime / Set Type) cluster together
        at the start of row 2 and the price ranges follow. -->
   <div class="ctrl-group">
     <label class="ctrl-label" for="filter-type">Set Type</label>
-    <select id="filter-type" style="min-width:140px">
+    <select id="filter-type" style="min-width:140px;max-width:170px">
       <option value="">All Types</option>
       <option value="masterlise">Masterlise</option>
       <option value="non-masterlise">Non-Masterlise</option>
@@ -1119,23 +1103,17 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
       <input type="number" id="max-msrp" placeholder="Max" min="0" aria-labelledby="label-msrp"/>
     </div>
   </div>
-  <!-- View selector at the right end of row 2. -->
-  <div class="ctrl-group view-tab-group">
-    <label class="ctrl-label">View</label>
-    <div class="view-tab-buttons" id="view-tabs" role="tablist" aria-label="View mode">
-      <!-- Left column: Wishlist on top of Collection. Bigger font than
-           the right column since these are the primary view toggles. -->
-      <div class="vt-stack">
-        <button class="view-tab" data-view="watchlist" type="button">★ Wishlist <span class="view-count" id="count-watchlist">0</span></button>
-        <button class="view-tab" data-view="collection" type="button">✓ Collection <span class="view-count" id="count-collection">0</span></button>
-      </div>
-      <!-- Right column: "All" on top, "Reset" on bottom. Each is half
-           the height of the Wishlist/Collection cells, and Reset is
-           moved here from the result-info line below the controls. -->
-      <div class="vt-side">
-        <button class="view-tab vt-all active" data-view="all" type="button">All <span class="view-count" id="count-all">—</span></button>
-        <button id="reset-btn" type="button" title="Reset all filters">↺ Reset</button>
-      </div>
+  <!-- Reset cluster at the right end of row 2 — mirrors the View
+       cluster on row 1's right end. The "All" view-toggle (returns
+       to the full catalogue) and the global Reset (clears every
+       filter) live here together. Same button typography as Prize
+       Filter / View so the right-end of every row reads as one
+       uniform pill cluster. -->
+  <div class="ctrl-group reset-group">
+    <label class="ctrl-label">Reset</label>
+    <div class="reset-buttons">
+      <button class="view-tab vt-all active" data-view="all" type="button">All <span class="view-count" id="count-all">—</span></button>
+      <button id="reset-btn" type="button" title="Reset all filters">↺ Reset</button>
     </div>
   </div>
 </section>
@@ -2578,9 +2556,13 @@ function renderStats(){
   document.getElementById('stat-sets').textContent = sets.size;
   document.getElementById('stat-figs').textContent = total;
   if(maxItem){
-    // eBay-backed stays as '$X'; Mercari-backed shows '~$X' to flag conversion.
-    const prefix = maxSource === 'mercari' ? '~$' : '$';
-    document.getElementById('stat-max-price').textContent = prefix + Math.round(maxUsd).toLocaleString();
+    // Convert from canonical USD into the user's display currency so
+    // the Most Valuable card tracks the picker like every other price.
+    // Mercari-backed values get a "~" prefix to flag the conversion
+    // (raw value is yen → USD → display); eBay-backed are exact.
+    const converted = convertFromTo(maxUsd, 'USD', displayCurrency);
+    const tilde = maxSource === 'mercari' ? '~' : '';
+    document.getElementById('stat-max-price').textContent = tilde + formatCurrency(converted, displayCurrency);
     document.getElementById('stat-max-name').textContent = maxItem.character;
   } else {
     document.getElementById('stat-max-price').textContent = '—';
@@ -2610,10 +2592,12 @@ function renderTop10(){
   const medals = {0:'🥇',1:'🥈',2:'🥉'};
   const list = document.getElementById('top10-list');
   list.innerHTML = ranked.map(({item, usd, source}, i) => {
-    // Mercari-derived USD is approximate; flag with '~$' so users know it
-    // came from a yen conversion at the JPY_PER_USD rate.
-    const prefix = source === 'mercari' ? '~$' : '$';
-    const display = prefix + Math.round(usd).toLocaleString();
+    // Convert from canonical USD to the user's display currency so the
+    // Top 10 list tracks the picker. Mercari-derived USD is approximate
+    // (yen → USD → display), flagged with "~"; eBay-backed is exact.
+    const converted = convertFromTo(usd, 'USD', displayCurrency);
+    const tilde = source === 'mercari' ? '~' : '';
+    const display = tilde + formatCurrency(converted, displayCurrency);
     return `
     <div class="top10-item">
       <div class="top10-rank ${i<3?'rank-'+(i+1):'rank-other'}">${medals[i]||'#'+(i+1)}</div>
