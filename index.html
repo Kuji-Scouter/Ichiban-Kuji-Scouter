@@ -104,7 +104,7 @@ body{
 #creator-left{display:flex;align-items:center;gap:8px}
 #creator-left .yt-icon{color:var(--red);font-size:18px;line-height:1}
 #creator-left .creator-name{
-  font-family:'Bebas Neue',cursive;
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size:22px;
   color:var(--gold);
   letter-spacing:1px;
@@ -121,7 +121,7 @@ body{
 /* ── Hero ── */
 #hero{text-align:center;padding:clamp(20px,2.6vw,44px) clamp(12px,1.4vw,28px) clamp(14px,1.6vw,28px);background:linear-gradient(180deg,#0d0d15 0%,var(--bg) 100%)}
 #hero h1{
-  font-family:'Bebas Neue',cursive;
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size:clamp(36px,6.4vw,96px);
   letter-spacing:clamp(2px,0.4vw,6px);color:var(--white);line-height:1;
   text-shadow:0 0 40px rgba(255,107,0,.4);
@@ -153,7 +153,7 @@ body{
   text-align:center;min-width:clamp(120px,12vw,180px);flex:1;max-width:280px;
 }
 .stat-label{font-size:clamp(10px,0.65vw + 5px,13px);text-transform:uppercase;letter-spacing:1.5px;color:var(--grey);font-weight:700}
-.stat-value{font-family:'Bebas Neue',cursive;font-size:clamp(22px,1.7vw + 10px,38px);color:var(--gold);letter-spacing:1px;line-height:1.2;margin-top:2px}
+.stat-value{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(22px,1.7vw + 10px,38px);color:var(--gold);letter-spacing:1px;line-height:1.2;margin-top:2px}
 .stat-sub{font-size:clamp(10px,0.55vw + 6px,12px);color:var(--grey);margin-top:1px}
  
 /* ── Top 10 ── */
@@ -163,7 +163,7 @@ body{
   background:var(--surface);border:1px solid #2a2a3a;
   border-left:3px solid var(--gold);border-radius:8px;
   padding:10px 16px;color:var(--gold);
-  font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:1px;
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:18px;letter-spacing:1px;
   cursor:pointer;text-align:left;transition:background .2s;
 }
 #top10-toggle:hover{background:#1a1a24}
@@ -173,12 +173,12 @@ body{
 #top10-body.visible{display:block}
 .top10-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
 .top10-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:6px;border:1px solid #1e1e2e}
-.top10-rank{font-family:'Bebas Neue',cursive;font-size:22px;min-width:36px;text-align:center}
+.top10-rank{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:22px;min-width:36px;text-align:center}
 .rank-1{color:#FFD700}.rank-2{color:#C0C0C0}.rank-3{color:#CD7F32}.rank-other{color:var(--grey)}
 .top10-info{flex:1;min-width:0}
 .top10-char{font-weight:700;font-size:12px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top10-meta{font-size:10px;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top10-price{font-family:'Bebas Neue',cursive;font-size:18px;color:var(--orange);white-space:nowrap}
+.top10-price{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:18px;color:var(--orange);white-space:nowrap}
  
 /* ── Controls (filter strip) ──
    Refactored 2026-05 for consistent rendering across resolutions.
@@ -332,7 +332,7 @@ tr.set-header.nm-row td{border-left:6px solid var(--purple)}
 tr.set-header.smsp-row td{border-left:6px solid var(--cyan)}
 tr.set-header.fortieth-row td{border-left:6px solid var(--green)}
 tr.set-header .sh-name{
-  font-family:'Bebas Neue',cursive;
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size:clamp(22px,2.4vw,36px);
   font-weight:700;
   /* Title colour now tracks the set type, matching the existing left-
@@ -363,7 +363,7 @@ tr.set-header.fortieth-row .sh-name{
 }
 tr.set-header .sh-meta{
   display:inline-block;
-  font-family:'Bebas Neue',cursive;
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size:clamp(15px,1.4vw,22px);
   font-weight:600;
   color:var(--white);
@@ -454,7 +454,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 .col-mfc a.mfc-direct{border-color:#6edcff;color:#6edcff}
 .col-mfc a.mfc-direct:hover{background:#6edcff;color:#000}
 .col-year{text-align:center;color:var(--grey);font-size:clamp(13px,0.65vw + 9px,16px)}
-.col-price{text-align:right;font-family:'Bebas Neue',cursive;font-size:clamp(18px,0.9vw + 13px,22px);font-weight:400;white-space:nowrap}
+.col-price{text-align:right;font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(18px,0.9vw + 13px,22px);font-weight:400;white-space:nowrap}
 .price-tier-hot{color:#ff4444}
 .price-tier-high{color:var(--gold)}
 .price-tier-mid{color:var(--white)}
@@ -463,7 +463,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 /* BBTS column (link + plain-text variants) */
 .bbts-link{
   display:inline-block;padding:4px 10px;
-  font-family:'Bebas Neue',cursive;font-size:clamp(17px,0.85vw + 12px,21px);
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(17px,0.85vw + 12px,21px);
   color:var(--cyan);text-decoration:none;
   border:1px solid rgba(110,220,255,.35);border-radius:4px;
   transition:all .15s;
@@ -471,15 +471,15 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 .bbts-link:hover{background:rgba(110,220,255,.12);border-color:var(--cyan)}
 .bbts-plain{
   display:inline-block;
-  font-family:'Bebas Neue',cursive;font-size:clamp(17px,0.85vw + 12px,21px);
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(17px,0.85vw + 12px,21px);
   color:var(--grey);
 }
-.bbts-empty{color:#444;font-family:'Bebas Neue',cursive;font-size:clamp(17px,0.85vw + 12px,21px)}
+.bbts-empty{color:#444;font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(17px,0.85vw + 12px,21px)}
  
 /* Price + search-button cells */
 .col-price-cell{text-align:right;min-width:130px;white-space:nowrap}
 .price-display{
-  font-family:'Bebas Neue',cursive;font-size:clamp(18px,0.9vw + 13px,22px);
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(18px,0.9vw + 13px,22px);
   display:inline-block;cursor:default;padding:3px 8px;border-radius:4px;
 }
 .price-display.has-value{
@@ -559,7 +559,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   border-radius:6px;background:#0d0d15;object-fit:contain;
 }
 #lightbox-caption{
-  font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:18px;color:var(--gold);
   letter-spacing:.5px;line-height:1.2;
 }
 #lightbox-sub{font-size:11px;color:var(--grey);max-width:560px}
@@ -583,7 +583,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 /* ── Footer ── */
 #footer{background:#0d0d15;border-top:1px solid #1e1e2e;padding:clamp(20px,2vw,36px) clamp(14px,1.4vw,28px);max-width:var(--container-max);margin:0 auto}
 .footer-section{margin-bottom:14px}
-.footer-title{font-family:'Bebas Neue',cursive;font-size:14px;letter-spacing:1px;color:var(--orange);margin-bottom:8px}
+.footer-title{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:14px;letter-spacing:1px;color:var(--orange);margin-bottom:8px}
 .footer-links{display:flex;flex-wrap:wrap;gap:8px}
 .footer-link{
   display:inline-block;padding:5px 12px;background:var(--surface);
@@ -792,7 +792,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 #legend-details summary{
   cursor:pointer;display:inline-block;padding:5px 12px;
   border:1px solid #2a2a3a;border-radius:5px;background:var(--surface);
-  list-style:none;font-family:'Bebas Neue',cursive;font-size:14px;
+  list-style:none;font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:14px;
   letter-spacing:1px;color:var(--orange);
 }
 #legend-details summary::-webkit-details-marker{display:none}
@@ -831,7 +831,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   padding:8px 12px;text-align:center;
 }
 .lightbox-stat .ls-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--grey);font-weight:700}
-.lightbox-stat .ls-value{font-family:'Bebas Neue',cursive;font-size:18px;color:var(--gold);margin-top:2px}
+.lightbox-stat .ls-value{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:18px;color:var(--gold);margin-top:2px}
 .lightbox-actions{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px;width:100%}
 .lightbox-actions a,
 .lightbox-actions button{
@@ -862,7 +862,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   padding:18px 22px;margin-bottom:16px;
 }
 .set-detail-header h2{
-  font-family:'Bebas Neue',cursive;font-size:clamp(28px,3vw,42px);
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(28px,3vw,42px);
   color:var(--orange);letter-spacing:1.2px;line-height:1.1;
 }
 .set-detail-meta{font-size:13px;color:var(--grey);margin-top:6px}
@@ -876,7 +876,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   padding:14px 18px;text-align:center;
 }
 .set-stat .ss-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--grey);font-weight:700}
-.set-stat .ss-value{font-family:'Bebas Neue',cursive;font-size:28px;color:var(--gold);margin-top:4px;line-height:1.1}
+.set-stat .ss-value{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:28px;color:var(--gold);margin-top:4px;line-height:1.1}
 .set-stat .ss-sub{font-size:11px;color:var(--grey);margin-top:2px}
 .set-stat.ev-positive .ss-value{color:#4caf50}
 .set-stat.ev-negative .ss-value{color:#ff4444}
@@ -913,7 +913,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:13px;margin-top:4px;
 }
 .figure-card .fc-grid .k{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.8px}
-.figure-card .fc-grid .v{font-family:'Bebas Neue',cursive;font-size:18px;color:var(--white)}
+.figure-card .fc-grid .v{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:18px;color:var(--white)}
 .figure-card .fc-grid .v.up{color:#4caf50}
 .figure-card .fc-grid .v.down{color:#ff4444}
 .figure-card .fc-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
@@ -937,7 +937,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .card-set-header.smsp-header{border-left-color:var(--cyan)}
 .card-set-header.fortieth-header{border-left-color:var(--green)}
 .card-set-header h3{
-  font-family:'Bebas Neue',cursive;font-size:20px;color:var(--orange);
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:20px;color:var(--orange);
   letter-spacing:1px;line-height:1.1;
 }
 .card-set-header.nm-header h3{color:var(--purple)}
