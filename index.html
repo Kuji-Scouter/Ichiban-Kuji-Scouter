@@ -1811,7 +1811,6 @@ tr.set-header:hover .set-badge,
       <tbody id="tableBody"></tbody>
     </table>
     <div id="no-results">No figures match your filters. Try adjusting your search or filters.</div>
-  </div>
   <!-- Mobile card list (1.2) — populated by the same renderTable() pass.
        Visibility is controlled by CSS at the (max-width:700px) breakpoint. -->
   <div id="card-list" class="card-list" aria-label="Figure cards"></div>
@@ -3018,6 +3017,7 @@ function renderTable(){
       bbtsCell = `<span class="bbts-empty price-display" data-id="${d.id}" data-field="bbts"></span>`;
     }
  
+
     // Mercari JP — directional arrow + avg price + per-site refresh timestamp.
     // 2.6: The avg is converted to displayCurrency on render. The on-row
     // value is formatted in the user's chosen currency; the native ¥
@@ -3894,41 +3894,18 @@ window.addEventListener('hashchange', () => setTimeout(updateCollectorPanelsVisi
    ════════════════════════════════════════════════════════════════════════ */
 
 const SAGAS = [
-  "Dragon Ball Saga",
-  "21st Tenkaichi Budokai Saga",
-  "Red Ribbon Army Saga",
-  "Fortuneteller Baba Saga",
-  "22nd Tenkaichi Budokai Saga",
-  "Piccolo Daimao Saga",
-  "23rd Tenkaichi Budokai",
-  "Saiyan Saga",
-  "Namek Saga",
-  "Android Saga",
-  "Buu Saga",
-  "Beerus Saga",
-  "Resurrection F Saga",
-  "Universe 6 Saga",
-  "Future Saga",
-  "Tournament of Power Saga",
-  "Movies Saga",
-  "Daima Saga",
-  "Black Star Dragon Ball Saga",
-  "Baby Saga",
-  "Super 17 Saga",
-  "Shadow Dragon Saga",
-  "Galactic Patrol Saga",
-  "Super Dragon Ball Heroes Saga",
-  "Dragon Ball Legends Saga"
+  "Dragon Ball Saga","21st Tenkaichi Budokai Saga","Red Ribbon Army Saga",
+  "Fortuneteller Baba Saga","22nd Tenkaichi Budokai Saga","Piccolo Daimao Saga",
+  "23rd Tenkaichi Budokai","Saiyan Saga","Namek Saga","Android Saga","Buu Saga",
+  "Beerus Saga","Resurrection F Saga","Universe 6 Saga","Future Saga",
+  "Tournament of Power Saga","Movies Saga","Daima Saga",
+  "Blackstar Dragon Ball Saga","Baby Saga","Super 17 Saga","Shadow Dragon Saga",
+  "Galactic Patrol Saga"
 ];
 
 const ANIMES = [
-  "Dragon Ball",
-  "Dragon Ball Z",
-  "Dragon Ball GT",
-  "Super Dragon Ball Heroes",
-  "Dragon Ball Super",
-  "Dragon Ball Daima",
-  "Dragon Ball Legends"
+  "Dragon Ball","Dragon Ball Z","Dragon Ball GT",
+  "Super Dragon Ball Heroes","Dragon Ball Super","Dragon Ball Daima"
 ];
 
 
@@ -4557,6 +4534,11 @@ RAW_SETS.forEach(s=>{
 const KEY_BY_ID = {};
 DATA.forEach(d => { KEY_BY_ID[d.id] = d.key; });
 
+// Populate the <select> filter dropdowns (Year, Kuji Set, Saga, Anime)
+// with their <option> children. Without this the dropdowns only show
+// their placeholder "All Years" / "All Sagas" / etc. text and clicking
+// them feels broken because there's nothing to drop down to.
+populateFilters();
 
 // Read URL state AFTER filters are populated so saved <select> values find
 // the matching <option> to select.
@@ -4574,7 +4556,6 @@ refreshFxRates();
 renderCompareBar();
 renderSetCompletion();
 updateCollectorPanelsVisibility();
-
 
 </script>
 </body>
