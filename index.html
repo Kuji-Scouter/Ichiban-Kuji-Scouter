@@ -63,6 +63,24 @@
 <link rel="preconnect" href="https://static.myfigurecollection.net" crossorigin/>
 <link rel="preconnect" href="https://www.kuji-collection.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style id="font-flash-prevention">html:not(.fonts-loaded){visibility:hidden}</style>
+<script>
+(function(){
+  var shown=false;
+  function show(){if(shown)return;shown=true;document.documentElement.classList.add('fonts-loaded');}
+  setTimeout(show,1500);
+  if(document.fonts&&document.fonts.load){
+    Promise.all([
+      document.fonts.load("1em 'Bebas Neue'"),
+      document.fonts.load("400 1em Nunito"),
+      document.fonts.load("600 1em Nunito"),
+      document.fonts.load("700 1em Nunito"),
+      document.fonts.load("800 1em Nunito")
+    ]).then(show,show);
+  }else{show();}
+})();
+</script>
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -969,6 +987,339 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   CHUNK 1: VISUAL / AESTHETIC PASS — "Lean harder into DBZ"
+   Self-contained block. Reverting any single feature is one contiguous
+   diff hunk to delete here. No JS state changes — every effect below is
+   pure CSS, plus a small SVG grail glyph and saga-keyed data-attributes
+   set by the set-header renderer.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── Secondary accent palette ──
+   Orange (#FF6B00) stays the primary brand colour. Cyan and the existing
+   gold are now the two declared secondaries — cyan signals grail / trend-
+   up cues, gold remains the stat-value / LOP colour. Defining them as
+   variables means future "what colour is grail?" questions are answered
+   in one place. */
+:root{
+  --accent-cyan:#7fe6ff;
+  --accent-cyan-soft:rgba(127,230,255,.22);
+  --accent-yellow:var(--gold);
+
+  /* Saga-keyed palette. Each saga gets a (hex, soft-rgba) pair used by
+     the set-header tinting rules below. Strip the trailing "?" off
+     uncertain sagas before lookup so "Saiyan Saga?" inherits the same
+     colour as "Saiyan Saga". Default = orange (current behaviour). */
+  --saga-namek:        #6fd49a;  --saga-namek-rgb:        111,212,154; /* Frieza/Namek green */
+  --saga-android:      #b487ff;  --saga-android-rgb:      180,135,255; /* Cell-arc purple    */
+  --saga-buu:          #ff6fc4;  --saga-buu-rgb:          255,111,196; /* Majin pink         */
+  --saga-saiyan:       #ff5a4d;  --saga-saiyan-rgb:       255, 90, 77; /* Saiyan armour red  */
+  --saga-top:          #f5c542;  --saga-top-rgb:          245,197, 66; /* Tournament gold    */
+  --saga-galactic:     #6fa8ff;  --saga-galactic-rgb:     111,168,255; /* Galactic blue      */
+  --saga-beerus:       #6fa8ff;  --saga-beerus-rgb:       111,168,255; /* Super-era blue     */
+  --saga-resf:         #6fa8ff;  --saga-resf-rgb:         111,168,255; /* Super-era blue     */
+  --saga-u6:           #6fa8ff;  --saga-u6-rgb:           111,168,255; /* Super-era blue     */
+  --saga-future:       #6fa8ff;  --saga-future-rgb:       111,168,255; /* Trunks blue        */
+  --saga-movies:       #ff6fe3;  --saga-movies-rgb:       255,111,227; /* Movies magenta     */
+  --saga-shadow:       #4cd0c0;  --saga-shadow-rgb:        76,208,192; /* GT teal            */
+  --saga-super17:      #4cd0c0;  --saga-super17-rgb:       76,208,192; /* GT teal            */
+  --saga-baby:         #4cd0c0;  --saga-baby-rgb:          76,208,192; /* GT teal            */
+  --saga-blackstar:    #4cd0c0;  --saga-blackstar-rgb:     76,208,192; /* GT teal            */
+  --saga-daima:        #a8f0c8;  --saga-daima-rgb:        168,240,200; /* Daima mint         */
+  --saga-sdbh:         #ffb547;  --saga-sdbh-rgb:         255,181, 71; /* SDBH amber         */
+  --saga-dbl:          #ffb547;  --saga-dbl-rgb:          255,181, 71; /* DBL amber          */
+  /* All early DB / Tenkaichi / Red-Ribbon / Piccolo Daimao sagas inherit
+     the default orange — they don't need an override. */
+}
+
+/* ── Set-header saga tint ──
+   Anchored on data-saga, applied in renderTable when emitting a set-
+   header row. Wins over the per-set-type colour for sets where saga
+   is known. SMSP / 40th / Non-Masterlise still keep their set-type
+   palette since those identify the product line, not the arc. Only
+   plain "masterlise" set-headers (the bulk of the catalogue) accept
+   the saga tint. The fallback is the existing orange.
+
+   The two-token approach (hex var + rgb triplet) is so the soft glow
+   can be reconstructed at any alpha without rebuilding the colour. */
+tr.set-header[data-saga]:not(.nm-row):not(.smsp-row):not(.fortieth-row) td{
+  border-left-color:var(--saga-color,var(--orange));
+}
+tr.set-header[data-saga]:not(.nm-row):not(.smsp-row):not(.fortieth-row) .sh-name{
+  color:var(--saga-color,var(--orange));
+  text-shadow:0 0 18px rgba(var(--saga-rgb,255,107,0),.20);
+}
+tr.set-header[data-saga="namek"]      { --saga-color:var(--saga-namek);     --saga-rgb:var(--saga-namek-rgb); }
+tr.set-header[data-saga="android"]    { --saga-color:var(--saga-android);   --saga-rgb:var(--saga-android-rgb); }
+tr.set-header[data-saga="buu"]        { --saga-color:var(--saga-buu);       --saga-rgb:var(--saga-buu-rgb); }
+tr.set-header[data-saga="saiyan"]     { --saga-color:var(--saga-saiyan);    --saga-rgb:var(--saga-saiyan-rgb); }
+tr.set-header[data-saga="top"]        { --saga-color:var(--saga-top);       --saga-rgb:var(--saga-top-rgb); }
+tr.set-header[data-saga="galactic"]   { --saga-color:var(--saga-galactic);  --saga-rgb:var(--saga-galactic-rgb); }
+tr.set-header[data-saga="beerus"]     { --saga-color:var(--saga-beerus);    --saga-rgb:var(--saga-beerus-rgb); }
+tr.set-header[data-saga="resf"]       { --saga-color:var(--saga-resf);      --saga-rgb:var(--saga-resf-rgb); }
+tr.set-header[data-saga="u6"]         { --saga-color:var(--saga-u6);        --saga-rgb:var(--saga-u6-rgb); }
+tr.set-header[data-saga="future"]     { --saga-color:var(--saga-future);    --saga-rgb:var(--saga-future-rgb); }
+tr.set-header[data-saga="movies"]     { --saga-color:var(--saga-movies);    --saga-rgb:var(--saga-movies-rgb); }
+tr.set-header[data-saga="shadow"]     { --saga-color:var(--saga-shadow);    --saga-rgb:var(--saga-shadow-rgb); }
+tr.set-header[data-saga="super17"]    { --saga-color:var(--saga-super17);   --saga-rgb:var(--saga-super17-rgb); }
+tr.set-header[data-saga="baby"]       { --saga-color:var(--saga-baby);      --saga-rgb:var(--saga-baby-rgb); }
+tr.set-header[data-saga="blackstar"]  { --saga-color:var(--saga-blackstar); --saga-rgb:var(--saga-blackstar-rgb); }
+tr.set-header[data-saga="daima"]      { --saga-color:var(--saga-daima);     --saga-rgb:var(--saga-daima-rgb); }
+tr.set-header[data-saga="sdbh"]       { --saga-color:var(--saga-sdbh);      --saga-rgb:var(--saga-sdbh-rgb); }
+tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --saga-rgb:var(--saga-dbl-rgb); }
+
+/* Mirror the same tinting onto the mobile card-list set-header. */
+.card-set-header[data-saga]:not(.nm-header):not(.smsp-header):not(.fortieth-header){
+  border-left-color:var(--saga-color,var(--orange));
+}
+.card-set-header[data-saga]:not(.nm-header):not(.smsp-header):not(.fortieth-header) h3{
+  color:var(--saga-color,var(--orange));
+}
+.card-set-header[data-saga="namek"]      { --saga-color:var(--saga-namek); }
+.card-set-header[data-saga="android"]    { --saga-color:var(--saga-android); }
+.card-set-header[data-saga="buu"]        { --saga-color:var(--saga-buu); }
+.card-set-header[data-saga="saiyan"]     { --saga-color:var(--saga-saiyan); }
+.card-set-header[data-saga="top"]        { --saga-color:var(--saga-top); }
+.card-set-header[data-saga="galactic"]   { --saga-color:var(--saga-galactic); }
+.card-set-header[data-saga="beerus"]     { --saga-color:var(--saga-beerus); }
+.card-set-header[data-saga="resf"]       { --saga-color:var(--saga-resf); }
+.card-set-header[data-saga="u6"]         { --saga-color:var(--saga-u6); }
+.card-set-header[data-saga="future"]     { --saga-color:var(--saga-future); }
+.card-set-header[data-saga="movies"]     { --saga-color:var(--saga-movies); }
+.card-set-header[data-saga="shadow"]     { --saga-color:var(--saga-shadow); }
+.card-set-header[data-saga="super17"]    { --saga-color:var(--saga-super17); }
+.card-set-header[data-saga="baby"]       { --saga-color:var(--saga-baby); }
+.card-set-header[data-saga="blackstar"]  { --saga-color:var(--saga-blackstar); }
+.card-set-header[data-saga="daima"]      { --saga-color:var(--saga-daima); }
+.card-set-header[data-saga="sdbh"]       { --saga-color:var(--saga-sdbh); }
+.card-set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl); }
+
+/* ── Scouter readout — stat cards (#stats-bar .stat-card) ──
+   Two overlays:
+     (a) scan-line: 2-px-period horizontal gradient at low alpha,
+         applied via ::before. Sits under the text on a positioned
+         parent. Pointer-events disabled.
+     (b) grid: 12-px square dotted grid in cyan at very low alpha
+         applied via ::after. Same z-order as scan-line.
+   Plus a small "CRT corner-tick" SVG-style border accent and a one-
+   shot scan-in animation that the JS toggles on first paint. */
+.stat-card{
+  position:relative;
+  overflow:hidden;
+  /* Inset glow on first paint — overridden by reduced-motion below. */
+  isolation:isolate;
+}
+.stat-card::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(
+    to bottom,
+    rgba(127,230,255,.04) 0 1px,
+    transparent 1px 3px
+  );
+  z-index:0;
+  mix-blend-mode:screen;
+}
+.stat-card::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(127,230,255,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(127,230,255,.06) 1px,transparent 1px);
+  background-size:12px 12px;
+  background-position:-1px -1px;
+  z-index:0;
+  opacity:.5;
+}
+.stat-card > *{position:relative;z-index:1}
+.stat-value{
+  /* The yellow scouter-readout colour gets a faint cyan glow so it
+     reads as "lit up" rather than flat ink. */
+  text-shadow:0 0 6px rgba(255,215,0,.22),
+              0 0 16px rgba(127,230,255,.08);
+}
+/* One-shot scan-in: fade + drift up. JS adds .scan-in once on first
+   render. Reduced-motion users skip the animation entirely. */
+.stat-value.scan-in{
+  animation:statScanIn 600ms cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes statScanIn{
+  0%   { opacity:0; transform:translateY(6px); filter:blur(2px); letter-spacing:4px }
+  60%  { opacity:1; transform:translateY(0);   filter:blur(.5px); letter-spacing:1.5px }
+  100% { opacity:1; transform:translateY(0);   filter:blur(0);    letter-spacing:1px   }
+}
+.stat-sub.scan-in{ animation:statScanIn 600ms cubic-bezier(.2,.7,.2,1) 80ms both }
+
+/* Corner ticks — purely decorative, lifts the card from "rectangle"
+   to "HUD readout". Drawn with two narrow gradients clipped to the
+   top-left and bottom-right inner corners. */
+.stat-card{
+  border-image-slice:1;
+}
+.stat-card .stat-label{position:relative}
+.stat-card .stat-label::before{
+  content:"";
+  position:absolute;left:-6px;top:50%;width:4px;height:4px;
+  background:var(--accent-cyan);box-shadow:0 0 6px var(--accent-cyan);
+  transform:translateY(-50%) rotate(45deg);opacity:.75;
+}
+
+/* ── Top 10 #1–#3 power-level callout ──
+   The first three items get a thin scan-line over the rank pill and
+   a faint colour-keyed glow. Ranks 4–10 stay neutral so the visual
+   hierarchy is preserved. */
+.top10-item{position:relative;overflow:hidden}
+.top10-item.rank-medal-1,
+.top10-item.rank-medal-2,
+.top10-item.rank-medal-3{
+  border-color:rgba(127,230,255,.22);
+}
+.top10-item.rank-medal-1::before,
+.top10-item.rank-medal-2::before,
+.top10-item.rank-medal-3::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(
+    to bottom,
+    rgba(255,215,0,.05) 0 1px,
+    transparent 1px 3px
+  );
+  z-index:0;mix-blend-mode:screen;
+}
+.top10-item.rank-medal-1{box-shadow:inset 0 0 24px rgba(255,215,0,.05)}
+.top10-item.rank-medal-2{box-shadow:inset 0 0 24px rgba(192,192,192,.05)}
+.top10-item.rank-medal-3{box-shadow:inset 0 0 24px rgba(205,127, 50,.05)}
+.top10-item > *{position:relative;z-index:1}
+.top10-item .top10-rank{
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 0 8px rgba(255,215,0,.18);
+}
+
+/* ── Hero — scouter lens flicker + scan drift ──
+   Two restrained animations, both reduced-motion-aware:
+     (a) flicker: brief .85 opacity dip every 6s
+     (b) scan: a thin highlight band drifts top→bottom every 9s,
+         giving the impression a beam is sweeping the lens.
+   Both gated on a .hero-logo wrapper so they don't accidentally
+   apply to other logo.png usages elsewhere. */
+.hero-logo{position:relative;animation:scouterFlicker 6s infinite}
+@keyframes scouterFlicker{
+  0%,7%,100% { filter:drop-shadow(0 0 18px rgba(255,107,0,.35)); opacity:1 }
+  8%         { filter:drop-shadow(0 0 22px rgba(127,230,255,.55)); opacity:.85 }
+  10%        { filter:drop-shadow(0 0 18px rgba(255,107,0,.35)); opacity:1 }
+  53%        { filter:drop-shadow(0 0 18px rgba(255,107,0,.35)); opacity:1 }
+  54%        { filter:drop-shadow(0 0 22px rgba(127,230,255,.55)); opacity:.85 }
+  56%        { filter:drop-shadow(0 0 18px rgba(255,107,0,.35)); opacity:1 }
+}
+/* Scan-line drifts down the hero block once every 9s, very faint. */
+#hero{position:relative;overflow:hidden}
+#hero::after{
+  content:"";position:absolute;left:0;right:0;height:60px;top:-60px;
+  background:linear-gradient(180deg,
+    transparent 0%,
+    rgba(127,230,255,.025) 40%,
+    rgba(127,230,255,.05) 50%,
+    rgba(127,230,255,.025) 60%,
+    transparent 100%);
+  pointer-events:none;
+  animation:heroScan 9s linear infinite;
+  z-index:0;
+}
+#hero > *{position:relative;z-index:1}
+@keyframes heroScan{
+  0%   { transform:translateY(0) }
+  100% { transform:translateY(100vh) }
+}
+
+/* ── Capsule Corp / Kuji-stamp badges ──
+   Replaces the generic "pill" look on .set-badge with a stamp-y
+   treatment: monospace label, dashed border, faint paper-grain
+   background, slight rotation so they feel hand-stamped rather
+   than UI-generated. The four set-type variants (.badge-masterlise
+   etc.) inherit this look and override only the colour. */
+.set-badge{
+  font-family: ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+  font-weight:800;
+  border:1.5px dashed;
+  border-radius:4px;
+  padding:3px 9px;
+  transform:rotate(-1.4deg);
+  background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:5px 5px;
+  text-shadow:0 0 2px rgba(0,0,0,.4);
+  display:inline-block;
+}
+.set-badge::before{
+  content:"";display:inline-block;width:4px;height:4px;
+  border-radius:50%;background:currentColor;opacity:.7;
+  margin-right:6px;vertical-align:middle;box-shadow:0 0 4px currentColor;
+}
+.badge-masterlise   {background-color:rgba(255,107,0,.10);  border-color:rgba(255,107,0,.55)  ;color:var(--orange)}
+.badge-nonmasterlise{background-color:rgba(187,136,255,.10);border-color:rgba(187,136,255,.55);color:var(--purple)}
+.badge-smsp         {background-color:rgba(110,220,255,.10);border-color:rgba(110,220,255,.55);color:var(--cyan)}
+.badge-fortieth     {background-color:rgba(136,221,136,.10);border-color:rgba(136,221,136,.55);color:var(--green)}
+/* On hover the badge straightens out — small interaction signal that
+   the row is reactive without committing to a real click target. */
+tr.set-header:hover .set-badge,
+.card-set-header:hover .set-badge{transform:rotate(0deg);transition:transform .25s}
+
+/* ── Custom grail diamond glyph (replaces the 💎 emoji) ──
+   Inlined as an SVG with a cyan/aqua tint and a soft glow. Sized to
+   match the surrounding prize-letter text height. The character/
+   prize/lightbox renderers swap the emoji for <span class="grail-mark">
+   GRAIL_SVG </span> at runtime. */
+.grail-mark{
+  display:inline-flex;align-items:center;justify-content:center;
+  vertical-align:-2px;
+  width:1.05em;height:1.05em;margin-right:.18em;
+  color:var(--accent-cyan);
+  filter:drop-shadow(0 0 4px rgba(127,230,255,.55));
+}
+.grail-mark svg{width:100%;height:100%;display:block}
+.grail-mark svg path.gem-face{fill:currentColor;opacity:.92}
+.grail-mark svg path.gem-shine{fill:#ffffff;opacity:.65}
+.grail-mark svg path.gem-edge{stroke:currentColor;stroke-width:.6;fill:none;opacity:.55}
+/* Subtle pulse — restrained, reduced-motion-aware. */
+.grail-mark{animation:grailPulse 4.5s ease-in-out infinite}
+@keyframes grailPulse{
+  0%,100%{filter:drop-shadow(0 0 4px rgba(127,230,255,.55))}
+  50%    {filter:drop-shadow(0 0 8px rgba(127,230,255,.85))}
+}
+
+/* Grail corner-stamp on the mobile-card thumbnail. Renders only when
+   .figure-card has .is-grail; the stamp is a small SVG-tinted box in
+   the top-right corner of the thumbnail. The desktop table view keeps
+   the inline glyph next to the prize letter — corner-stamping the 72×72
+   table thumb would crowd the row. */
+.figure-card.is-grail .fc-thumb{position:relative}
+.figure-card.is-grail .fc-thumb::after{
+  content:"";
+  position:absolute;top:3px;right:3px;width:16px;height:16px;
+  background:radial-gradient(circle at 30% 30%,#ffffff 0%,var(--accent-cyan) 35%,#0b6a8a 100%);
+  clip-path:polygon(50% 0,100% 33%,82% 100%,18% 100%,0 33%);
+  box-shadow:0 0 6px rgba(127,230,255,.7);
+  pointer-events:none;
+}
+
+/* ── Reduced-motion gate ──
+   Single global override. Disables the scouter flicker, hero scan,
+   stat scan-in, grail pulse, and the badge-straighten transition.
+   Static, immediately-final-state appearance for users who've opted
+   in via OS / browser settings. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+  .hero-logo{animation:none}
+  #hero::after{display:none}
+  .stat-value.scan-in,.stat-sub.scan-in{animation:none}
+  .grail-mark{animation:none}
+  .set-badge{transform:none}
+}
+/* ════════════════════════════════════════════════════════════════════════
+   /CHUNK 1
+   ════════════════════════════════════════════════════════════════════════ */
 </style>
 </head>
 <body>
@@ -1345,6 +1696,49 @@ const ANIMES = [
  
 const MONTH_IDX = {January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11};
 
+// ── Chunk 1 helpers — grail glyph + saga→slug for set-header data attr ─
+// The grail SVG replaces the 💎 emoji wherever a grail figure is rendered.
+// Inlined once here so the markup at each call site stays compact and so
+// the glyph's geometry/colour can be tuned in one place. The .grail-mark
+// CSS rule (see <style> block) gives it the cyan tint, glow, and pulse.
+const GRAIL_SVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'
+  +   '<path class="gem-face" d="M5 9 L12 3 L19 9 L12 21 Z"/>'
+  +   '<path class="gem-shine" d="M9 9 L12 3 L15 9 L12 12 Z"/>'
+  +   '<path class="gem-edge" d="M5 9 L19 9 M12 9 L12 21 M9 9 L12 3 L15 9"/>'
+  + '</svg>';
+const GRAIL_MARK_HTML = '<span class="grail-mark" aria-label="grail figure" title="Grail figure">' + GRAIL_SVG + '</span>';
+
+// Returns the data-saga slug used by per-saga set-header tint rules in
+// the <style> block. Strips the trailing "?" (uncertain-mapping marker)
+// and maps the canonical saga name to a short slug. Unknown / early-DB
+// sagas return an empty string so the set-header keeps the existing
+// type-based colour (orange for plain Masterlise, etc).
+function sagaSlug(saga){
+  if(!saga) return '';
+  const s = String(saga).replace(/\?+$/,'').trim();
+  // Order matters only for the most-specific match; sagas below are all
+  // exact-string compared.
+  if(s === 'Namek Saga') return 'namek';
+  if(s === 'Android Saga') return 'android';
+  if(s === 'Buu Saga') return 'buu';
+  if(s === 'Saiyan Saga') return 'saiyan';
+  if(s === 'Tournament of Power Saga') return 'top';
+  if(s === 'Galactic Patrol Saga') return 'galactic';
+  if(s === 'Beerus Saga') return 'beerus';
+  if(s === 'Resurrection F Saga') return 'resf';
+  if(s === 'Universe 6 Saga') return 'u6';
+  if(s === 'Future Saga') return 'future';
+  if(s === 'Movies Saga') return 'movies';
+  if(s === 'Shadow Dragon Saga') return 'shadow';
+  if(s === 'Super 17 Saga') return 'super17';
+  if(s === 'Baby Saga') return 'baby';
+  if(s === 'Black Star Dragon Ball Saga' || s === 'Blackstar Dragon Ball Saga') return 'blackstar';
+  if(s === 'Daima Saga') return 'daima';
+  if(s === 'Super Dragon Ball Heroes Saga') return 'sdbh';
+  if(s === 'Dragon Ball Legends Saga') return 'dbl';
+  return '';
+}
+
 // Fixed JPY -> USD conversion rate used only for ranking-by-value calculations.
 // The on-page price columns still display each marketplace in its native
 // currency (Mercari ¥, eBay $); this constant exists purely so figures whose
@@ -1425,7 +1819,7 @@ const GRAIL_FIGURES = {
   // SMSP sets — prize names are the full strings as they appear in the
   // data tuples (e.g. "02 The Original"), not letters.
   "SMSP — The Vegeta":                   ["02 The Original","03 The Tones"],
-  "SMSP — The Son Goku":                 ["01 The Brush","02 The Original","04 Two Dimensions","1.5 Original II"]
+  "SMSP — The Son Goku (DBZ)":           ["01 The Brush","02 The Original","04 Two Dimensions","1.5 Original II"]
 };
 
 // Resolve a prize-tuple's prize-name string to its short letter token, so
@@ -1908,14 +2302,14 @@ const RAW_SETS = [
   // SMSP releases use prize tiers 01 The Brush, 02 The Original, 03 The Tones,
   // 04 Two Dimensions, plus occasional SP1-SP4 add-ons. Each kuji typically
   // features one character across all four colour variants.
-  {set:"SMSP — The Vegeta", setNameJP:"アミューズメント一番くじ DRAGONBALL超 SUPER MASTER STARS PIECE THE VEGETA", dateStr:"April 2017", type:"smsp", saga:S.NAM, anime:A.DBZ, prizes:[
+  {set:"SMSP — The Vegeta", setNameJP:"アミューズメント一番くじ DRAGONBALL超 SUPER MASTER STARS PIECE THE VEGETA", dateStr:"October 2017", type:"smsp", saga:S.NAM, anime:A.DBZ, prizes:[
     ["01 The Brush", "Vegeta SSJ", 516079, _, 47124, 340, _, _, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20BRUSH_695937b756e2f.jpg", {"ebayHistory":[{"date":"2026-02-05","price":201.67},{"date":"2026-02-12","price":187.36},{"date":"2026-02-19","price":131.11},{"date":"2026-03-01","price":205.83},{"date":"2026-03-03","price":185.0},{"date":"2026-03-14","price":258.3},{"date":"2026-03-21","price":174.74},{"date":"2026-03-29","price":195.09},{"date":"2026-04-05","price":251.7},{"date":"2026-04-12","price":163.42},{"date":"2026-04-18","price":174.83},{"date":"2026-05-02","price":174.46}],"ebayUpdated":"2026-05-03","mercariUpdated":"2026-05-01"}],
     ["02 The Original", "Vegeta SSJ", 517546, _, 237976, _, S.AND, _, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20ORIGINAL_695937b757d93.jpg", {"mercariUpdated":"2026-05-01"}],
     ["03 The Tones", "Vegeta SSJ", 517549, _, 209702, _, S.AND, _, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20TONES_695937b758faf.jpg", {"mercariUpdated":"2026-05-01"}],
     ["04 Two Dimensions", "Vegeta SSJ", 517550, _, 84823, _, S.AND, _, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_TWO%20DIMENSIONS_695937b759fb7.jpg", {"mercariUpdated":"2026-05-01"}],
     ["Genkidamatsuri Ver.", "Vegeta SSJ", 3120354, _, 12566, 200, S.AND, _, _, "https://static.myfigurecollection.net/upload/items/0/3120354-5f101.jpg", {"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
   ]},
-  {set:"SMSP — The Son Goku", setNameJP:"アミューズメント一番くじ DRAGON BALL超 SUPER MASTER STARS PIECE THE SON GOKOU ver.1.5", dateStr:"September 2016", type:"smsp", saga:S.NAM, anime:A.DBZ, prizes:[
+  {set:"SMSP — The Son Goku (DBZ)", setNameJP:"アミューズメント一番くじ DRAGON BALL超 SUPER MASTER STARS PIECE THE SON GOKOU ver.1.5", dateStr:"April 2018", type:"smsp", saga:S.NAM, anime:A.DBZ, prizes:[
     ["01 The Brush", "Super Saiyan Goku", 379918, _, 94248, _, _, _, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20BRUSH_695937df426e4.jpg", {"mercariUpdated":"2026-05-01"}],
     ["02 The Original", "Super Saiyan Goku", 379919, _, 144514, _, _, _, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20ORIGINAL_695937df4360f.jpg", {"mercariUpdated":"2026-05-01"}],
     ["03 The Tones", "Super Saiyan Goku", 379920, _, 84038, _, _, _, _, "https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20TONES_695937df43f65.jpg", {"mercariUpdated":"2026-05-01"}],
@@ -2633,6 +3027,24 @@ function renderStats(){
   // with whatever filter the user currently has on.
   const grailCount = DATA.reduce((n,d)=>n + (d.isGrail?1:0), 0);
   document.getElementById('stat-grails').textContent = grailCount;
+
+  // ── Chunk 1: One-shot scouter "scan-in" animation on first paint ──
+  // Adds .scan-in to every stat-value / stat-sub element exactly once
+  // (subsequent currency switches and FX refreshes don't re-trigger).
+  // Reduced-motion users get the final state immediately via the
+  // @media (prefers-reduced-motion: reduce) override in <style>.
+  if(!renderStats._scannedIn){
+    renderStats._scannedIn = true;
+    document.querySelectorAll('#stats-bar .stat-value, #stats-bar .stat-sub')
+      .forEach(el => {
+        // Reset triggers a reflow so the animation actually fires when
+        // the page hydrates from a server-rendered "—" placeholder.
+        el.classList.remove('scan-in');
+        // eslint-disable-next-line no-unused-expressions
+        void el.offsetWidth;
+        el.classList.add('scan-in');
+      });
+  }
 }
  
 // ── Top 10 ─────────────────────────────────────────────────────────────
@@ -2658,7 +3070,7 @@ function renderTop10(){
     const tilde = source === 'mercari' ? '~' : '';
     const display = tilde + formatCurrency(converted, displayCurrency);
     return `
-    <div class="top10-item">
+    <div class="top10-item ${i<3?'rank-medal-'+(i+1):''}">
       <div class="top10-rank ${i<3?'rank-'+(i+1):'rank-other'}">${medals[i]||'#'+(i+1)}</div>
       <div class="top10-info">
         <div class="top10-char">${esc(item.character)}</div>
@@ -2837,11 +3249,13 @@ function buildFigureCard(d, hideSet){
   const setRow = hideSet ? '' :
     `<div class="fc-set"><a href="#/sets/${setSlug}">${esc(d.set)}</a> · ${esc(d.dateStr)}</div>`;
 
-  return `<article class="figure-card ${lopClass} ${typeClass}" data-id="${d.id}">
+  // Chunk 1: is-grail toggles the corner-stamp on the figure-card thumb.
+  const grailClass = d.isGrail ? 'is-grail' : '';
+  return `<article class="figure-card ${lopClass} ${typeClass} ${grailClass}" data-id="${d.id}">
     ${thumbHtml}
     <div class="fc-body">
       ${setRow}
-      <div class="fc-character">${d.isGrail?'💎 ':''}${esc(d.character)}</div>
+      <div class="fc-character">${d.isGrail?GRAIL_MARK_HTML:''}${esc(d.character)}</div>
       <div class="fc-prize ${d.isLOP?'lop':''}">${esc(d.prize)} · ${esc(d.saga||'? Saga')}</div>
       <div class="fc-grid">
         <div><div class="k">MSRP</div><div class="v">${msrpDisp}</div></div>
@@ -3015,7 +3429,7 @@ function renderTable(){
       <td class="col-set">${setLinkedHtml} <span style="color:#444;font-size:10px">(${esc(dateStr)})</span>${typeTag}
         <div class="col-meta-line">${sagaTag}${animeTag}</div>
       </td>
-      <td class="col-prize"><span class="${prizeClass}">${d.isGrail?'💎 ':''}${esc(d.prize)}</span></td>
+      <td class="col-prize"><span class="${prizeClass}">${d.isGrail?GRAIL_MARK_HTML:''}${esc(d.prize)}</span></td>
       <td class="col-char">${esc(d.character)}</td>
       <td class="col-mfc"><a class="${mfcClass}" href="${mfcHref}" target="_blank" rel="noopener">${mfcLabel}</a></td>
       <td class="col-year">${d.year}</td>
@@ -3069,7 +3483,13 @@ function renderTable(){
       // rules in the stylesheet ("tr.set-header.nm-row .sh-name", etc)
       // apply to it normally. We do NOT add an inline style here — that
       // would beat the class selector and force the link grey/blue.
-      rows.push(`<tr class="set-header ${bd.headerCls}"><td colspan="10">
+      // Chunk 1: data-saga attr drives per-saga tint via CSS — see the
+      // tr.set-header[data-saga="…"] rules in the <style> block. Only
+      // emitted for plain "masterlise" set-types since NM / SMSP / 40th
+      // keep their product-line colour. Falls back to empty (orange).
+      const sagaAttr = (setType === 'masterlise') ? sagaSlug(items[0].saga) : '';
+      const sagaAttrHtml = sagaAttr ? ` data-saga="${sagaAttr}"` : '';
+      rows.push(`<tr class="set-header ${bd.headerCls}"${sagaAttrHtml}><td colspan="10">
         <a class="sh-name set-detail-link" href="#/sets/${setSlug}">${esc(sn)}</a>
         <span class="set-badge ${bd.cls}">${bd.label}</span>
         <span class="sh-meta">${esc(dateStr)} &nbsp;·&nbsp; ${items.length} prize${items.length!==1?'s':''}</span>
@@ -3122,8 +3542,11 @@ function renderMobileCards(filtered){
                     : setType==='40th'?'fortieth-header'
                     : '';
     const setSlug = SLUG_BY_SET[sn] || slugifySetName(sn);
+    // Mirror the table's saga-tint behaviour for the mobile card header.
+    const sagaAttr = (setType === 'masterlise') ? sagaSlug(items[0].saga) : '';
+    const sagaAttrHtml = sagaAttr ? ` data-saga="${sagaAttr}"` : '';
     return `
-      <div class="card-set-header ${headerCls}">
+      <div class="card-set-header ${headerCls}"${sagaAttrHtml}>
         <h3><a href="#/sets/${setSlug}" style="color:inherit;text-decoration:none">${esc(sn)}</a></h3>
         <div class="csh-meta">${esc(items[0].dateStr)} · ${items.length} prize${items.length!==1?'s':''}</div>
       </div>
@@ -3253,7 +3676,7 @@ function openLightbox(e){
   }
   cap.textContent = d.character;
   const setSlug = SLUG_BY_SET[d.set] || slugifySetName(d.set);
-  sub.innerHTML = `<a href="#/sets/${setSlug}" style="color:var(--orange);text-decoration:none">${esc(d.set)}</a> · <strong>${d.isGrail?'💎 ':''}${esc(d.prize)}</strong> · ${esc(d.dateStr)}<br><em style="color:#888">${esc(d.saga||'? Saga')} · ${esc(d.anime||'? Anime')}</em>`;
+  sub.innerHTML = `<a href="#/sets/${setSlug}" style="color:var(--orange);text-decoration:none">${esc(d.set)}</a> · <strong>${d.isGrail?GRAIL_MARK_HTML:''}${esc(d.prize)}</strong> · ${esc(d.dateStr)}<br><em style="color:#888">${esc(d.saga||'? Saga')} · ${esc(d.anime||'? Anime')}</em>`;
 
   // Stat tiles
   const ed = userEdits[id] || {};
