@@ -1320,6 +1320,259 @@ tr.set-header:hover .set-badge,
 /* ════════════════════════════════════════════════════════════════════════
    /CHUNK 1
    ════════════════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════════════════
+   CHUNK 2: FEATURES
+     • Wishlist priority + target editor (lightbox)
+     • Set completion progress panel
+     • Now-in-range panel
+     • Per-figure 60-day eBay sparkline
+     • Persistent compare bottom bar + side-by-side modal
+   Self-contained block. Reverting any single feature is one contiguous
+   diff hunk to delete here + the matching block in the main script.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── Shared "collector panels" container ──
+   Wraps the set-completion panel above the table. The wrapping section
+   can be hidden in one place (set-detail view) without the renderer
+   needing to know about visibility plumbing. */
+#collector-panels{
+  max-width:var(--container-max);margin:0 auto 12px;
+  padding:0 clamp(12px,1.2vw,28px);
+  display:block;
+}
+.cp-section{
+  background:var(--surface);border:1px solid #2a2a3a;
+  border-left:3px solid var(--accent-cyan);border-radius:8px;
+  padding:10px 14px;
+  position:relative;
+}
+.cp-section[hidden]{display:none}
+.cp-header{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:16px;letter-spacing:1px;color:var(--accent-cyan);
+  margin-bottom:8px;cursor:pointer;user-select:none;
+}
+.cp-header .cp-count{
+  margin-left:auto;font-family:'Nunito',sans-serif;
+  font-size:11px;color:var(--grey);font-weight:700;
+  background:#000;border:1px solid #2a2a3a;border-radius:10px;
+  padding:1px 8px;letter-spacing:0;
+}
+.cp-header .cp-chevron{font-size:11px;color:var(--grey);transition:transform .2s}
+.cp-section.collapsed .cp-chevron{transform:rotate(-90deg)}
+.cp-section.collapsed .cp-body{display:none}
+.cp-body{padding-top:2px}
+
+/* Set completion: progress rows */
+.sc-summary{
+  font-size:12px;color:var(--grey);margin-bottom:8px;
+}
+.sc-summary strong{color:var(--white);font-weight:800}
+.sc-list{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;padding-right:4px}
+.sc-row{
+  display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
+  padding:4px 8px;border-radius:5px;background:#0d0d15;border:1px solid #1e1e2e;
+}
+.sc-row:hover{border-color:#2a2a3a}
+.sc-row .sc-name{
+  font-size:12px;color:var(--white);font-weight:600;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sc-row .sc-name a{color:inherit;text-decoration:none}
+.sc-row .sc-name a:hover{color:var(--orange)}
+.sc-row .sc-frac{font-size:11px;color:var(--grey);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sc-row .sc-bar{
+  grid-column:1 / -1;height:4px;border-radius:2px;
+  background:#1e1e2e;overflow:hidden;
+}
+.sc-row .sc-bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent-cyan),var(--gold));
+  transition:width .25s ease-out;
+}
+.sc-row.complete .sc-bar-fill{background:linear-gradient(90deg,#4caf50,var(--gold))}
+.sc-row.complete .sc-frac{color:#4caf50;font-weight:700}
+
+/* ── eBay 60-day sparkline ──
+   Inline SVG sized to fit inside the existing eBay column without
+   reflowing the layout. Renders only when there are ≥2 history points
+   in the last 60 days. */
+.sparkline{
+  display:inline-block;vertical-align:middle;
+  width:72px;height:20px;margin-left:6px;
+}
+.sparkline path.sl-line{fill:none;stroke-width:1.3;stroke-linejoin:round;stroke-linecap:round}
+.sparkline path.sl-area{opacity:.18}
+.sparkline circle.sl-end{r:1.8}
+.sparkline.sl-up    path.sl-line{stroke:#4caf50}
+.sparkline.sl-up    path.sl-area{fill:#4caf50}
+.sparkline.sl-up    circle.sl-end{fill:#4caf50}
+.sparkline.sl-down  path.sl-line{stroke:#ff4444}
+.sparkline.sl-down  path.sl-area{fill:#ff4444}
+.sparkline.sl-down  circle.sl-end{fill:#ff4444}
+.sparkline.sl-flat  path.sl-line{stroke:#888}
+.sparkline.sl-flat  path.sl-area{fill:#888}
+.sparkline.sl-flat  circle.sl-end{fill:#888}
+.sparkline-empty{
+  display:inline-block;width:72px;height:20px;margin-left:6px;vertical-align:middle;
+  background:repeating-linear-gradient(90deg,#1a1a24 0 4px,#0d0d15 4px 8px);
+  border-radius:2px;opacity:.35;
+}
+
+/* Within the mobile figure-card eBay/Mercari grid cells, the sparkline
+   sits under the price value. */
+.figure-card .fc-grid .v .sparkline,
+.figure-card .fc-grid .v .sparkline-empty{
+  display:block;margin:3px 0 0;width:100%;height:18px;
+}
+
+/* ── Compare: persistent bottom bar + side-by-side modal ── */
+#compare-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:9000;
+  background:linear-gradient(180deg,rgba(13,13,21,.95) 0%,rgba(10,10,15,.98) 100%);
+  border-top:2px solid var(--accent-cyan);
+  padding:8px 14px;
+  display:flex;align-items:center;gap:8px;
+  box-shadow:0 -6px 24px rgba(0,0,0,.5);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  transform:translateY(0);transition:transform .25s ease-out;
+}
+#compare-bar[hidden]{display:none}
+.cb-label{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:15px;letter-spacing:1.2px;color:var(--accent-cyan);
+  margin-right:8px;flex-shrink:0;
+}
+.cb-slots{display:flex;gap:6px;flex:1;min-width:0;overflow-x:auto}
+.cb-slot{
+  flex:0 0 auto;width:56px;height:56px;border-radius:6px;
+  background:#0d0d15;border:1px solid #2a2a3a;
+  overflow:hidden;position:relative;cursor:pointer;
+}
+.cb-slot.cb-empty{border-style:dashed;cursor:default;opacity:.4}
+.cb-slot img{width:100%;height:100%;object-fit:cover;display:block}
+.cb-slot .cb-remove{
+  position:absolute;top:2px;right:2px;width:18px;height:18px;
+  border-radius:50%;background:rgba(0,0,0,.7);border:1px solid #444;
+  color:var(--white);font-size:11px;line-height:1;
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;padding:0;
+}
+.cb-slot .cb-remove:hover{background:#ff4444;border-color:#ff4444}
+.cb-actions{display:flex;gap:6px;flex-shrink:0}
+.cb-compare-btn{
+  background:var(--accent-cyan);color:#003a4b;border:none;border-radius:6px;
+  padding:8px 18px;font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:16px;letter-spacing:1.2px;cursor:pointer;font-weight:700;
+  transition:filter .15s;
+}
+.cb-compare-btn:hover{filter:brightness(1.1)}
+.cb-compare-btn:disabled{filter:grayscale(.7);cursor:not-allowed;opacity:.55}
+.cb-clear-btn{
+  background:transparent;color:var(--grey);border:1px solid #2a2a3a;
+  border-radius:6px;padding:6px 12px;font-family:'Nunito',sans-serif;
+  font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;
+}
+.cb-clear-btn:hover{border-color:#ff4444;color:#ff4444}
+
+/* Per-row compare toggle — small "+" pill in the actions column.
+   The actions column now holds 3 round buttons (watch, own, compare)
+   so widen the cell from 74px → 104px to keep them on one line. */
+.col-actions{width:104px;min-width:104px}
+.fig-action-btn.compare-btn{font-size:11px;line-height:1;letter-spacing:.3px}
+.fig-action-btn.compare-btn.is-comparing{background:rgba(127,230,255,.18);border-color:var(--accent-cyan);color:var(--accent-cyan)}
+.figure-card .fc-actions .compare-btn{padding:5px 10px;font-size:11px}
+.figure-card .fc-actions .compare-btn.is-comparing{background:rgba(127,230,255,.18);border-color:var(--accent-cyan);color:var(--accent-cyan)}
+
+/* Compare modal — fullscreen overlay with side-by-side grid */
+#compare-modal{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(5,5,10,.94);
+  align-items:flex-start;justify-content:center;
+  padding:36px 18px;overflow-y:auto;
+  cursor:zoom-out;
+}
+#compare-modal.open{display:flex}
+.cm-inner{
+  width:min(1100px,96vw);
+  background:var(--surface);border:1px solid #2a2a3a;
+  border-top:3px solid var(--accent-cyan);border-radius:10px;
+  padding:18px 20px;cursor:default;position:relative;
+}
+.cm-close{
+  position:absolute;top:10px;right:10px;
+  width:34px;height:34px;border-radius:50%;
+  background:#0d0d15;border:1px solid #2a2a3a;color:var(--white);
+  font-size:18px;cursor:pointer;line-height:1;
+}
+.cm-close:hover{border-color:var(--orange);color:var(--orange)}
+.cm-title{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:24px;letter-spacing:1.2px;color:var(--accent-cyan);
+  margin-bottom:14px;padding-right:40px;
+}
+.cm-grid{
+  display:grid;gap:10px;
+  grid-template-columns:repeat(var(--cm-cols,2),1fr);
+}
+@media(max-width:700px){
+  .cm-grid{grid-template-columns:1fr}
+}
+.cm-col{
+  background:#0d0d15;border:1px solid #2a2a3a;border-radius:8px;
+  padding:10px;display:flex;flex-direction:column;gap:6px;
+  border-left:3px solid var(--orange);
+}
+.cm-col.cm-lop{border-left-color:var(--gold);background:var(--lop-bg)}
+.cm-col.cm-grail::after{
+  content:"";position:absolute;
+}
+.cm-col-thumb{
+  width:100%;aspect-ratio:1;border-radius:6px;background:#000;
+  overflow:hidden;border:1px solid #1e1e2e;
+}
+.cm-col-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cm-col-thumb.thumb-empty{
+  background:repeating-linear-gradient(45deg,#0d0d15 0 6px,#14141d 6px 12px);
+}
+.cm-col-name{
+  font-weight:800;font-size:15px;color:var(--white);line-height:1.2;
+  display:flex;align-items:center;gap:4px;
+}
+.cm-col-meta{font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:.5px}
+.cm-col-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;font-size:12px;margin-top:4px;
+}
+.cm-col-grid .k{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.6px}
+.cm-col-grid .v{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:18px;color:var(--white);line-height:1.1;
+}
+.cm-col-grid .v.up{color:#4caf50}
+.cm-col-grid .v.down{color:#ff4444}
+.cm-col-actions{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.cm-col-actions a{
+  flex:1 1 auto;min-width:0;text-align:center;
+  font-size:11px;padding:5px 6px;border-radius:5px;
+  background:transparent;border:1px solid #2a2a3a;color:var(--grey);
+  text-decoration:none;font-weight:700;font-family:'Nunito',sans-serif;
+}
+.cm-col-actions a:hover{border-color:var(--orange);color:var(--orange)}
+.cm-col .cm-col-spark{height:30px}
+.cm-col .cm-col-spark .sparkline{width:100%;height:30px}
+
+/* Reduced-motion: kill compare-bar slide-in transition + cp-section expand transition */
+@media (prefers-reduced-motion: reduce){
+  #compare-bar{transition:none}
+  .cp-section .cp-chevron{transition:none}
+  .sc-row .sc-bar-fill{transition:none}
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   /CHUNK 2
+   ════════════════════════════════════════════════════════════════════════ */
 </style>
 </head>
 <body>
@@ -1507,6 +1760,23 @@ tr.set-header:hover .set-badge,
   <div id="result-info"></div>
 </div>
 
+<!-- ── Chunk 2: Collector panel (set-completion) ──
+     Sits above the table on the main view; auto-hidden in set-detail
+     mode or when the user owns nothing. -->
+<aside id="collector-panels" hidden aria-label="Your collection at a glance">
+  <section id="set-completion-section" class="cp-section" hidden aria-labelledby="sc-title">
+    <button type="button" class="cp-header" id="sc-toggle" aria-expanded="true" aria-controls="sc-body">
+      <span id="sc-title">Set completion</span>
+      <span class="cp-count" id="sc-summary-pill">—</span>
+      <span class="cp-chevron" aria-hidden="true">▼</span>
+    </button>
+    <div class="cp-body" id="sc-body">
+      <div class="sc-summary" id="sc-summary">—</div>
+      <div class="sc-list" id="sc-list"></div>
+    </div>
+  </section>
+</aside>
+
 <!-- ── Set-detail view (2.2) — hidden until user navigates to #/sets/:slug ── -->
 <section id="set-detail-view" class="set-detail-view" hidden aria-labelledby="set-detail-heading">
   <button id="set-detail-back" class="set-detail-back" type="button">← Back to all figures</button>
@@ -1621,6 +1891,23 @@ tr.set-header:hover .set-badge,
     <div id="lightbox-sub"></div>
     <div id="lightbox-stats" class="lightbox-stats"></div>
     <div id="lightbox-actions" class="lightbox-actions"></div>
+  </div>
+</div>
+
+<!-- ── Chunk 2: Compare bar (persistent bottom strip) + modal ────────── -->
+<div id="compare-bar" hidden role="region" aria-label="Compare figures">
+  <span class="cb-label">Compare</span>
+  <div class="cb-slots" id="cb-slots"></div>
+  <div class="cb-actions">
+    <button type="button" class="cb-compare-btn" id="cb-compare-btn" disabled>Compare</button>
+    <button type="button" class="cb-clear-btn" id="cb-clear-btn">Clear</button>
+  </div>
+</div>
+<div id="compare-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="cm-title">
+  <div class="cm-inner" onclick="event.stopPropagation()">
+    <button class="cm-close" id="cm-close-btn" type="button" aria-label="Close compare dialog">✕</button>
+    <div class="cm-title" id="cm-title">Side-by-side comparison</div>
+    <div class="cm-grid" id="cm-grid"></div>
   </div>
 </div>
  
@@ -2488,6 +2775,31 @@ const FX_FALLBACK = {USD:1, JPY:JPY_PER_USD, EUR:0.92, GBP:0.78, AUD:1.52};
 const WATCHLIST_KEY = 'kuji.watchlist.v1';
 const COLLECTION_KEY = 'kuji.collection.v1';
 
+// One-time downgrade from a prior build's "v2" wishlist (which carried
+// priority + target metadata). The priority/target feature was reverted;
+// this preserves any wishlist keys saved during testing by copying them
+// back into the v1 store, unioned with whatever v1 already has, then
+// removes the orphaned v2 key. Self-deletes after running once.
+(function _downgradeV2WatchlistIfPresent(){
+  try{
+    const v2 = localStorage.getItem('kuji.watchlist.v2');
+    if(!v2) return;
+    const arr = JSON.parse(v2);
+    if(!Array.isArray(arr)){ localStorage.removeItem('kuji.watchlist.v2'); return; }
+    const merged = new Set();
+    const v1raw = localStorage.getItem(WATCHLIST_KEY);
+    if(v1raw){
+      try{
+        const v1arr = JSON.parse(v1raw);
+        if(Array.isArray(v1arr)) v1arr.forEach(k => { if(typeof k === 'string') merged.add(k); });
+      }catch(e){}
+    }
+    arr.forEach(e => { if(e && typeof e.key === 'string') merged.add(e.key); });
+    localStorage.setItem(WATCHLIST_KEY, JSON.stringify([...merged]));
+    localStorage.removeItem('kuji.watchlist.v2');
+  }catch(e){}
+})();
+
 // Reverse lookup so we can resolve an `id` (used by row markup as
 // data-fig-id) to its stable storage key without a linear scan.
 const KEY_BY_ID = {};
@@ -2520,6 +2832,7 @@ function loadFigureSet(storeKey){
 function saveFigureSet(storeKey, set){
   try{ localStorage.setItem(storeKey, JSON.stringify([...set])); }catch(e){}
 }
+
 const watchlist = loadFigureSet(WATCHLIST_KEY);
 const collection = loadFigureSet(COLLECTION_KEY);
 
@@ -2858,6 +3171,8 @@ function toggleOwn(id){
   if(collection.has(k)) collection.delete(k); else collection.add(k);
   saveFigureSet(COLLECTION_KEY, collection);
   updateViewCounts();
+  // Chunk 2: set completion progress depends on the collection.
+  if(typeof renderSetCompletion === 'function') renderSetCompletion();
 }
 function updateViewCounts(){
   document.getElementById('count-all').textContent = DATA.length.toLocaleString();
@@ -2896,6 +3211,11 @@ function exportBackupData(){
 }
 function importBackupData(file){
   if(!file) return;
+  // Chunk 2: defensive 1 MB cap so an oversized JSON can't freeze the tab.
+  if(file.size > 1_000_000){
+    alert('Backup file is too large (>1 MB). Try again with the file you exported from this site.');
+    return;
+  }
   const reader = new FileReader();
   reader.onerror = () => alert('Could not read that file. Try again, or pick a different backup.');
   reader.onload = e => {
@@ -2915,6 +3235,7 @@ function importBackupData(file){
     saveFigureSet(COLLECTION_KEY, collection);
     updateViewCounts();
     renderTable();
+    if(typeof renderSetCompletion === 'function') renderSetCompletion();
     alert('Imported successfully — added ' + wlNew + ' to Wishlist and ' + colNew + ' to Collection. (Items already saved on this browser were left alone.)');
   };
   reader.readAsText(file);
@@ -3261,7 +3582,7 @@ function buildFigureCard(d, hideSet){
         <div><div class="k">MSRP</div><div class="v">${msrpDisp}</div></div>
         <div><div class="k">Year</div><div class="v">${d.year}</div></div>
         <div><div class="k">Mercari ${mTrend==='up'?'▲':mTrend==='down'?'▼':''}</div><div class="v ${mTrend==='up'?'up':mTrend==='down'?'down':''}">${mDisp}</div></div>
-        <div><div class="k">eBay ${eTrend==='up'?'▲':eTrend==='down'?'▼':''}</div><div class="v ${eTrend==='up'?'up':eTrend==='down'?'down':''}">${eDisp}</div></div>
+        <div><div class="k">eBay ${eTrend==='up'?'▲':eTrend==='down'?'▼':''}</div><div class="v ${eTrend==='up'?'up':eTrend==='down'?'down':''}">${eDisp}${ebaySparkSvg(d.ebayHistory)}</div></div>
       </div>
       <div class="fc-actions">
         <a href="${mfcUrl(d)}" target="_blank" rel="noopener">MFC ↗</a>
@@ -3269,6 +3590,7 @@ function buildFigureCard(d, hideSet){
         <a href="${mercariJpSearchUrl(d)}" target="_blank" rel="noopener">Mercari JP ↗</a>
         <button class="watch-btn ${watchOn?'is-watching':''}" data-fig-id="${d.id}" type="button" aria-pressed="${watchOn}">${watchOn?'★ Watching':'☆ Watch'}</button>
         <button class="own-btn ${ownOn?'is-owned':''}" data-fig-id="${d.id}" type="button" aria-pressed="${ownOn}">${ownOn?'✓ Owned':'+ Own'}</button>
+        <button class="compare-btn ${isComparing(d.id)?'is-comparing':''}" data-fig-id="${d.id}" type="button" aria-pressed="${isComparing(d.id)}">${isComparing(d.id)?'⇄ Comparing':'+ Compare'}</button>
       </div>
     </div>
   </article>`;
@@ -3389,7 +3711,10 @@ function renderTable(){
       : `<span class="price-display placeholder" data-id="${d.id}" data-field="ebay">${esc(ebayPlaceholder)}</span>`;
     const ebayNativeNote = ebayNative != null && displayCurrency !== 'USD'
       ? `<span class="price-avg-note" style="opacity:.7">≈ $${ebayNative.toLocaleString()}</span>` : '';
-    const ebayCell = `${ebayArrow}${ebayDisplay}<a class="price-search-btn" title="Search eBay (sold + completed listings)" href="${ebaySearchUrl(d)}" target="_blank" rel="noopener" aria-label="Search eBay for ${esc(d.character)}">🔍</a><span class="price-avg-note">Last 3-mo avg (eBay)</span>${ebayNativeNote}${updatedNoteHtml(d.ebayUpdated)}`;
+    // Chunk 2: 60-day eBay sparkline. ebaySparkSvg() returns '' when
+    // there are fewer than 2 in-window points so rows with no history
+    // don't sprout an empty box.
+    const ebayCell = `${ebayArrow}${ebayDisplay}${ebaySparkSvg(d.ebayHistory)}<a class="price-search-btn" title="Search eBay (sold + completed listings)" href="${ebaySearchUrl(d)}" target="_blank" rel="noopener" aria-label="Search eBay for ${esc(d.character)}">🔍</a><span class="price-avg-note">Last 3-mo avg (eBay)</span>${ebayNativeNote}${updatedNoteHtml(d.ebayUpdated)}`;
 
     // 2.1/2.9 actions cell — star + own toggle. Pressing either one
     // updates the in-memory Set, persists to localStorage, and re-renders
@@ -3397,11 +3722,14 @@ function renderTable(){
     // scroll position); we just update the button visuals.
     const watchOn = isWatching(d.id);
     const ownOn = isOwned(d.id);
+    const cmpOn = isComparing(d.id);
     const actionsCell = `<td class="col-actions">
       <button class="fig-action-btn watch-btn ${watchOn?'is-watching':''}" data-fig-id="${d.id}" type="button"
               aria-pressed="${watchOn}" title="${watchOn?'Remove from watchlist':'Add to watchlist'}">${watchOn?'★':'☆'}</button>
       <button class="fig-action-btn own-btn ${ownOn?'is-owned':''}" data-fig-id="${d.id}" type="button"
               aria-pressed="${ownOn}" title="${ownOn?'Remove from collection':'Mark as owned'}">${ownOn?'✓':'+'}</button>
+      <button class="fig-action-btn compare-btn ${cmpOn?'is-comparing':''}" data-fig-id="${d.id}" type="button"
+              aria-pressed="${cmpOn}" title="${cmpOn?'Remove from compare':'Add to compare'}">${cmpOn?'⇄':'+⇄'}</button>
     </td>`;
  
     // Saga / Anime tags (with uncertain marker)
@@ -3924,12 +4252,323 @@ if(sortCol){
   const th = document.querySelector(`thead th.sortable[data-col="${sortCol}"]`);
   if(th) th.classList.add(sortDir==='asc'?'sort-asc':'sort-desc');
 }
+/* ════════════════════════════════════════════════════════════════════════
+   CHUNK 2: FEATURES — sparklines / set-completion / compare
+   Defines: ebaySparkSvg, isComparing/toggleCompare, renderCompareBar,
+   openCompareModal/closeCompareModal, renderSetCompletion,
+   updateCollectorPanelsVisibility. Wires event listeners and runs
+   initial renders.
+   ════════════════════════════════════════════════════════════════════════ */
+
+// ── 60-day eBay sparkline ──
+// Reads d.ebayHistory (sparse, irregular daily samples), filters to the
+// 60-day window, scales to a 72×20 SVG box, and colours the line by
+// first-vs-last delta. Returns '' for figures with <2 in-window points
+// so rows without history don't sprout an empty box.
+const SPARKLINE_WINDOW_DAYS = 60;
+function ebaySparkSvg(history){
+  if(!Array.isArray(history) || history.length < 2) return '';
+  const cutoff = Date.now() - SPARKLINE_WINDOW_DAYS * 86400000;
+  const points = [];
+  for(const sample of history){
+    if(!sample || sample.price == null || !sample.date) continue;
+    const t = new Date(sample.date).getTime();
+    if(isNaN(t) || t < cutoff) continue;
+    const p = +sample.price;
+    if(!isFinite(p)) continue;
+    points.push({t, p});
+  }
+  if(points.length < 2) return '';
+  points.sort((a,b) => a.t - b.t);
+  const W = 72, H = 20, PAD = 1;
+  const tMin = points[0].t, tMax = points[points.length-1].t;
+  let pMin = Infinity, pMax = -Infinity;
+  points.forEach(({p}) => { if(p < pMin) pMin = p; if(p > pMax) pMax = p; });
+  const xRange = Math.max(1, tMax - tMin);
+  const yRange = Math.max(1, pMax - pMin);
+  const xs = points.map(({t,p}) => ({
+    x: PAD + ((t - tMin)/xRange) * (W - 2*PAD),
+    y: PAD + (1 - (p - pMin)/yRange) * (H - 2*PAD),
+  }));
+  const linePath = xs.map((pt,i) => (i===0?'M':'L') + pt.x.toFixed(2) + ' ' + pt.y.toFixed(2)).join(' ');
+  const areaPath = linePath
+    + ' L ' + xs[xs.length-1].x.toFixed(2) + ' ' + H
+    + ' L ' + xs[0].x.toFixed(2) + ' ' + H
+    + ' Z';
+  const first = points[0].p, last = points[points.length-1].p;
+  const delta = (last - first) / Math.max(0.01, first);
+  const cls = Math.abs(delta) < 0.02 ? 'sl-flat' : (delta > 0 ? 'sl-up' : 'sl-down');
+  const endX = xs[xs.length-1].x.toFixed(2);
+  const endY = xs[xs.length-1].y.toFixed(2);
+  return '<svg class="sparkline ' + cls + '" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">'
+    + '<path class="sl-area" d="' + areaPath + '"/>'
+    + '<path class="sl-line" d="' + linePath + '"/>'
+    + '<circle class="sl-end" cx="' + endX + '" cy="' + endY + '"/>'
+    + '</svg>';
+}
+
+// ── Compare state ──
+// In-session only (sessionStorage). Survives a refresh inside the tab,
+// resets on new session — matches how Pricecharting / e-commerce compare
+// flows behave.
+const COMPARE_KEY = 'kuji.compare.v1';
+const COMPARE_MAX = 4;
+const compareList = [];
+try{
+  const raw = sessionStorage.getItem(COMPARE_KEY);
+  if(raw){
+    const arr = JSON.parse(raw);
+    if(Array.isArray(arr)){
+      arr.filter(k => typeof k === 'string').slice(0, COMPARE_MAX).forEach(k => compareList.push(k));
+    }
+  }
+}catch(e){}
+function saveCompareList(){
+  try{ sessionStorage.setItem(COMPARE_KEY, JSON.stringify(compareList)); }catch(e){}
+}
+function isComparing(id){
+  const k = KEY_BY_ID[+id]; return !!k && compareList.indexOf(k) !== -1;
+}
+function syncCompareRowButtons(id){
+  const on = isComparing(id);
+  document.querySelectorAll('.compare-btn[data-fig-id="' + (+id) + '"]').forEach(b => {
+    b.classList.toggle('is-comparing', on);
+    b.setAttribute('aria-pressed', on);
+    if(b.classList.contains('fig-action-btn')){
+      b.textContent = on ? '⇄' : '+⇄';
+      b.title = on ? 'Remove from compare' : 'Add to compare';
+    } else {
+      b.textContent = on ? '⇄ Comparing' : '+ Compare';
+    }
+  });
+}
+function toggleCompare(id){
+  const k = KEY_BY_ID[+id]; if(!k) return;
+  const idx = compareList.indexOf(k);
+  if(idx !== -1){
+    compareList.splice(idx, 1);
+  } else {
+    if(compareList.length >= COMPARE_MAX){
+      alert('Compare can hold up to ' + COMPARE_MAX + ' figures at a time. Remove one first.');
+      return;
+    }
+    compareList.push(k);
+  }
+  saveCompareList();
+  renderCompareBar();
+  syncCompareRowButtons(id);
+}
+function clearCompareList(){
+  const keys = [...compareList];
+  compareList.length = 0;
+  saveCompareList();
+  renderCompareBar();
+  keys.forEach(key => {
+    const fig = DATA.find(x => x.key === key);
+    if(fig) syncCompareRowButtons(fig.id);
+  });
+}
+function renderCompareBar(){
+  const bar = document.getElementById('compare-bar');
+  const slots = document.getElementById('cb-slots');
+  const btn = document.getElementById('cb-compare-btn');
+  if(!bar || !slots || !btn) return;
+  bar.hidden = compareList.length === 0;
+  let html = '';
+  for(let i = 0; i < COMPARE_MAX; i++){
+    const key = compareList[i];
+    if(!key){
+      html += '<div class="cb-slot cb-empty" aria-hidden="true"></div>';
+      continue;
+    }
+    const d = DATA.find(x => x.key === key);
+    if(!d){ html += '<div class="cb-slot cb-empty" aria-hidden="true"></div>'; continue; }
+    const img = d.dbKujiImg || d.setImg || null;
+    html += '<div class="cb-slot" title="' + esc(d.character) + ' — ' + esc(d.set) + '">'
+      + (img ? '<img loading="lazy" decoding="async" src="' + esc(img) + '" alt="' + esc(d.character) + '"/>' : '')
+      + '<button type="button" class="cb-remove" data-key="' + esc(key) + '" aria-label="Remove from compare">✕</button>'
+      + '</div>';
+  }
+  slots.innerHTML = html;
+  btn.disabled = compareList.length < 2;
+  btn.textContent = 'Compare (' + compareList.length + ')';
+  slots.querySelectorAll('.cb-remove').forEach(rmBtn => {
+    rmBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const key = rmBtn.dataset.key;
+      const idx = compareList.indexOf(key);
+      if(idx === -1) return;
+      compareList.splice(idx, 1);
+      saveCompareList();
+      renderCompareBar();
+      const fig = DATA.find(x => x.key === key);
+      if(fig) syncCompareRowButtons(fig.id);
+    });
+  });
+}
+function openCompareModal(){
+  if(compareList.length < 2) return;
+  const modal = document.getElementById('compare-modal');
+  const grid = document.getElementById('cm-grid');
+  if(!modal || !grid) return;
+  const figs = compareList.map(k => DATA.find(x => x.key === k)).filter(Boolean);
+  if(figs.length < 2) return;
+  grid.style.setProperty('--cm-cols', Math.min(4, figs.length));
+  grid.innerHTML = figs.map(d => {
+    const img = d.dbKujiImg || d.setImg || null;
+    const thumb = img
+      ? '<div class="cm-col-thumb"><img loading="lazy" decoding="async" src="' + esc(img) + '" alt="' + esc(d.character) + '"/></div>'
+      : '<div class="cm-col-thumb thumb-empty"></div>';
+    const lopCls = d.isLOP ? 'cm-lop' : '';
+    const mDisp = d.mercari != null ? formatCurrency(convertFromTo(+d.mercari, 'JPY', displayCurrency), displayCurrency) : '—';
+    const eDisp = d.ebay    != null ? formatCurrency(convertFromTo(+d.ebay,    'USD', displayCurrency), displayCurrency) : '—';
+    const msrpDisp = d.bbts != null ? formatCurrency(convertFromTo(+d.bbts,    'USD', displayCurrency), displayCurrency) : '—';
+    const mTrend = computeTrend(d.mercariHistory);
+    const eTrend = computeTrend(d.ebayHistory);
+    const grailLabel = d.isGrail ? GRAIL_MARK_HTML : '';
+    const sparklineHtml = ebaySparkSvg(d.ebayHistory) || '<div class="sparkline-empty" title="No 60-day history"></div>';
+    return '<div class="cm-col ' + lopCls + '">'
+      + thumb
+      + '<div class="cm-col-name">' + grailLabel + esc(d.character) + '</div>'
+      + '<div class="cm-col-meta">' + esc(d.prize) + ' · ' + esc(d.set) + '</div>'
+      + '<div class="cm-col-grid">'
+      +   '<div><div class="k">MSRP</div><div class="v">' + msrpDisp + '</div></div>'
+      +   '<div><div class="k">Year</div><div class="v">' + (d.year != null ? d.year : '—') + '</div></div>'
+      +   '<div><div class="k">Mercari JP</div><div class="v ' + (mTrend==='up'?'up':mTrend==='down'?'down':'') + '">' + mDisp + '</div></div>'
+      +   '<div><div class="k">eBay</div><div class="v ' + (eTrend==='up'?'up':eTrend==='down'?'down':'') + '">' + eDisp + '</div></div>'
+      + '</div>'
+      + '<div class="cm-col-spark">' + sparklineHtml + '</div>'
+      + '<div class="cm-col-actions">'
+      +   '<a href="' + mfcUrl(d) + '" target="_blank" rel="noopener noreferrer">MFC</a>'
+      +   '<a href="' + ebaySearchUrl(d) + '" target="_blank" rel="noopener noreferrer">eBay</a>'
+      +   '<a href="' + mercariJpSearchUrl(d) + '" target="_blank" rel="noopener noreferrer">Mercari</a>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+function closeCompareModal(){
+  const modal = document.getElementById('compare-modal');
+  if(!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+}
+
+// ── Set completion progress panel ──
+function renderSetCompletion(){
+  const sec = document.getElementById('set-completion-section');
+  const list = document.getElementById('sc-list');
+  const summary = document.getElementById('sc-summary');
+  const pill = document.getElementById('sc-summary-pill');
+  if(!sec || !list || !summary) return;
+  if(collection.size === 0){ sec.hidden = true; updateCollectorPanelsVisibility(); return; }
+  // Group: for every set in DATA, count owned vs total prizes.
+  const setCounts = {};
+  const setOrder = [];
+  DATA.forEach(d => {
+    if(!setCounts[d.set]){ setCounts[d.set] = {owned: 0, total: 0, setName: d.set}; setOrder.push(d.set); }
+    setCounts[d.set].total++;
+    if(collection.has(d.key)) setCounts[d.set].owned++;
+  });
+  const rows = setOrder
+    .map(sn => setCounts[sn])
+    .filter(r => r.owned > 0)
+    .sort((a, b) => (b.owned / b.total) - (a.owned / a.total) || b.owned - a.owned);
+  if(rows.length === 0){ sec.hidden = true; updateCollectorPanelsVisibility(); return; }
+  sec.hidden = false;
+  const totalOwned = rows.reduce((n, r) => n + r.owned, 0);
+  const totalAcrossSets = rows.reduce((n, r) => n + r.total, 0);
+  summary.innerHTML = '<strong>' + totalOwned + '</strong> / ' + totalAcrossSets
+    + ' prizes across <strong>' + rows.length + '</strong> set' + (rows.length===1?'':'s');
+  if(pill) pill.textContent = totalOwned + ' / ' + totalAcrossSets;
+  list.innerHTML = rows.map(r => {
+    const pct = Math.round((r.owned / r.total) * 100);
+    const isComplete = r.owned === r.total;
+    const setSlug = SLUG_BY_SET[r.setName] || slugifySetName(r.setName);
+    return '<div class="sc-row ' + (isComplete?'complete':'') + '">'
+      + '<div class="sc-name"><a href="#/sets/' + setSlug + '">' + esc(r.setName) + '</a></div>'
+      + '<div class="sc-frac">' + r.owned + ' / ' + r.total + (isComplete?' ✓':'') + '</div>'
+      + '<div class="sc-bar"><div class="sc-bar-fill" style="width:' + pct + '%"></div></div>'
+      + '</div>';
+  }).join('');
+  updateCollectorPanelsVisibility();
+}
+
+function updateCollectorPanelsVisibility(){
+  const wrap = document.getElementById('collector-panels');
+  if(!wrap) return;
+  const sc = document.getElementById('set-completion-section');
+  const anyVisible = (sc && !sc.hidden);
+  // Hide the whole wrap on the set-detail page; otherwise show iff
+  // the set-completion child has content.
+  wrap.hidden = !anyVisible || (viewMode === 'set');
+}
+
+// ── Event wiring (idempotent — runs once at boot) ──
+// Compare button click: delegated on body so it fires for buttons in
+// rebuilt rows, mobile cards, and set-detail prizes.
+document.body.addEventListener('click', e => {
+  const btn = e.target.closest && e.target.closest('.compare-btn');
+  if(!btn) return;
+  e.stopPropagation();
+  const id = +btn.dataset.figId;
+  if(!isNaN(id)) toggleCompare(id);
+});
+// Compare bar action buttons.
+const _cbBtn = document.getElementById('cb-compare-btn');
+if(_cbBtn) _cbBtn.addEventListener('click', openCompareModal);
+const _cbClr = document.getElementById('cb-clear-btn');
+if(_cbClr) _cbClr.addEventListener('click', clearCompareList);
+// Compare modal: backdrop closes; inner content stops propagation in HTML.
+const _cmpModalEl = document.getElementById('compare-modal');
+if(_cmpModalEl) _cmpModalEl.addEventListener('click', closeCompareModal);
+const _cmpCloseBtn = document.getElementById('cm-close-btn');
+if(_cmpCloseBtn) _cmpCloseBtn.addEventListener('click', e => { e.stopPropagation(); closeCompareModal(); });
+document.addEventListener('keydown', e => {
+  const m = document.getElementById('compare-modal');
+  if(m && m.classList.contains('open') && e.key === 'Escape') closeCompareModal();
+});
+// Collector panel collapse toggles.
+const _scToggle = document.getElementById('sc-toggle');
+if(_scToggle) _scToggle.addEventListener('click', () => {
+  const sec = document.getElementById('set-completion-section');
+  if(!sec) return;
+  sec.classList.toggle('collapsed');
+  _scToggle.setAttribute('aria-expanded', !sec.classList.contains('collapsed'));
+});
+// Currency picker: re-render set-completion so displayed amounts track.
+const _curSel = document.getElementById('currency-select');
+if(_curSel) _curSel.addEventListener('change', () => {
+  // Deferred to a tick so the existing change handler's renderTable()
+  // has settled before we re-paint the panel.
+  setTimeout(() => { renderSetCompletion(); }, 0);
+});
+// View-tab switch + hash change: collector panels should hide on the
+// set-detail page (the existing renderers and showSetDetailView don't
+// know about them).
+document.querySelectorAll('.view-tab').forEach(tab => {
+  tab.addEventListener('click', () => setTimeout(updateCollectorPanelsVisibility, 0));
+});
+window.addEventListener('hashchange', () => setTimeout(updateCollectorPanelsVisibility, 0));
+
+/* ════════════════════════════════════════════════════════════════════════
+   /CHUNK 2
+   ════════════════════════════════════════════════════════════════════════ */
+
 updateViewCounts();
 renderStats();
 renderTop10();
 renderTable();
 // Kick off async FX refresh; if it succeeds, callers re-render.
 refreshFxRates();
+
+// Chunk 2 final render — runs AFTER renderTable so the per-row compare
+// buttons exist in the DOM (their state reads compareList, which was
+// initialised earlier inside the CHUNK 2 block above).
+renderCompareBar();
+renderSetCompletion();
+updateCollectorPanelsVisibility();
 </script>
 </body>
 </html>
