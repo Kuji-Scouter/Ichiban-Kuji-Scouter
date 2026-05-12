@@ -1969,7 +1969,6 @@ tr.set-header:hover .set-badge,
  */
  
 
-
  
 const MONTH_IDX = {January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11};
 
@@ -2038,10 +2037,8 @@ function figureValueUsd(d){
  
 // Tag constants for terse override syntax. "?" suffix = uncertain mapping.
 
-
  
 // Helpers for tuple terseness
-
 
 // ── Grail figures ──────────────────────────────────────────────────────
 // Lookup: data set-name → list of grail prize tokens. Each list entry is
@@ -2057,7 +2054,6 @@ function figureValueUsd(d){
 // → "Strong Chains!!", and "Dragon Ball vs Omnibus" — the original set
 // with no suffix — → "Dragon Ball VS Omnibus"). Every other entry below
 // matches its data-set name verbatim.
-
 
 // Resolve a prize-tuple's prize-name string to its short letter token, so
 // it can be looked up against GRAIL_FIGURES. "LOP" passes through; "Prize
@@ -2156,7 +2152,6 @@ const COLLECTION_KEY = 'kuji.collection.v1';
 const watchlist = loadFigureSet(WATCHLIST_KEY);
 const collection = loadFigureSet(COLLECTION_KEY);
 
-
 function loadFigureSet(storeKey){
   try{
     const raw = localStorage.getItem(storeKey);
@@ -2184,8 +2179,6 @@ function loadFigureSet(storeKey){
 function saveFigureSet(storeKey, set){
   try{ localStorage.setItem(storeKey, JSON.stringify([...set])); }catch(e){}
 }
-
-
 
 // ── Helpers ────────────────────────────────────────────────────────────
 function esc(str){
@@ -2951,7 +2944,6 @@ function renderTable(){
   const tbody = document.getElementById('tableBody');
   const noRes = document.getElementById('no-results');
   const info = document.getElementById('result-info');
-
 
   if(filtered.length===0){
     tbody.innerHTML='';
@@ -3909,7 +3901,6 @@ const ANIMES = [
   "Super Dragon Ball Heroes","Dragon Ball Super","Dragon Ball Daima"
 ];
 
-
 // MONTH_IDX, JPY_PER_USD, and figureValueUsd are defined elsewhere in this script.
 
 const GRAIL_FIGURES = {
@@ -3937,7 +3928,7 @@ const GRAIL_FIGURES = {
   "EX: Temple Above the Clouds": ["LOP"],
   "Dragon Ball vs Omnibus Cross": ["D"],
   "SMSP — The Vegeta": ["02 The Original","03 The Tones"],
-  "SMSP — The Son Goku (DBZ)": ["01 The Brush","02 The Original","04 Two Dimensions","1.5 Original II"],
+  "SMSP — The Son Goku": ["01 The Brush","02 The Original","04 Two Dimensions","1.5 Original II"],
 };
 
 const RAW_SETS = [
@@ -4392,14 +4383,14 @@ const RAW_SETS = [
     ["Prize G","Upa",2755256,null,785,null,"Red Ribbon Army Saga",null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-assemble-collection-arc-son-goku-enfant/main_G_6929b307b9acd.jpg",{"mercariUpdated":"2026-05-09"}],
     ["LOP","Dragon Ball Logo (GIGANT NAME)",2755257,null,14915,null,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-assemble-collection-arc-son-goku-enfant/main_LO_6929b307ba132.jpg",{"mercariUpdated":"2026-05-09"}],
   ]},
-  {set:"SMSP — The Vegeta", setNameJP:"アミューズメント一番くじ DRAGONBALL超 SUPER MASTER STARS PIECE THE VEGETA", dateStr:"October 2017", type:"smsp", saga:"Namek Saga", anime:"Dragon Ball Z", prizes:[
+  {set:"SMSP — The Vegeta", setNameJP:"アミューズメント一番くじ DRAGONBALL超 SUPER MASTER STARS PIECE THE VEGETA", dateStr:"April 2017", type:"smsp", saga:"Namek Saga", anime:"Dragon Ball Z", prizes:[
     ["01 The Brush","Vegeta SSJ",516079,null,47124,340,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20BRUSH_695937b756e2f.jpg",{"ebayHistory":[{"date":"2026-02-05","price":201.67},{"date":"2026-02-12","price":187.36},{"date":"2026-02-19","price":131.11},{"date":"2026-03-01","price":205.83},{"date":"2026-03-03","price":185},{"date":"2026-03-14","price":258.3},{"date":"2026-03-21","price":174.74},{"date":"2026-03-29","price":195.09},{"date":"2026-04-05","price":251.7},{"date":"2026-04-12","price":163.42},{"date":"2026-04-18","price":174.83},{"date":"2026-05-02","price":174.46}],"ebayUpdated":"2026-05-03","mercariUpdated":"2026-05-01"}],
     ["02 The Original","Vegeta SSJ",517546,null,237976,null,"Android Saga",null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20ORIGINAL_695937b757d93.jpg",{"mercariUpdated":"2026-05-01"}],
     ["03 The Tones","Vegeta SSJ",517549,null,209702,null,"Android Saga",null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20TONES_695937b758faf.jpg",{"mercariUpdated":"2026-05-01"}],
     ["04 Two Dimensions","Vegeta SSJ",517550,null,84823,null,"Android Saga",null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_TWO%20DIMENSIONS_695937b759fb7.jpg",{"mercariUpdated":"2026-05-01"}],
     ["Genkidamatsuri Ver.","Vegeta SSJ",3120354,null,12566,200,"Android Saga",null,null,"https://static.myfigurecollection.net/upload/items/0/3120354-5f101.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
   ]},
-  {set:"SMSP — The Son Goku (DBZ)", setNameJP:"アミューズメント一番くじ DRAGON BALL超 SUPER MASTER STARS PIECE THE SON GOKOU ver.1.5", dateStr:"April 2018", type:"smsp", saga:"Namek Saga", anime:"Dragon Ball Z", prizes:[
+  {set:"SMSP — The Son Goku", setNameJP:"アミューズメント一番くじ DRAGON BALL超 SUPER MASTER STARS PIECE THE SON GOKOU ver.1.5", dateStr:"April 2016", type:"smsp", saga:"Namek Saga", anime:"Dragon Ball Z", prizes:[
     ["01 The Brush","Super Saiyan Goku",379918,null,94248,null,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20BRUSH_695937df426e4.jpg",{"mercariUpdated":"2026-05-01"}],
     ["02 The Original","Super Saiyan Goku",379919,null,144514,null,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20ORIGINAL_695937df4360f.jpg",{"mercariUpdated":"2026-05-01"}],
     ["03 The Tones","Super Saiyan Goku",379920,null,84038,null,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20TONES_695937df43f65.jpg",{"mercariUpdated":"2026-05-01"}],
@@ -4461,7 +4452,6 @@ const RAW_SETS = [
     ["LOP","Shenron",2964850,null,7850,123,"Dragon Ball Saga","Dragon Ball",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-40th-partie-2/main_LO_6929b3052dee2.webp",{"ebayUpdated":"2026-05-01"}],
   ]},
 ];
-
 
 // Sort RAW_SETS by date descending (newest first).
 RAW_SETS.sort((a,b) => {
