@@ -837,6 +837,37 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .fig-action-btn.is-watching{background:rgba(255,215,0,.15);border-color:var(--gold);color:var(--gold)}
 .fig-action-btn.is-owned   {background:rgba(76,175,80,.15);border-color:#4caf50;color:#4caf50}
 
+/* Dragon Radar / Dragon Ball PNG icons in Watch / Own buttons. One
+   image per icon; inactive state is desaturated + dimmed via CSS so
+   the user only has to provide two files (img/radar.png and
+   img/dragonball.png). Falls back gracefully if the file is missing
+   — the inline onerror hides the broken img and the text label
+   carries the meaning. */
+.btn-icon{
+  display:inline-block;width:15px;height:15px;
+  vertical-align:-3px;margin-right:5px;
+  object-fit:contain;
+  transition:filter .15s,opacity .15s,transform .15s;
+}
+/* Icon-only desktop table button — bigger icon, no margin, no text */
+.fig-action-btn .btn-icon{
+  width:18px;height:18px;margin:0;vertical-align:middle;
+}
+/* Inactive (not watching / not owned): greyscale + dimmed */
+.watch-btn:not(.is-watching) .btn-icon,
+.lb-watch:not(.is-on) .btn-icon{
+  filter:grayscale(1) brightness(.7);opacity:.55;
+}
+.own-btn:not(.is-owned) .btn-icon,
+.lb-own:not(.is-on) .btn-icon{
+  filter:grayscale(1) brightness(.7);opacity:.55;
+}
+/* When watching / owned, give the icon a subtle pop on hover */
+.watch-btn:hover .btn-icon,
+.own-btn:hover .btn-icon,
+.lb-watch:hover .btn-icon,
+.lb-own:hover .btn-icon{transform:scale(1.08)}
+
 /* ── 1.6 Lightbox upgrade ─────────────────────────────────────────────── */
 #lightbox-inner{position:relative;max-width:min(720px,92vw)}
 #lightbox-close{top:10px;right:10px;position:absolute}
@@ -1348,51 +1379,292 @@ tr.set-header:hover .set-badge,
   position:relative;
 }
 .cp-section[hidden]{display:none}
+
+/* Dragon Radar mini-treatment for the Collection Progress header.
+   Silver casing + green radar-screen background with a subtle grid,
+   glowing ping-orange text, and a small antenna knob on top. Replaces
+   the prior default-button look (white browser background) the user
+   couldn't read. */
 .cp-header{
-  display:flex;align-items:center;gap:10px;
+  position:relative;
+  display:flex;align-items:center;gap:12px;
+  margin:14px -4px 14px;padding:11px 16px;
+  cursor:pointer;user-select:none;
+  appearance:none;-webkit-appearance:none;
   font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size:16px;letter-spacing:1px;color:var(--accent-cyan);
-  margin-bottom:8px;cursor:pointer;user-select:none;
+  font-size:20px;letter-spacing:2px;font-weight:400;
+  /* Glowing radar-ping text (yellow-orange like the dragon-ball dots) */
+  color:#ffc24d;
+  text-shadow:
+    0 0 5px rgba(255,180,60,.95),
+    0 0 12px rgba(255,150,40,.55),
+    0 1px 0 rgba(0,0,0,.4);
+  /* Silver radar casing */
+  border:2px solid #c4c4c4;
+  border-radius:14px;
+  /* Green radar screen with subtle white grid lines (every 14px) */
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0 13px, rgba(255,255,255,.09) 13px 14px),
+    repeating-linear-gradient(0deg,
+      transparent 0 13px, rgba(255,255,255,.09) 13px 14px),
+    radial-gradient(ellipse at 28% 28%,
+      #54a83f 0%, #2f6a23 65%, #1c4514 100%);
+  box-shadow:
+    inset 0 1px 10px rgba(0,0,0,.5),
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 2px 4px rgba(0,0,0,.4);
 }
-.cp-header .cp-count{
-  margin-left:auto;font-family:'Nunito',sans-serif;
-  font-size:11px;color:var(--grey);font-weight:700;
-  background:#000;border:1px solid #2a2a3a;border-radius:10px;
-  padding:1px 8px;letter-spacing:0;
+/* Antenna knob — the little silver pill that sits on top of every
+   Dragon Radar. Anchored to the casing's top edge. */
+.cp-header::before{
+  content:'';
+  position:absolute;
+  top:-8px;left:22px;
+  width:26px;height:9px;
+  background:linear-gradient(180deg,#f4f4f4 0%,#b8b8b8 55%,#7a7a7a 100%);
+  border:1px solid #888;border-bottom:0;
+  border-radius:5px 5px 1px 1px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
 }
-.cp-header .cp-chevron{font-size:11px;color:var(--grey);transition:transform .2s}
+.cp-header:hover{
+  color:#ffd680;
+  text-shadow:
+    0 0 7px rgba(255,210,110,1),
+    0 0 16px rgba(255,170,60,.7);
+}
+.cp-header:focus-visible{outline:2px solid #ffd680;outline-offset:3px}
+.cp-header .cp-chevron{
+  margin-left:auto;
+  font-size:14px;color:#ffc24d;
+  text-shadow:0 0 5px rgba(255,170,60,.8);
+  transition:transform .2s;
+}
+
+/* Set-completion panel: drop the outer card chrome entirely. The radar
+   header is the visual anchor, and rows/controls below have their own
+   borders — wrapping everything in a section-wide box just made an
+   empty rectangle when the panel was collapsed. */
+#set-completion-section{
+  background:transparent;
+  border:0;
+  padding:0;
+}
 .cp-section.collapsed .cp-chevron{transform:rotate(-90deg)}
 .cp-section.collapsed .cp-body{display:none}
 .cp-body{padding-top:2px}
 
 /* Set completion: progress rows */
 .sc-summary{
-  font-size:12px;color:var(--grey);margin-bottom:8px;
+  font-size:12px;color:var(--grey);margin-bottom:10px;
 }
 .sc-summary strong{color:var(--white);font-weight:800}
-.sc-list{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;padding-right:4px}
-.sc-row{
-  display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
-  padding:4px 8px;border-radius:5px;background:#0d0d15;border:1px solid #1e1e2e;
+
+/* Empty state shown when the user owns nothing yet — turns the panel
+   from an invisible reward into a discovery prompt. */
+.sc-empty{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 12px;border-radius:6px;
+  background:linear-gradient(135deg,rgba(31,219,231,.06),rgba(255,196,0,.04));
+  border:1px dashed #2a2a3a;
 }
-.sc-row:hover{border-color:#2a2a3a}
+.sc-empty-icon{
+  flex:0 0 auto;width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:var(--gold);
+  background:rgba(255,196,0,.08);border:1px solid rgba(255,196,0,.25);
+}
+.sc-empty-text{font-size:13px;color:var(--white);line-height:1.45}
+.sc-empty-text strong{display:block;font-size:14px;font-weight:800;margin-bottom:2px}
+.sc-empty-text span{color:var(--grey);font-size:12px}
+
+/* Controls row — filter chips on the left, sort dropdown on the right.
+   Shown only when the user has at least one set tracked (renderer
+   toggles the [hidden] attribute on #sc-controls). */
+.sc-controls{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin:6px 0 10px;padding:6px 8px;
+  background:#0d0d15;border:1px solid #1e1e2e;border-radius:6px;
+}
+.sc-chips{display:flex;gap:4px;flex-wrap:wrap}
+.sc-chip{
+  font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.3px;
+  background:transparent;color:var(--grey);
+  border:1px solid #2a2a3a;border-radius:14px;
+  padding:3px 10px;cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.sc-chip:hover{color:var(--white);border-color:#4a4a5e}
+.sc-chip.active{
+  background:rgba(31,219,231,.15);color:var(--accent-cyan);
+  border-color:var(--accent-cyan);
+}
+.sc-sort{
+  display:flex;align-items:center;gap:6px;margin-left:auto;
+  font-family:'Nunito',sans-serif;
+}
+.sc-sort-label{font-size:11px;color:var(--grey);font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+#sc-sort-select{
+  background:#13131c;color:var(--white);
+  border:1px solid #2a2a3a;border-radius:5px;
+  padding:4px 8px;font-size:12px;font-weight:600;
+  font-family:'Nunito',sans-serif;cursor:pointer;
+}
+#sc-sort-select:hover{border-color:#4a4a5e}
+.sc-empty-filter{
+  padding:14px 12px;text-align:center;
+  color:var(--grey);font-size:12px;
+  border:1px dashed #2a2a3a;border-radius:6px;
+}
+
+/* Subsection labels — "Completed", "Almost there", "In progress" — give
+   the long list a sense of structure once a collection grows. */
+.sc-group-label{
+  font-family:'Bebas Neue',system-ui,sans-serif;
+  font-size:11px;letter-spacing:1.2px;color:var(--grey);
+  margin:8px 0 4px;padding-left:2px;
+}
+.sc-group-label:first-child{margin-top:0}
+.sc-group-label.sc-group-complete{color:#4caf50}
+.sc-group-label.sc-group-almost{color:var(--gold)}
+
+.sc-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;padding-right:4px}
+.sc-row{
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  grid-template-rows:auto auto auto;
+  column-gap:12px;row-gap:5px;align-items:center;
+  padding:8px 10px;border-radius:6px;background:#0d0d15;border:1px solid #1e1e2e;
+  transition:border-color .15s,transform .15s;
+}
+.sc-row:hover{border-color:#3a3a4a;transform:translateY(-1px)}
+
+.sc-thumb{
+  grid-column:1;grid-row:1 / span 3;
+  width:48px;height:48px;border-radius:5px;
+  background:#1a1a24 center/cover no-repeat;
+  border:1px solid #2a2a3a;
+}
+.sc-thumb-fallback{
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',system-ui,sans-serif;
+  font-size:18px;color:var(--accent-cyan);letter-spacing:1px;
+}
+
 .sc-row .sc-name{
-  font-size:12px;color:var(--white);font-weight:600;
+  grid-column:2;grid-row:1;
+  font-size:13px;color:var(--white);font-weight:700;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .sc-row .sc-name a{color:inherit;text-decoration:none}
 .sc-row .sc-name a:hover{color:var(--orange)}
-.sc-row .sc-frac{font-size:11px;color:var(--grey);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+.sc-row .sc-frac{
+  grid-column:3;grid-row:1;
+  font-size:12px;color:var(--grey);white-space:nowrap;
+  font-variant-numeric:tabular-nums;font-weight:700;
+}
+
+/* Per-prize tiles — show *which* prizes you own, not just a count. */
+.sc-tiles{
+  grid-column:2 / -1;grid-row:2;
+  display:flex;flex-wrap:wrap;gap:4px;align-items:center;
+}
+.sc-tile{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:22px;height:22px;padding:0 5px;
+  border-radius:4px;font-size:11px;font-weight:800;
+  font-family:'Nunito',sans-serif;
+  background:#13131c;border:1px solid #2a2a3a;color:#5a5a6e;
+  text-decoration:none;letter-spacing:.3px;
+  transition:transform .12s,border-color .12s,background .12s;
+  cursor:pointer;
+}
+.sc-tile:hover{transform:translateY(-1px);border-color:#4a4a5e}
+.sc-tile.owned{
+  background:linear-gradient(135deg,rgba(31,219,231,.22),rgba(31,219,231,.08));
+  border-color:var(--accent-cyan);color:var(--white);
+}
+.sc-tile.grail{
+  border-color:var(--gold);color:var(--gold);
+}
+.sc-tile.grail.owned{
+  background:linear-gradient(135deg,rgba(255,196,0,.28),rgba(255,196,0,.1));
+  color:#fff8d6;
+}
+.sc-tile.lop{border-style:dashed}
+.sc-tile.lop.owned{border-style:solid}
+
+/* Inline "filter table to this set" icon. Appears next to the fraction;
+   on hover scales up and changes color. Avoids cluttering the name row
+   while staying tappable on mobile. */
+.sc-filter-btn{
+  margin-left:6px;padding:0;background:transparent;border:0;
+  width:22px;height:22px;border-radius:4px;
+  color:var(--grey);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:13px;line-height:1;
+  transition:color .15s,background .15s;
+  vertical-align:-2px;
+}
+.sc-filter-btn:hover{color:var(--accent-cyan);background:rgba(31,219,231,.1)}
+.sc-filter-btn:focus-visible{outline:1px solid var(--accent-cyan);outline-offset:1px}
+
+/* Progress bar — beefed up from 4px → 10px, with a subtle inner highlight. */
 .sc-row .sc-bar{
-  grid-column:1 / -1;height:4px;border-radius:2px;
-  background:#1e1e2e;overflow:hidden;
+  grid-column:2 / -1;grid-row:3;
+  height:10px;border-radius:5px;
+  background:#13131c;overflow:hidden;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.4);
 }
 .sc-row .sc-bar-fill{
-  height:100%;background:linear-gradient(90deg,var(--accent-cyan),var(--gold));
-  transition:width .25s ease-out;
+  height:100%;
+  background:linear-gradient(90deg,var(--accent-cyan),var(--gold));
+  box-shadow:0 0 6px rgba(31,219,231,.4);
+  transition:width .35s cubic-bezier(.4,1.2,.6,1);
+  position:relative;
 }
-.sc-row.complete .sc-bar-fill{background:linear-gradient(90deg,#4caf50,var(--gold))}
-.sc-row.complete .sc-frac{color:#4caf50;font-weight:700}
+.sc-row .sc-bar-fill::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.25) 0%,rgba(255,255,255,0) 50%);
+  border-radius:5px;
+}
+.sc-row.complete .sc-bar-fill{
+  background:linear-gradient(90deg,#4caf50,#9bd34f);
+  box-shadow:0 0 8px rgba(76,175,80,.5);
+}
+.sc-row.complete .sc-frac{color:#4caf50;font-weight:800}
+.sc-row.complete .sc-name::after{
+  content:" ✓";color:#4caf50;font-weight:800;
+}
+
+/* "Almost there" emphasis — sets at 75-99% get a subtle gold rail and
+   a small badge to motivate finishing. */
+.sc-row.almost{
+  border-color:rgba(255,196,0,.35);
+  background:linear-gradient(90deg,rgba(255,196,0,.04),#0d0d15 30%);
+}
+.sc-row.almost .sc-name::after{
+  content:attr(data-remaining-label);
+  display:inline-block;margin-left:8px;
+  padding:1px 6px;border-radius:3px;
+  background:rgba(255,196,0,.15);color:var(--gold);
+  font-size:10px;font-weight:800;letter-spacing:.4px;
+  vertical-align:1px;
+}
+
+/* Mobile: drop the thumb column to keep rows tappable, and bump the
+   collapse chevron + filter icon to a real tap target (was 11/22 px). */
+@media (max-width:600px){
+  .cp-header{font-size:20px}
+  .cp-header .cp-chevron{font-size:16px;padding:4px}
+  .sc-row{grid-template-columns:40px 1fr auto;column-gap:8px;padding:8px}
+  .sc-thumb{width:40px;height:40px}
+  .sc-tile{min-width:24px;height:24px;font-size:11px}
+  .sc-filter-btn{width:28px;height:28px;font-size:14px}
+  .sc-chip{padding:5px 12px;font-size:12px}
+}
 
 /* ── eBay 60-day sparkline ──
    Inline SVG sized to fit inside the existing eBay column without
@@ -1767,12 +2039,28 @@ tr.set-header:hover .set-badge,
 <aside id="collector-panels" hidden aria-label="Your collection at a glance">
   <section id="set-completion-section" class="cp-section" hidden aria-labelledby="sc-title">
     <button type="button" class="cp-header" id="sc-toggle" aria-expanded="true" aria-controls="sc-body">
-      <span id="sc-title">Set completion</span>
-      <span class="cp-count" id="sc-summary-pill">—</span>
+      <span id="sc-title">Collection Progress</span>
       <span class="cp-chevron" aria-hidden="true">▼</span>
     </button>
     <div class="cp-body" id="sc-body">
       <div class="sc-summary" id="sc-summary">—</div>
+      <div class="sc-controls" id="sc-controls" hidden>
+        <div class="sc-chips" role="tablist" aria-label="Filter sets">
+          <button class="sc-chip active" data-filter="all" type="button">All</button>
+          <button class="sc-chip" data-filter="incomplete" type="button">Incomplete</button>
+          <button class="sc-chip" data-filter="almost" type="button">Almost done</button>
+        </div>
+        <label class="sc-sort">
+          <span class="sc-sort-label">Sort</span>
+          <select id="sc-sort-select" aria-label="Sort sets">
+            <option value="completion-desc">Most complete</option>
+            <option value="completion-asc">Least complete</option>
+            <option value="owned-desc">Most owned</option>
+            <option value="newest">Newest set</option>
+            <option value="alpha">Alphabetical</option>
+          </select>
+        </label>
+      </div>
       <div class="sc-list" id="sc-list"></div>
     </div>
   </section>
@@ -2930,8 +3218,8 @@ function buildFigureCard(d, hideSet){
         <a href="${mfcUrl(d)}" target="_blank" rel="noopener">MFC ↗</a>
         <a href="${ebaySearchUrl(d)}" target="_blank" rel="noopener">eBay ↗</a>
         <a href="${mercariJpSearchUrl(d)}" target="_blank" rel="noopener">Mercari JP ↗</a>
-        <button class="watch-btn ${watchOn?'is-watching':''}" data-fig-id="${d.id}" type="button" aria-pressed="${watchOn}">${watchOn?'★ Watching':'☆ Watch'}</button>
-        <button class="own-btn ${ownOn?'is-owned':''}" data-fig-id="${d.id}" type="button" aria-pressed="${ownOn}">${ownOn?'✓ Owned':'+ Own'}</button>
+        <button class="watch-btn ${watchOn?'is-watching':''}" data-fig-id="${d.id}" type="button" aria-pressed="${watchOn}"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${watchOn?'Watching':'Watch'}</span></button>
+        <button class="own-btn ${ownOn?'is-owned':''}" data-fig-id="${d.id}" type="button" aria-pressed="${ownOn}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${ownOn?'Owned':'Own'}</span></button>
         <button class="compare-btn ${isComparing(d.id)?'is-comparing':''}" data-fig-id="${d.id}" type="button" aria-pressed="${isComparing(d.id)}">${isComparing(d.id)?'⇄ Comparing':'+ Compare'}</button>
       </div>
     </div>
@@ -3068,9 +3356,9 @@ function renderTable(){
     const cmpOn = isComparing(d.id);
     const actionsCell = `<td class="col-actions">
       <button class="fig-action-btn watch-btn ${watchOn?'is-watching':''}" data-fig-id="${d.id}" type="button"
-              aria-pressed="${watchOn}" title="${watchOn?'Remove from watchlist':'Add to watchlist'}">${watchOn?'★':'☆'}</button>
+              aria-pressed="${watchOn}" title="${watchOn?'Remove from watchlist':'Add to watchlist'}"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"></button>
       <button class="fig-action-btn own-btn ${ownOn?'is-owned':''}" data-fig-id="${d.id}" type="button"
-              aria-pressed="${ownOn}" title="${ownOn?'Remove from collection':'Mark as owned'}">${ownOn?'✓':'+'}</button>
+              aria-pressed="${ownOn}" title="${ownOn?'Remove from collection':'Mark as owned'}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"></button>
       <button class="fig-action-btn compare-btn ${cmpOn?'is-comparing':''}" data-fig-id="${d.id}" type="button"
               aria-pressed="${cmpOn}" title="${cmpOn?'Remove from compare':'Add to compare'}">${cmpOn?'⇄':'+⇄'}</button>
     </td>`;
@@ -3239,12 +3527,11 @@ function bindCardActions(root){
       const watching = isWatching(id);
       btn.classList.toggle('is-watching', watching);
       btn.setAttribute('aria-pressed', watching);
-      // Mobile cards have a text label; table cells use a single glyph.
-      if(btn.classList.contains('fig-action-btn')){
-        btn.textContent = watching ? '★' : '☆';
-      } else {
-        btn.textContent = watching ? '★ Watching' : '☆ Watch';
-      }
+      // V2: buttons contain an <img class="btn-icon"> + <span class="btn-label">.
+      // Only update the label span so the icon stays in place. Icon-only
+      // table buttons have no label — they rely on the class for state.
+      const lbl = btn.querySelector('.btn-label');
+      if(lbl) lbl.textContent = watching ? 'Watching' : 'Watch';
       btn.title = watching ? 'Remove from watchlist' : 'Add to watchlist';
       // If the user is currently looking AT their watchlist tab and they
       // unstar a figure, re-render so it disappears from the view.
@@ -3259,11 +3546,8 @@ function bindCardActions(root){
       const owned = isOwned(id);
       btn.classList.toggle('is-owned', owned);
       btn.setAttribute('aria-pressed', owned);
-      if(btn.classList.contains('fig-action-btn')){
-        btn.textContent = owned ? '✓' : '+';
-      } else {
-        btn.textContent = owned ? '✓ Owned' : '+ Own';
-      }
+      const lbl = btn.querySelector('.btn-label');
+      if(lbl) lbl.textContent = owned ? 'Owned' : 'Own';
       btn.title = owned ? 'Remove from collection' : 'Mark as owned';
       if(viewMode === 'collection' && !owned) renderTable();
     });
@@ -3372,30 +3656,36 @@ function openLightbox(e){
     <a href="${ebaySearchUrl(d)}" target="_blank" rel="noopener">eBay Sold ↗</a>
     <a href="${mercariJpSearchUrl(d)}" target="_blank" rel="noopener">Mercari JP ↗</a>
     ${bbtsActionLink}
-    <button type="button" class="lb-watch ${watchOn?'is-on':''}" data-fig-id="${id}">${watchOn?'★ Watching':'☆ Watch'}</button>
-    <button type="button" class="lb-own ${ownOn?'is-on':''}" data-fig-id="${id}">${ownOn?'✓ Owned':'+ Own'}</button>
+    <button type="button" class="lb-watch ${watchOn?'is-on':''}" data-fig-id="${id}"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${watchOn?'Watching':'Watch'}</span></button>
+    <button type="button" class="lb-own ${ownOn?'is-on':''}" data-fig-id="${id}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${ownOn?'Owned':'Own'}</span></button>
   `;
   actions.querySelectorAll('.lb-watch').forEach(btn => btn.addEventListener('click', () => {
     toggleWatch(id);
     const on = isWatching(id);
     btn.classList.toggle('is-on', on);
-    btn.textContent = on ? '★ Watching' : '☆ Watch';
-    // Refresh the matching button in the table/cards if it exists.
+    const lbl = btn.querySelector('.btn-label');
+    if(lbl) lbl.textContent = on ? 'Watching' : 'Watch';
+    // Refresh matching buttons in the table/cards. Icon-only table
+    // buttons (.fig-action-btn) have no .btn-label and are state-driven
+    // by class alone.
     document.querySelectorAll(`.watch-btn[data-fig-id="${id}"]`).forEach(b=>{
       b.classList.toggle('is-watching', on);
       b.setAttribute('aria-pressed', on);
-      b.textContent = b.classList.contains('fig-action-btn') ? (on?'★':'☆') : (on?'★ Watching':'☆ Watch');
+      const l = b.querySelector('.btn-label');
+      if(l) l.textContent = on ? 'Watching' : 'Watch';
     });
   }));
   actions.querySelectorAll('.lb-own').forEach(btn => btn.addEventListener('click', () => {
     toggleOwn(id);
     const on = isOwned(id);
     btn.classList.toggle('is-on', on);
-    btn.textContent = on ? '✓ Owned' : '+ Own';
+    const lbl = btn.querySelector('.btn-label');
+    if(lbl) lbl.textContent = on ? 'Owned' : 'Own';
     document.querySelectorAll(`.own-btn[data-fig-id="${id}"]`).forEach(b=>{
       b.classList.toggle('is-owned', on);
       b.setAttribute('aria-pressed', on);
-      b.textContent = b.classList.contains('fig-action-btn') ? (on?'✓':'+') : (on?'✓ Owned':'+ Own');
+      const l = b.querySelector('.btn-label');
+      if(l) l.textContent = on ? 'Owned' : 'Own';
     });
   }));
 
@@ -3786,42 +4076,242 @@ function closeCompareModal(){
 }
 
 // ── Set completion progress panel ──
+
+// Panel preferences — persist in localStorage so they survive reloads.
+// (Defaults restore the original behavior: groupable, "all" filter,
+// "most complete first" sort.)
+const SC_PREFS_KEY = 'kuji.sc.prefs.v1';
+let scFilter = 'all';        // 'all' | 'incomplete' | 'grails' | 'almost'
+let scSort   = 'completion-desc';
+let scCollapsed = false;
+(function loadScPrefs(){
+  try{
+    const raw = localStorage.getItem(SC_PREFS_KEY);
+    if(!raw) return;
+    const p = JSON.parse(raw);
+    if(p && typeof p === 'object'){
+      if(typeof p.filter === 'string')   scFilter = p.filter;
+      if(typeof p.sort === 'string')     scSort = p.sort;
+      if(typeof p.collapsed === 'boolean') scCollapsed = p.collapsed;
+    }
+    // The "grails" filter was removed; fall back to "all" rather than
+    // silently filter with no UI to undo it.
+    if(scFilter === 'grails') scFilter = 'all';
+  }catch(e){}
+})();
+function saveScPrefs(){
+  try{
+    localStorage.setItem(SC_PREFS_KEY, JSON.stringify({
+      filter: scFilter, sort: scSort, collapsed: scCollapsed
+    }));
+  }catch(e){}
+}
+
+// Short label for a prize tile: "Prize A" → "A", "LOP" → "★",
+// numbered prize names (SMSP, e.g. "01 The Brush") → leading code.
+// Anything else falls back to the first two characters so the tile
+// stays a uniform width.
+function prizeShortLabel(prizeName){
+  if(prizeName === 'LOP') return '★';
+  const letter = /^Prize ([A-Z])$/.exec(prizeName);
+  if(letter) return letter[1];
+  const numCode = /^([\d.]+)/.exec(prizeName);
+  if(numCode) return numCode[1];
+  return prizeName.slice(0, 2).toUpperCase();
+}
+
 function renderSetCompletion(){
   const sec = document.getElementById('set-completion-section');
   const list = document.getElementById('sc-list');
   const summary = document.getElementById('sc-summary');
-  const pill = document.getElementById('sc-summary-pill');
+  const controls = document.getElementById('sc-controls');
   if(!sec || !list || !summary) return;
-  if(collection.size === 0){ sec.hidden = true; updateCollectorPanelsVisibility(); return; }
-  // Group: for every set in DATA, count owned vs total prizes.
+
+  // Always show the panel — when the collection is empty we render an
+  // inviting empty state instead of hiding the feature entirely.
+  sec.hidden = false;
+
+  if(collection.size === 0){
+    summary.innerHTML = '';
+    if(controls) controls.hidden = true;
+    list.innerHTML =
+      '<div class="sc-empty">'
+      + '<div class="sc-empty-icon">★</div>'
+      + '<div class="sc-empty-text">'
+      +   '<strong>Start your collection</strong>'
+      +   '<span>Tap the ☆ on any figure below to mark it as owned. '
+      +   'Your set-by-set progress will appear here.</span>'
+      + '</div>'
+      + '</div>';
+    updateCollectorPanelsVisibility();
+    return;
+  }
+
+  // Group: for every set in DATA, count owned vs total prizes and stash
+  // per-prize info plus the bits needed for sort (year, month).
   const setCounts = {};
   const setOrder = [];
   DATA.forEach(d => {
-    if(!setCounts[d.set]){ setCounts[d.set] = {owned: 0, total: 0, setName: d.set}; setOrder.push(d.set); }
-    setCounts[d.set].total++;
-    if(collection.has(d.key)) setCounts[d.set].owned++;
+    if(!setCounts[d.set]){
+      setCounts[d.set] = {
+        owned: 0, total: 0, setName: d.set,
+        setImg: d.setImg || null,
+        year: d.year || 0, monthIdx: d.monthIdx || 0,
+        prizes: [],
+      };
+      setOrder.push(d.set);
+    }
+    const c = setCounts[d.set];
+    const isOwned = collection.has(d.key);
+    c.total++;
+    if(isOwned) c.owned++;
+    c.prizes.push({
+      key: d.key,
+      prize: d.prize,
+      character: d.character,
+      isGrail: !!d.isGrail,
+      isLOP: !!d.isLOP,
+      owned: isOwned,
+    });
   });
-  const rows = setOrder
-    .map(sn => setCounts[sn])
-    .filter(r => r.owned > 0)
-    .sort((a, b) => (b.owned / b.total) - (a.owned / a.total) || b.owned - a.owned);
-  if(rows.length === 0){ sec.hidden = true; updateCollectorPanelsVisibility(); return; }
-  sec.hidden = false;
-  const totalOwned = rows.reduce((n, r) => n + r.owned, 0);
-  const totalAcrossSets = rows.reduce((n, r) => n + r.total, 0);
+
+  // All sets the user owns at least one prize from — this is the
+  // unfiltered universe the chips and sort operate over.
+  const ownedRows = setOrder.map(sn => setCounts[sn]).filter(r => r.owned > 0);
+
+  if(ownedRows.length === 0){
+    list.innerHTML =
+      '<div class="sc-empty">'
+      + '<div class="sc-empty-icon">★</div>'
+      + '<div class="sc-empty-text"><strong>No progress to show yet</strong>'
+      + '<span>Mark figures from the table below to start tracking sets.</span></div>'
+      + '</div>';
+    summary.innerHTML = '';
+    if(controls) controls.hidden = true;
+    updateCollectorPanelsVisibility();
+    return;
+  }
+
+  // Summary line — totals are always across the user's whole collection,
+  // not affected by the active filter. (Filter narrows the visible list,
+  // not the headline number.)
+  const totalOwned = ownedRows.reduce((n, r) => n + r.owned, 0);
+  const totalAcrossSets = ownedRows.reduce((n, r) => n + r.total, 0);
   summary.innerHTML = '<strong>' + totalOwned + '</strong> / ' + totalAcrossSets
-    + ' prizes across <strong>' + rows.length + '</strong> set' + (rows.length===1?'':'s');
-  if(pill) pill.textContent = totalOwned + ' / ' + totalAcrossSets;
-  list.innerHTML = rows.map(r => {
+    + ' prizes across <strong>' + ownedRows.length + '</strong> set' + (ownedRows.length===1?'':'s');
+  if(controls){
+    controls.hidden = false;
+    // Sync the controls' visual state to the saved prefs (only needed on
+    // first paint; subsequent user clicks update the DOM directly).
+    controls.querySelectorAll('.sc-chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.filter === scFilter);
+    });
+    const sel = document.getElementById('sc-sort-select');
+    if(sel && sel.value !== scSort) sel.value = scSort;
+  }
+
+  // Apply the active filter chip.
+  function passesFilter(r){
+    const pct = r.owned / r.total;
+    if(scFilter === 'incomplete') return r.owned < r.total;
+    if(scFilter === 'almost')     return r.owned < r.total && pct >= 0.75;
+    return true; // 'all'
+  }
+  const filteredRows = ownedRows.filter(passesFilter);
+
+  if(filteredRows.length === 0){
+    list.innerHTML = '<div class="sc-empty-filter">No sets match this filter. Try a different chip above.</div>';
+    updateCollectorPanelsVisibility();
+    return;
+  }
+
+  // Apply the active sort. When the sort is the default "most complete",
+  // we also group results into Completed / Almost there / In progress.
+  // Any other sort produces a flat list.
+  const sorters = {
+    'completion-desc': (a, b) => (b.owned/b.total) - (a.owned/a.total) || b.owned - a.owned,
+    'completion-asc':  (a, b) => (a.owned/a.total) - (b.owned/b.total) || a.owned - b.owned,
+    'owned-desc':      (a, b) => b.owned - a.owned || (b.owned/b.total) - (a.owned/a.total),
+    'newest':          (a, b) => (b.year - a.year) || (b.monthIdx - a.monthIdx) || a.setName.localeCompare(b.setName),
+    'alpha':           (a, b) => a.setName.localeCompare(b.setName),
+  };
+  const sortFn = sorters[scSort] || sorters['completion-desc'];
+  const sortedRows = filteredRows.slice().sort(sortFn);
+
+  function renderRow(r){
     const pct = Math.round((r.owned / r.total) * 100);
     const isComplete = r.owned === r.total;
+    const isAlmost = !isComplete && (r.owned/r.total) >= 0.75;
     const setSlug = SLUG_BY_SET[r.setName] || slugifySetName(r.setName);
-    return '<div class="sc-row ' + (isComplete?'complete':'') + '">'
-      + '<div class="sc-name"><a href="#/sets/' + setSlug + '">' + esc(r.setName) + '</a></div>'
-      + '<div class="sc-frac">' + r.owned + ' / ' + r.total + (isComplete?' ✓':'') + '</div>'
+    const remaining = r.total - r.owned;
+    const remainingLabel = remaining === 1 ? '1 to go!' : remaining + ' to go';
+    const classes = ['sc-row'];
+    if(isComplete) classes.push('complete');
+    if(isAlmost)   classes.push('almost');
+
+    const thumbStyle = r.setImg
+      ? 'style="background-image:url(\'' + esc(r.setImg) + '\')"'
+      : '';
+    const thumbInner = r.setImg ? '' :
+      '<div class="sc-thumb-fallback">' + esc(r.setName.slice(0,2).toUpperCase()) + '</div>';
+
+    const tiles = r.prizes.map(p => {
+      const cls = ['sc-tile'];
+      if(p.owned) cls.push('owned');
+      if(p.isGrail) cls.push('grail');
+      if(p.isLOP) cls.push('lop');
+      const titleParts = [p.prize, p.character || ''];
+      if(p.isGrail) titleParts.push('— Grail');
+      if(p.isLOP)   titleParts.push('— Last One Prize');
+      titleParts.push(p.owned ? '· OWNED' : '· missing');
+      const title = esc(titleParts.filter(Boolean).join(' '));
+      return '<a class="' + cls.join(' ') + '" href="#/sets/' + setSlug + '" '
+           + 'title="' + title + '">' + esc(prizeShortLabel(p.prize)) + '</a>';
+    }).join('');
+
+    const nameAttrs = isAlmost ? ' data-remaining-label="' + esc(remainingLabel) + '"' : '';
+
+    // Filter-table-to-this-set button — sets the main Kuji Set dropdown
+    // and re-runs the table render. Saves a trip to the filter strip.
+    const filterBtn = '<button type="button" class="sc-filter-btn" '
+      + 'data-filter-set="' + esc(r.setName) + '" '
+      + 'title="Show only this set in the table below" aria-label="Filter table to ' + esc(r.setName) + '">▼</button>';
+
+    return '<div class="' + classes.join(' ') + '">'
+      + '<div class="sc-thumb" ' + thumbStyle + '>' + thumbInner + '</div>'
+      + '<div class="sc-name"' + nameAttrs + '>'
+      +   '<a href="#/sets/' + setSlug + '">' + esc(r.setName) + '</a>'
+      + '</div>'
+      + '<div class="sc-frac">' + r.owned + ' / ' + r.total + filterBtn + '</div>'
+      + '<div class="sc-tiles">' + tiles + '</div>'
       + '<div class="sc-bar"><div class="sc-bar-fill" style="width:' + pct + '%"></div></div>'
       + '</div>';
-  }).join('');
+  }
+
+  const parts = [];
+  const useGroups = (scFilter === 'all' && scSort === 'completion-desc');
+  if(useGroups){
+    const complete = sortedRows.filter(r => r.owned === r.total);
+    const almost   = sortedRows.filter(r => r.owned < r.total && (r.owned/r.total) >= 0.75);
+    const inProg   = sortedRows.filter(r => r.owned < r.total && (r.owned/r.total) <  0.75);
+    if(complete.length){
+      parts.push('<div class="sc-group-label sc-group-complete">✓ Completed</div>');
+      parts.push(complete.map(renderRow).join(''));
+    }
+    if(almost.length){
+      parts.push('<div class="sc-group-label sc-group-almost">★ Almost there</div>');
+      parts.push(almost.map(renderRow).join(''));
+    }
+    if(inProg.length){
+      if(complete.length || almost.length){
+        parts.push('<div class="sc-group-label">In progress</div>');
+      }
+      parts.push(inProg.map(renderRow).join(''));
+    }
+  } else {
+    parts.push(sortedRows.map(renderRow).join(''));
+  }
+  list.innerHTML = parts.join('');
   updateCollectorPanelsVisibility();
 }
 
@@ -3859,20 +4349,53 @@ document.addEventListener('keydown', e => {
   const m = document.getElementById('compare-modal');
   if(m && m.classList.contains('open') && e.key === 'Escape') closeCompareModal();
 });
-// Collector panel collapse toggles.
+// Collector panel collapse toggle — persists across reloads (V2).
 const _scToggle = document.getElementById('sc-toggle');
+const _scSection = document.getElementById('set-completion-section');
+if(_scSection && scCollapsed){
+  _scSection.classList.add('collapsed');
+  if(_scToggle) _scToggle.setAttribute('aria-expanded', 'false');
+}
 if(_scToggle) _scToggle.addEventListener('click', () => {
   const sec = document.getElementById('set-completion-section');
   if(!sec) return;
   sec.classList.toggle('collapsed');
-  _scToggle.setAttribute('aria-expanded', !sec.classList.contains('collapsed'));
+  scCollapsed = sec.classList.contains('collapsed');
+  _scToggle.setAttribute('aria-expanded', !scCollapsed);
+  saveScPrefs();
 });
-// Currency picker: re-render set-completion so displayed amounts track.
-const _curSel = document.getElementById('currency-select');
-if(_curSel) _curSel.addEventListener('change', () => {
-  // Deferred to a tick so the existing change handler's renderTable()
-  // has settled before we re-paint the panel.
-  setTimeout(() => { renderSetCompletion(); }, 0);
+
+// Filter chips
+document.querySelectorAll('#sc-controls .sc-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    scFilter = chip.dataset.filter || 'all';
+    saveScPrefs();
+    renderSetCompletion();
+  });
+});
+// Sort dropdown
+const _scSort = document.getElementById('sc-sort-select');
+if(_scSort){
+  _scSort.value = scSort;
+  _scSort.addEventListener('change', () => {
+    scSort = _scSort.value || 'completion-desc';
+    saveScPrefs();
+    renderSetCompletion();
+  });
+}
+// Filter-table-to-set buttons (event-delegated since rows are
+// re-rendered on every render pass).
+document.addEventListener('click', e => {
+  const btn = e.target.closest && e.target.closest('.sc-filter-btn');
+  if(!btn) return;
+  const setName = btn.dataset.filterSet;
+  if(!setName) return;
+  const sel = document.getElementById('filter-set');
+  if(!sel) return;
+  sel.value = setName;
+  sel.dispatchEvent(new Event('change', {bubbles: true}));
+  const tbl = document.getElementById('table-wrap') || document.getElementById('figures-view');
+  if(tbl) tbl.scrollIntoView({behavior: 'smooth', block: 'start'});
 });
 // View-tab switch + hash change: collector panels should hide on the
 // set-detail page (the existing renderers and showSetDetailView don't
