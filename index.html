@@ -165,14 +165,17 @@ body{
   max-width:var(--container-max);margin:0 auto;
 }
 .stat-card{
-  background:var(--surface);border:1px solid #2a2a3a;
-  border-top:2px solid var(--orange);border-radius:8px;
+  /* Full scouter palette — dark scouter green replaces var(--surface),
+     yellow top border replaces the orange brand accent. */
+  background:linear-gradient(180deg,#0b1a0f 0%,#061008 100%);
+  border:1px solid #2a2a3a;
+  border-top:2px solid #ffc400;border-radius:8px;
   padding:clamp(10px,0.9vw,18px) clamp(14px,1.2vw,26px);
   text-align:center;min-width:clamp(120px,12vw,180px);flex:1;max-width:280px;
 }
-.stat-label{font-size:clamp(10px,0.65vw + 5px,13px);text-transform:uppercase;letter-spacing:1.5px;color:var(--grey);font-weight:700}
-.stat-value{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(22px,1.7vw + 10px,38px);color:var(--gold);letter-spacing:1px;line-height:1.2;margin-top:2px}
-.stat-sub{font-size:clamp(10px,0.55vw + 6px,12px);color:var(--grey);margin-top:1px}
+.stat-label{font-size:clamp(10px,0.65vw + 5px,13px);text-transform:uppercase;letter-spacing:1.5px;color:#b8d4b8;font-weight:700}
+.stat-value{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:clamp(22px,1.7vw + 10px,38px);color:#ffc400;letter-spacing:1px;line-height:1.2;margin-top:2px}
+.stat-sub{font-size:clamp(10px,0.55vw + 6px,12px);color:#a8c0a8;margin-top:1px}
  
 /* ── Top 10 ── */
 #top10-section{max-width:var(--container-max);margin:0 auto 16px;padding:0 clamp(12px,1.2vw,28px)}
@@ -1130,25 +1133,42 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
 .card-set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl); }
 
 /* ── Scouter readout — stat cards (#stats-bar .stat-card) ──
-   Two overlays:
-     (a) scan-line: 2-px-period horizontal gradient at low alpha,
-         applied via ::before. Sits under the text on a positioned
-         parent. Pointer-events disabled.
-     (b) grid: 12-px square dotted grid in cyan at very low alpha
-         applied via ::after. Same z-order as scan-line.
-   Plus a small "CRT corner-tick" SVG-style border accent and a one-
-   shot scan-in animation that the JS toggles on first paint. */
+   Full DBZ scouter HUD treatment per user reference photos:
+     (a) Green scan-line stripes via ::before — like CRT phosphor lines.
+     (b) Green 12px square grid via ::after — the targeting reticle.
+     (c) Yellow corner brackets painted as four inline-SVG backgrounds
+         on the card itself — gives the "TARGET LOCK" framing.
+     (d) Character portrait (.stat-char) sized to ~42% of the card
+         width on the right side with a yellow halo glow.
+     (e) Side-arrow markers (▶ ◀) flanking the value on desktop.
+   The one-shot scan-in animation on first paint is preserved. */
 .stat-card{
   position:relative;
   overflow:hidden;
-  /* Inset glow on first paint — overridden by reduced-motion below. */
   isolation:isolate;
+  /* Yellow corner brackets — four inline-SVG corner-tick marks
+     positioned at the four corners. Each SVG is the same "L" shape
+     rotated for its corner. */
+  background-image:
+    /* TL bracket */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M0 5 V0 H5' stroke='%23ffc400' stroke-width='2' fill='none'/></svg>"),
+    /* TR bracket */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M9 0 H14 V5' stroke='%23ffc400' stroke-width='2' fill='none'/></svg>"),
+    /* BL bracket */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M0 9 V14 H5' stroke='%23ffc400' stroke-width='2' fill='none'/></svg>"),
+    /* BR bracket */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M9 14 H14 V9' stroke='%23ffc400' stroke-width='2' fill='none'/></svg>"),
+    /* the green card gradient lives below the SVGs */
+    linear-gradient(180deg,#0b1a0f 0%,#061008 100%);
+  background-repeat:no-repeat;
+  background-position:6px 6px, calc(100% - 6px) 6px, 6px calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), 0 0;
+  background-size:14px 14px, 14px 14px, 14px 14px, 14px 14px, 100% 100%;
 }
 .stat-card::before{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(
     to bottom,
-    rgba(127,230,255,.04) 0 1px,
+    rgba(140,255,170,.06) 0 1px,
     transparent 1px 3px
   );
   z-index:0;
@@ -1157,19 +1177,48 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
 .stat-card::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background-image:
-    linear-gradient(rgba(127,230,255,.06) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(127,230,255,.06) 1px,transparent 1px);
+    linear-gradient(rgba(140,255,170,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(140,255,170,.08) 1px,transparent 1px);
   background-size:12px 12px;
   background-position:-1px -1px;
   z-index:0;
-  opacity:.5;
+  opacity:.65;
 }
-.stat-card > *{position:relative;z-index:1}
+.stat-card > *{position:relative;z-index:2}
 .stat-value{
-  /* The yellow scouter-readout colour gets a faint cyan glow so it
-     reads as "lit up" rather than flat ink. */
-  text-shadow:0 0 6px rgba(255,215,0,.22),
-              0 0 16px rgba(127,230,255,.08);
+  /* Pure scouter-yellow with a yellow glow only — drops the cyan
+     undertone that the old colour pairing had. */
+  color:#ffc400;
+  text-shadow:0 0 8px rgba(255,196,0,.6),
+              0 0 18px rgba(255,196,0,.25);
+}
+/* Character portrait — fills the card behind the text at low opacity,
+   so the character reads as a watermark "you're looking through a
+   scouter" effect without occluding the number/label info. */
+.stat-card .stat-char{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  opacity:.32;pointer-events:none;
+  filter:drop-shadow(0 0 2px rgba(255,196,0,.7)) saturate(.85);
+  z-index:1;
+}
+/* Side-arrow markers flanking the value on wider widths — the small
+   ▶ ◀ targeting triangles seen in the reference photos. Hidden below
+   700px to keep the cramped phone view readable. */
+.stat-value{position:relative}
+.stat-value::before,
+.stat-value::after{
+  color:#ffc400;font-size:.7em;font-weight:700;
+  text-shadow:0 0 4px rgba(255,196,0,.7);
+  position:absolute;top:50%;transform:translateY(-50%);
+  pointer-events:none;
+}
+.stat-value::before{content:"\25b6";left:-1.2em}
+.stat-value::after {content:"\25c0";right:-1.2em}
+@media(max-width:700px){
+  .stat-value::before,.stat-value::after{display:none}
+  .stat-card .stat-char{width:32%;max-width:80px;opacity:.85}
 }
 /* One-shot scan-in: fade + drift up. JS adds .scan-in once on first
    render. Reduced-motion users skip the animation entirely. */
@@ -1183,19 +1232,10 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
 }
 .stat-sub.scan-in{ animation:statScanIn 600ms cubic-bezier(.2,.7,.2,1) 80ms both }
 
-/* Corner ticks — purely decorative, lifts the card from "rectangle"
-   to "HUD readout". Drawn with two narrow gradients clipped to the
-   top-left and bottom-right inner corners. */
-.stat-card{
-  border-image-slice:1;
-}
+/* The old cyan diamond bullet next to each label was removed —
+   the yellow corner brackets + side arrows on the card itself
+   carry the "HUD readout" framing now. */
 .stat-card .stat-label{position:relative}
-.stat-card .stat-label::before{
-  content:"";
-  position:absolute;left:-6px;top:50%;width:4px;height:4px;
-  background:var(--accent-cyan);box-shadow:0 0 6px var(--accent-cyan);
-  transform:translateY(-50%) rotate(45deg);opacity:.75;
-}
 
 /* ── Top 10 #1–#3 power-level callout ──
    The first three items get a thin scan-line over the rank pill and
@@ -1862,20 +1902,24 @@ tr.set-header:hover .set-badge,
 
 <!-- Stats Bar -->
 <section id="stats-bar" aria-label="Catalogue stats">
-  <div class="stat-card">
+  <div class="stat-card" data-char="goku-gohan">
+    <img class="stat-char" src="img/char-goku-gohan.png" alt="" onerror="this.style.display='none'">
     <div class="stat-label">Total Sets</div>
     <div class="stat-value" id="stat-sets">—</div>
   </div>
-  <div class="stat-card">
+  <div class="stat-card" data-char="krillin">
+    <img class="stat-char" src="img/char-krillin.png" alt="" onerror="this.style.display='none'">
     <div class="stat-label">Total Figures</div>
     <div class="stat-value" id="stat-figs">—</div>
   </div>
-  <div class="stat-card">
+  <div class="stat-card" data-char="roshi">
+    <img class="stat-char" src="img/char-roshi.png" alt="" onerror="this.style.display='none'">
     <div class="stat-label">Most Valuable</div>
     <div class="stat-value" id="stat-max-price">—</div>
     <div class="stat-sub" id="stat-max-name">—</div>
   </div>
-  <div class="stat-card">
+  <div class="stat-card" data-char="piccolo">
+    <img class="stat-char" src="img/char-piccolo.png" alt="" onerror="this.style.display='none'">
     <div class="stat-label">Total Grails</div>
     <div class="stat-value" id="stat-grails">—</div>
   </div>
