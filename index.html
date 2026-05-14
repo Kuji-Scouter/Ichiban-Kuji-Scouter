@@ -342,6 +342,32 @@ thead th.sort-asc .sort-icon::after{content:'▲';opacity:1;color:var(--orange)}
 thead th.sort-desc .sort-icon::after{content:'▼';opacity:1;color:var(--orange)}
 thead th:not(.sort-asc):not(.sort-desc) .sort-icon::after{content:'⇅'}
  
+/* Per-set collapse / expand button on each set-header row (and on the
+   mobile card-set-header). Floats to the far right of the heading so
+   the user can condense a whole kuji set with one click. */
+.set-collapse-btn{
+  float:right;
+  background:transparent;
+  border:1px solid #555;
+  color:inherit;
+  padding:2px 9px;
+  cursor:pointer;
+  font-size:14px;line-height:1;
+  border-radius:4px;
+  margin-left:8px;
+  opacity:.7;
+  transition:opacity .15s,border-color .15s,color .15s;
+}
+.set-collapse-btn:hover{
+  opacity:1;
+  border-color:var(--orange);
+  color:var(--orange);
+}
+.card-set-header{position:relative}
+.card-set-header .set-collapse-btn{
+  position:absolute;top:10px;right:10px;float:none;margin:0;
+}
+
 /* Set header row */
 tr.set-header td{
   background:linear-gradient(180deg,#1f1f2c 0%,#16161f 100%);
@@ -1164,26 +1190,14 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
   background-position:6px 6px, calc(100% - 6px) 6px, 6px calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), 0 0;
   background-size:14px 14px, 14px 14px, 14px 14px, 14px 14px, 100% 100%;
 }
-.stat-card::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(
-    to bottom,
-    rgba(140,255,170,.06) 0 1px,
-    transparent 1px 3px
-  );
-  z-index:0;
-  mix-blend-mode:screen;
-}
-.stat-card::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(140,255,170,.08) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(140,255,170,.08) 1px,transparent 1px);
-  background-size:12px 12px;
-  background-position:-1px -1px;
-  z-index:0;
-  opacity:.65;
-}
+/* Scan-line + grid overlays disabled by user request — the card now
+   relies on the green gradient + corner brackets + side arrows for
+   the scouter look, and the character watermark fills the body. The
+   pseudo-element rules below are kept as comments so they can be
+   reinstated quickly if the cleaner look reads too flat.
+   .stat-card::before { ... repeating scan-line ... }
+   .stat-card::after  { ... 12px grid ... }
+*/
 .stat-card > *{position:relative;z-index:2}
 .stat-value{
   /* Pure scouter-yellow with a yellow glow only — drops the cyan
@@ -2400,6 +2414,22 @@ let sortCol = null;
 let sortDir = 'asc';
 let lopOnly = false;
 let grailOnly = false;
+// Per-set collapse state. Each entry is a set name (matches d.set on a
+// figure). renderTable hides the data rows belonging to a collapsed set
+// and adds a `.collapsed` class to its set-header. Persisted in
+// localStorage so the choice survives reloads.
+const COLLAPSED_SETS_KEY = 'kuji.collapsedSets.v1';
+let collapsedSets = new Set();
+try{
+  const raw = localStorage.getItem(COLLAPSED_SETS_KEY);
+  if(raw){
+    const arr = JSON.parse(raw);
+    if(Array.isArray(arr)) collapsedSets = new Set(arr.filter(x => typeof x === 'string'));
+  }
+}catch(e){}
+function saveCollapsedSets(){
+  try{ localStorage.setItem(COLLAPSED_SETS_KEY, JSON.stringify([...collapsedSets])); }catch(e){}
+}
 // 2.1/2.9 View mode — 'all' | 'watchlist' | 'collection' | 'set' (set-detail)
 let viewMode = 'all';
 let activeSet = null;        // when viewMode==='set' this is the set name
@@ -3463,13 +3493,24 @@ function renderTable(){
       // keep their product-line colour. Falls back to empty (orange).
       const sagaAttr = (setType === 'masterlise') ? sagaSlug(items[0].saga) : '';
       const sagaAttrHtml = sagaAttr ? ` data-saga="${sagaAttr}"` : '';
-      rows.push(`<tr class="set-header ${bd.headerCls}"${sagaAttrHtml}><td colspan="10">
+      const isCollapsed = collapsedSets.has(sn);
+      const collapsedClass = isCollapsed ? ' collapsed' : '';
+      const dataSetAttr = ` data-set-name="${esc(sn)}"`;
+      rows.push(`<tr class="set-header ${bd.headerCls}${collapsedClass}"${sagaAttrHtml}${dataSetAttr}><td colspan="10">
         <a class="sh-name set-detail-link" href="#/sets/${setSlug}">${esc(sn)}</a>
         <span class="set-badge ${bd.cls}">${bd.label}</span>
         <span class="sh-meta">${esc(dateStr)} &nbsp;·&nbsp; ${items.length} prize${items.length!==1?'s':''}</span>
+        <button type="button" class="set-collapse-btn" data-set-collapse="${esc(sn)}" aria-label="${isCollapsed?'Expand':'Collapse'} ${esc(sn)}" title="${isCollapsed?'Expand':'Collapse'} this set">${isCollapsed?'▸':'▾'}</button>
       </td></tr>`);
 
-      items.forEach(d=>rows.push(buildDataRow(d)));
+      // Stamp each data row with the set name so the collapse handler
+      // can target them; pre-hide if this set is collapsed.
+      const hiddenAttr = isCollapsed ? ' style="display:none"' : '';
+      const dataRowHtml = items.map(d => {
+        const row = buildDataRow(d);
+        return row.replace(/^<tr/, '<tr data-set-name="' + esc(sn) + '"' + hiddenAttr);
+      });
+      rows.push(...dataRowHtml);
     });
   }
 
@@ -3519,12 +3560,22 @@ function renderMobileCards(filtered){
     // Mirror the table's saga-tint behaviour for the mobile card header.
     const sagaAttr = (setType === 'masterlise') ? sagaSlug(items[0].saga) : '';
     const sagaAttrHtml = sagaAttr ? ` data-saga="${sagaAttr}"` : '';
+    const isCollapsed = collapsedSets.has(sn);
+    const collapsedClass = isCollapsed ? ' collapsed' : '';
+    // Each figure card gets data-set-name so the collapse handler can
+    // target it; pre-hide if this set starts collapsed.
+    const hiddenAttr = isCollapsed ? ' style="display:none"' : '';
+    const figureCards = items.map(d => {
+      const html = buildFigureCard(d, false);
+      return html.replace(/^<article/, '<article data-set-name="' + esc(sn) + '"' + hiddenAttr);
+    }).join('');
     return `
-      <div class="card-set-header ${headerCls}"${sagaAttrHtml}>
+      <div class="card-set-header ${headerCls}${collapsedClass}"${sagaAttrHtml} data-set-name="${esc(sn)}">
         <h3><a href="#/sets/${setSlug}" style="color:inherit;text-decoration:none">${esc(sn)}</a></h3>
         <div class="csh-meta">${esc(items[0].dateStr)} · ${items.length} prize${items.length!==1?'s':''}</div>
+        <button type="button" class="set-collapse-btn card-set-collapse-btn" data-set-collapse="${esc(sn)}" aria-label="${isCollapsed?'Expand':'Collapse'} ${esc(sn)}" title="${isCollapsed?'Expand':'Collapse'} this set">${isCollapsed?'▸':'▾'}</button>
       </div>
-      ${items.map(d => buildFigureCard(d, false)).join('')}
+      ${figureCards}
     `;
   }).join('');
   list.innerHTML = html;
@@ -3809,19 +3860,61 @@ document.getElementById('reset-btn').addEventListener('click',()=>{
   renderTable();
 });
 
+// Per-set collapse / expand — event-delegated so it survives every
+// renderTable() pass. Clicks the right-side button on a set-header row
+// (table) or card-set-header (mobile); flips display on every
+// .data-row / .figure-card with the matching data-set-name and saves
+// the new state to localStorage so it persists across reloads.
+document.body.addEventListener('click', e => {
+  const btn = e.target.closest && e.target.closest('.set-collapse-btn');
+  if(!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const sn = btn.dataset.setCollapse;
+  if(!sn) return;
+  const willCollapse = !collapsedSets.has(sn);
+  if(willCollapse) collapsedSets.add(sn); else collapsedSets.delete(sn);
+  saveCollapsedSets();
+  // Update set-headers + their rows in place (no re-render needed).
+  const sel = `[data-set-name="${(window.CSS && CSS.escape) ? CSS.escape(sn) : sn.replace(/"/g,'\\"')}"]`;
+  document.querySelectorAll(sel).forEach(el => {
+    if(el.matches('tr.set-header, .card-set-header')){
+      el.classList.toggle('collapsed', willCollapse);
+      const innerBtn = el.querySelector('.set-collapse-btn');
+      if(innerBtn){
+        innerBtn.textContent = willCollapse ? '▸' : '▾';
+        const label = (willCollapse ? 'Expand ' : 'Collapse ') + sn;
+        innerBtn.setAttribute('aria-label', label);
+        innerBtn.setAttribute('title', label);
+      }
+    } else {
+      el.style.display = willCollapse ? 'none' : '';
+    }
+  });
+});
+
 // ── 2.1/2.9 View tabs ─────────────────────────────────────────────────
 document.querySelectorAll('.view-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     const v = tab.dataset.view;
-    if(v === viewMode) return;
+    // Clicking the already-active Wishlist/Collection tab toggles it
+    // back to "All" (a separate Reset click is no longer required).
+    // The "All" tab itself is a no-op when already active.
+    let nextMode;
+    if(v === viewMode){
+      if(v === 'all') return;
+      nextMode = 'all';
+    } else {
+      nextMode = v;
+    }
     // Leaving set-detail mode (if any) when switching tabs.
     if(location.hash){
       suppressUrlSync = true;
       history.replaceState(null, '', location.pathname + location.search);
       suppressUrlSync = false;
     }
-    viewMode = v;
-    setActiveTab(v);
+    viewMode = nextMode;
+    setActiveTab(nextMode);
     showSetDetailView(false);
     renderTable();
   });
