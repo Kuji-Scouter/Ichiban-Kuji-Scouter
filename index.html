@@ -1894,6 +1894,39 @@ tr.set-header:hover .set-badge,
   </div>
 </section>
 
+<!-- ── Chunk 2: Collector panel (set-completion) ──
+     Sits between the Top 10 section and the filter strip on the main
+     view; auto-hidden in set-detail mode or when the user owns nothing. -->
+<aside id="collector-panels" hidden aria-label="Your collection at a glance">
+  <section id="set-completion-section" class="cp-section collapsed" hidden aria-labelledby="sc-title">
+    <button type="button" class="cp-header" id="sc-toggle" aria-expanded="false" aria-controls="sc-body">
+      <span id="sc-title">Collection Progress</span>
+      <span class="cp-chevron" aria-hidden="true">▼</span>
+    </button>
+    <div class="cp-body" id="sc-body">
+      <div class="sc-summary" id="sc-summary">—</div>
+      <div class="sc-controls" id="sc-controls" hidden>
+        <div class="sc-chips" role="tablist" aria-label="Filter sets">
+          <button class="sc-chip active" data-filter="all" type="button">All</button>
+          <button class="sc-chip" data-filter="incomplete" type="button">Incomplete</button>
+          <button class="sc-chip" data-filter="almost" type="button">Almost done</button>
+        </div>
+        <label class="sc-sort">
+          <span class="sc-sort-label">Sort</span>
+          <select id="sc-sort-select" aria-label="Sort sets">
+            <option value="completion-desc">Most complete</option>
+            <option value="completion-asc">Least complete</option>
+            <option value="owned-desc">Most owned</option>
+            <option value="newest">Newest set</option>
+            <option value="alpha">Alphabetical</option>
+          </select>
+        </label>
+      </div>
+      <div class="sc-list" id="sc-list"></div>
+    </div>
+  </section>
+</aside>
+
 <!-- ── Controls — flat, all filters visible (matches the original
      live-site layout). The View selector (All / Watchlist / Collection)
      lives on the stats bar above as a vertical card, NOT inside this
@@ -2003,39 +2036,6 @@ tr.set-header:hover .set-badge,
 <div id="result-info-line">
   <div id="result-info"></div>
 </div>
-
-<!-- ── Chunk 2: Collector panel (set-completion) ──
-     Sits above the table on the main view; auto-hidden in set-detail
-     mode or when the user owns nothing. -->
-<aside id="collector-panels" hidden aria-label="Your collection at a glance">
-  <section id="set-completion-section" class="cp-section collapsed" hidden aria-labelledby="sc-title">
-    <button type="button" class="cp-header" id="sc-toggle" aria-expanded="false" aria-controls="sc-body">
-      <span id="sc-title">Collection Progress</span>
-      <span class="cp-chevron" aria-hidden="true">▼</span>
-    </button>
-    <div class="cp-body" id="sc-body">
-      <div class="sc-summary" id="sc-summary">—</div>
-      <div class="sc-controls" id="sc-controls" hidden>
-        <div class="sc-chips" role="tablist" aria-label="Filter sets">
-          <button class="sc-chip active" data-filter="all" type="button">All</button>
-          <button class="sc-chip" data-filter="incomplete" type="button">Incomplete</button>
-          <button class="sc-chip" data-filter="almost" type="button">Almost done</button>
-        </div>
-        <label class="sc-sort">
-          <span class="sc-sort-label">Sort</span>
-          <select id="sc-sort-select" aria-label="Sort sets">
-            <option value="completion-desc">Most complete</option>
-            <option value="completion-asc">Least complete</option>
-            <option value="owned-desc">Most owned</option>
-            <option value="newest">Newest set</option>
-            <option value="alpha">Alphabetical</option>
-          </select>
-        </label>
-      </div>
-      <div class="sc-list" id="sc-list"></div>
-    </div>
-  </section>
-</aside>
 
 <!-- ── Set-detail view (2.2) — hidden until user navigates to #/sets/:slug ── -->
 <section id="set-detail-view" class="set-detail-view" hidden aria-labelledby="set-detail-heading">
