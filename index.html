@@ -1224,41 +1224,13 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
   text-shadow:0 0 8px rgba(255,215,0,.18);
 }
 
-/* ── Hero — scouter lens flicker + scan drift ──
-   Two restrained animations, both reduced-motion-aware:
-     (a) flicker: brief .85 opacity dip every 6s
-     (b) scan: a thin highlight band drifts top→bottom every 9s,
-         giving the impression a beam is sweeping the lens.
-   Both gated on a .hero-logo wrapper so they don't accidentally
-   apply to other logo.png usages elsewhere. */
-.hero-logo{position:relative;animation:scouterFlicker 6s infinite}
-@keyframes scouterFlicker{
-  0%,7%,100% { filter:drop-shadow(0 0 18px rgba(255,107,0,.35)); opacity:1 }
-  8%         { filter:drop-shadow(0 0 22px rgba(127,230,255,.55)); opacity:.85 }
-  10%        { filter:drop-shadow(0 0 18px rgba(255,107,0,.35)); opacity:1 }
-  53%        { filter:drop-shadow(0 0 18px rgba(255,107,0,.35)); opacity:1 }
-  54%        { filter:drop-shadow(0 0 22px rgba(127,230,255,.55)); opacity:.85 }
-  56%        { filter:drop-shadow(0 0 18px rgba(255,107,0,.35)); opacity:1 }
-}
-/* Scan-line drifts down the hero block once every 9s, very faint. */
-#hero{position:relative;overflow:hidden}
-#hero::after{
-  content:"";position:absolute;left:0;right:0;height:60px;top:-60px;
-  background:linear-gradient(180deg,
-    transparent 0%,
-    rgba(127,230,255,.025) 40%,
-    rgba(127,230,255,.05) 50%,
-    rgba(127,230,255,.025) 60%,
-    transparent 100%);
-  pointer-events:none;
-  animation:heroScan 9s linear infinite;
-  z-index:0;
-}
-#hero > *{position:relative;z-index:1}
-@keyframes heroScan{
-  0%   { transform:translateY(0) }
-  100% { transform:translateY(100vh) }
-}
+/* ── Hero — static warm glow on the scouter logo. The earlier flicker
+   (cyan opacity dip every 6s) and scan-line drift were removed by user
+   feedback; the constant orange drop-shadow that used to live at the
+   0% keyframe is now baked into the base style so the logo still reads
+   as "lit." */
+.hero-logo{position:relative;filter:drop-shadow(0 0 18px rgba(255,107,0,.35))}
+#hero{position:relative}
 
 /* ── Capsule Corp / Kuji-stamp badges ──
    Replaces the generic "pill" look on .set-badge with a stamp-y
@@ -1331,10 +1303,10 @@ tr.set-header:hover .set-badge,
 }
 
 /* ── Reduced-motion gate ──
-   Single global override. Disables the scouter flicker, hero scan,
-   stat scan-in, grail pulse, and the badge-straighten transition.
-   Static, immediately-final-state appearance for users who've opted
-   in via OS / browser settings. */
+   Single global override. Disables the stat scan-in, grail pulse, and
+   badge-straighten transition. (The hero's scouter flicker + scan-line
+   are no longer animated, so they don't need explicit reduced-motion
+   overrides.) */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
     animation-duration:.001ms !important;
@@ -1342,8 +1314,6 @@ tr.set-header:hover .set-badge,
     transition-duration:.001ms !important;
     scroll-behavior:auto !important;
   }
-  .hero-logo{animation:none}
-  #hero::after{display:none}
   .stat-value.scan-in,.stat-sub.scan-in{animation:none}
   .grail-mark{animation:none}
   .set-badge{transform:none}
