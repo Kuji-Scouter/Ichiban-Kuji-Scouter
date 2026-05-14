@@ -994,16 +994,19 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .card-set-header.fortieth-header h3{color:var(--green)}
 .card-set-header .csh-meta{font-size:11px;color:var(--grey);margin-top:2px;text-transform:uppercase;letter-spacing:1px}
 
-/* Below 700px: hide the table entirely and reveal the card list. The
-   1080-px-wide table + horizontal scroll was the worst-case mobile UX,
-   per audit item 1.2 — cards put image, set, character, and BOTH price
-   columns above the fold without any horizontal swiping. */
+/* Below 700px (phone-narrow): hide the table and reveal the card list.
+   Above 700px the table view is preferred — the Watch / Own / Compare
+   action column is made sticky-to-the-right (rule lower in this file)
+   so those buttons stay visible even when the table itself scrolls
+   horizontally on intermediate widths. */
 @media(max-width:700px){
   #table-wrap{display:none}
   .card-list{display:flex}
-  /* On phones the View + Reset ctrl-groups each take their own
-     full-width row. Buttons spread evenly across the row so each one
-     stays touch-friendly. */
+}
+/* Phone-only ergonomics (separate from table → cards swap): View and
+   Reset control groups each take their own full-width row, with their
+   buttons spread evenly to stay touch-friendly. */
+@media(max-width:700px){
   .view-tab-group,.reset-group{min-width:100%}
   .view-tab-buttons,.reset-buttons{
     display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:stretch;
@@ -1264,27 +1267,25 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
 tr.set-header:hover .set-badge,
 .card-set-header:hover .set-badge{transform:rotate(0deg);transition:transform .25s}
 
-/* ── Custom grail diamond glyph (replaces the 💎 emoji) ──
-   Inlined as an SVG with a cyan/aqua tint and a soft glow. Sized to
-   match the surrounding prize-letter text height. The character/
-   prize/lightbox renderers swap the emoji for <span class="grail-mark">
-   GRAIL_SVG </span> at runtime. */
+/* ── DBZ "Z" grail glyph (was a cyan diamond SVG, then a 💎 emoji) ──
+   Renders the dbz-z.png asset inside a span sized to match the
+   surrounding prize-letter text height. Renderers inject GRAIL_MARK_HTML
+   wherever a grail figure appears (table / cards / lightbox / set
+   detail). The warm red drop-shadow + pulse give the same "stand out"
+   cue the old cyan diamond had, retuned to the Z's colour. */
 .grail-mark{
   display:inline-flex;align-items:center;justify-content:center;
   vertical-align:-2px;
-  width:1.05em;height:1.05em;margin-right:.18em;
-  color:var(--accent-cyan);
-  filter:drop-shadow(0 0 4px rgba(127,230,255,.55));
+  width:1.15em;height:1.15em;margin-right:.18em;
+  filter:drop-shadow(0 0 4px rgba(255,80,60,.55));
 }
-.grail-mark svg{width:100%;height:100%;display:block}
-.grail-mark svg path.gem-face{fill:currentColor;opacity:.92}
-.grail-mark svg path.gem-shine{fill:#ffffff;opacity:.65}
-.grail-mark svg path.gem-edge{stroke:currentColor;stroke-width:.6;fill:none;opacity:.55}
-/* Subtle pulse — restrained, reduced-motion-aware. */
+.grail-mark img{width:100%;height:100%;display:block;object-fit:contain}
+/* Subtle pulse — restrained, reduced-motion-aware. Switched the glow
+   from cyan (old diamond) to a warm red that matches the DBZ Z logo. */
 .grail-mark{animation:grailPulse 4.5s ease-in-out infinite}
 @keyframes grailPulse{
-  0%,100%{filter:drop-shadow(0 0 4px rgba(127,230,255,.55))}
-  50%    {filter:drop-shadow(0 0 8px rgba(127,230,255,.85))}
+  0%,100%{filter:drop-shadow(0 0 4px rgba(255,80,60,.55))}
+  50%    {filter:drop-shadow(0 0 9px rgba(255,80,60,.85))}
 }
 
 /* Grail corner-stamp on the mobile-card thumbnail. Renders only when
@@ -1920,7 +1921,7 @@ tr.set-header:hover .set-badge,
     <label class="ctrl-label">Prize Filter</label>
     <div class="prize-filter-buttons">
       <button id="lop-toggle" type="button" aria-pressed="false">★ LOP</button>
-      <button id="grail-toggle" type="button" aria-pressed="false">★ Grail</button>
+      <button id="grail-toggle" type="button" aria-pressed="false"><img class="btn-icon" src="img/dbz-z.png" alt="" onerror="this.style.display='none'">Grail</button>
     </div>
   </div>
   <!-- View ctrl-group on row 1 — Wishlist + Collection live here. The
@@ -1930,8 +1931,8 @@ tr.set-header:hover .set-badge,
   <div class="ctrl-group view-tab-group">
     <label class="ctrl-label">View</label>
     <div class="view-tab-buttons" id="view-tabs" role="tablist" aria-label="View mode">
-      <button class="view-tab" data-view="watchlist" type="button">★ Wishlist <span class="view-count" id="count-watchlist">0</span></button>
-      <button class="view-tab" data-view="collection" type="button">✓ Collection <span class="view-count" id="count-collection">0</span></button>
+      <button class="view-tab" data-view="watchlist" type="button"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'">Wishlist</button>
+      <button class="view-tab" data-view="collection" type="button"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'">Collection</button>
     </div>
   </div>
   <!-- Hard flex-break — pins the layout to exactly six controls on
@@ -2007,8 +2008,8 @@ tr.set-header:hover .set-badge,
      Sits above the table on the main view; auto-hidden in set-detail
      mode or when the user owns nothing. -->
 <aside id="collector-panels" hidden aria-label="Your collection at a glance">
-  <section id="set-completion-section" class="cp-section" hidden aria-labelledby="sc-title">
-    <button type="button" class="cp-header" id="sc-toggle" aria-expanded="true" aria-controls="sc-body">
+  <section id="set-completion-section" class="cp-section collapsed" hidden aria-labelledby="sc-title">
+    <button type="button" class="cp-header" id="sc-toggle" aria-expanded="false" aria-controls="sc-body">
       <span id="sc-title">Collection Progress</span>
       <span class="cp-chevron" aria-hidden="true">▼</span>
     </button>
@@ -2231,16 +2232,15 @@ tr.set-header:hover .set-badge,
 const MONTH_IDX = {January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11};
 
 // ── Chunk 1 helpers — grail glyph + saga→slug for set-header data attr ─
-// The grail SVG replaces the 💎 emoji wherever a grail figure is rendered.
-// Inlined once here so the markup at each call site stays compact and so
-// the glyph's geometry/colour can be tuned in one place. The .grail-mark
-// CSS rule (see <style> block) gives it the cyan tint, glow, and pulse.
-const GRAIL_SVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'
-  +   '<path class="gem-face" d="M5 9 L12 3 L19 9 L12 21 Z"/>'
-  +   '<path class="gem-shine" d="M9 9 L12 3 L15 9 L12 12 Z"/>'
-  +   '<path class="gem-edge" d="M5 9 L19 9 M12 9 L12 21 M9 9 L12 3 L15 9"/>'
-  + '</svg>';
-const GRAIL_MARK_HTML = '<span class="grail-mark" aria-label="grail figure" title="Grail figure">' + GRAIL_SVG + '</span>';
+// The grail glyph (DBZ "Z" logo) marks every grail figure in the table /
+// cards / lightbox / set-detail. Inlined once here so the geometry +
+// fallback live in one place; the .grail-mark CSS rule gives it the red
+// glow and pulse. onerror hides the img if dbz-z.png is missing so the
+// row still reads without a broken-image placeholder.
+const GRAIL_MARK_HTML =
+  '<span class="grail-mark" aria-label="grail figure" title="Grail figure">'
+  + '<img src="img/dbz-z.png" alt="" onerror="this.style.display=\'none\'">'
+  + '</span>';
 
 // Returns the data-saga slug used by per-saga set-header tint rules in
 // the <style> block. Strips the trailing "?" (uncertain-mapping marker)
@@ -2775,9 +2775,10 @@ function toggleOwn(id){
   if(typeof renderSetCompletion === 'function') renderSetCompletion();
 }
 function updateViewCounts(){
+  // Wishlist and Collection counts were removed from the view tabs to
+  // make room for the radar + dragon-ball icons. Only the "All" count
+  // remains.
   document.getElementById('count-all').textContent = DATA.length.toLocaleString();
-  document.getElementById('count-watchlist').textContent = watchlist.size.toLocaleString();
-  document.getElementById('count-collection').textContent = collection.size.toLocaleString();
 }
 function setActiveTab(name){
   document.querySelectorAll('.view-tab').forEach(t =>
@@ -4051,9 +4052,15 @@ function closeCompareModal(){
 // (Defaults restore the original behavior: groupable, "all" filter,
 // "most complete first" sort.)
 const SC_PREFS_KEY = 'kuji.sc.prefs.v1';
-let scFilter = 'all';        // 'all' | 'incomplete' | 'grails' | 'almost'
+let scFilter = 'all';        // 'all' | 'incomplete' | 'almost'
 let scSort   = 'completion-desc';
-let scCollapsed = false;
+// Panel always starts collapsed on every page load — the user can
+// expand it mid-session, but reloading resets to collapsed. (Persisting
+// collapsed state caused returning visitors to land on a pre-expanded
+// panel even after we changed the new-visitor default.) Filter + sort
+// preferences still persist in localStorage; only the collapsed flag is
+// session-local.
+let scCollapsed = true;
 (function loadScPrefs(){
   try{
     const raw = localStorage.getItem(SC_PREFS_KEY);
@@ -4062,7 +4069,6 @@ let scCollapsed = false;
     if(p && typeof p === 'object'){
       if(typeof p.filter === 'string')   scFilter = p.filter;
       if(typeof p.sort === 'string')     scSort = p.sort;
-      if(typeof p.collapsed === 'boolean') scCollapsed = p.collapsed;
     }
     // The "grails" filter was removed; fall back to "all" rather than
     // silently filter with no UI to undo it.
@@ -4072,7 +4078,7 @@ let scCollapsed = false;
 function saveScPrefs(){
   try{
     localStorage.setItem(SC_PREFS_KEY, JSON.stringify({
-      filter: scFilter, sort: scSort, collapsed: scCollapsed
+      filter: scFilter, sort: scSort
     }));
   }catch(e){}
 }
