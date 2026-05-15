@@ -107,6 +107,34 @@ body{
   min-height:100vh;
   font-size:clamp(13px,0.55vw + 10.8px,17px);
 }
+
+/* Fixed full-page Shenron line-art watermark. Renders ABOVE regular
+   content (z-index:100) so it stays visible while scrolling through
+   the data table — previously it sat behind everything and got
+   covered as soon as opaque rows scrolled into view. z-index:100 is
+   still well under modals (compare-bar 9000, lightbox 9999) and the
+   skip-link (10000). mix-blend-mode:screen drops the image's black
+   bg, leaving only the linework; the linework then gets dimmed to a
+   low opacity so it never compromises text legibility on top of it. */
+#page-watermark{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:100;
+  background:url('img/shenron-watermark.png') right center / contain no-repeat;
+  mix-blend-mode:screen;
+  opacity:.07;
+}
+/* No longer strictly required (watermark's z-index now positions it
+   directly), but harmless and keeps a clean stacking context for any
+   future fixed-position children of <body>. */
+body > *:not(#page-watermark){position:relative;z-index:1}
+
+/* Phone widths get a fainter watermark so the smaller viewport
+   doesn't feel claustrophobic with the dragon overlay. */
+@media(max-width:600px){
+  #page-watermark{opacity:.05}
+}
 /* Shared fluid container width — fills wider monitors but stays readable */
 :root{--container-max:min(1600px, 96vw)}
  
@@ -1898,6 +1926,11 @@ tr.set-header:hover .set-badge,
 </style>
 </head>
 <body>
+
+<!-- Fixed full-page Shenron watermark. Empty by design; the image is
+     attached in CSS so it can be swapped/tuned without touching markup.
+     aria-hidden so screen readers skip the decoration. -->
+<div id="page-watermark" aria-hidden="true"></div>
 
 <!-- Skip-link for keyboard users — jumps straight to main content. -->
 <a class="skip-link" href="#main-content">Skip to main content</a>
