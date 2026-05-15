@@ -628,6 +628,23 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 #no-results{text-align:center;padding:40px;color:var(--grey);font-size:14px;display:none}
  
 /* ── Footer ── */
+/* Akira Toriyama manga-spine art — centered banner above the footer.
+   Honours the original aspect ratio (height:auto + width:100% in a
+   max-width container) so the line art is never stretched or cropped.
+   Subtle drop-shadow gives the image a faint lift from the page bg
+   without applying any colour treatment that would alter Toriyama's
+   original palette. */
+#toriyama-spine{
+  max-width:var(--container-max);
+  margin:24px auto 16px;
+  padding:0 clamp(12px,1.2vw,28px);
+}
+#toriyama-spine img{
+  display:block;
+  width:100%;
+  height:auto;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.45));
+}
 #footer{background:#0d0d15;border-top:1px solid #1e1e2e;padding:clamp(20px,2vw,36px) clamp(14px,1.4vw,28px);max-width:var(--container-max);margin:0 auto}
 .footer-section{margin-bottom:14px}
 .footer-title{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:14px;letter-spacing:1px;color:var(--orange);margin-bottom:8px}
@@ -1620,6 +1637,13 @@ tr.set-header:hover .set-badge,
 }
 .sc-tile.lop{border-style:dashed}
 .sc-tile.lop.owned{border-style:solid}
+/* When a prize tile is LOP, it carries the LAST ONE icon image
+   instead of the ★ glyph. Image fills the tile while preserving
+   its 1:1 aspect ratio. */
+.sc-tile-img{
+  display:block;width:100%;height:100%;object-fit:contain;
+  padding:1px;
+}
 
 /* Inline "filter table to this set" icon. Appears next to the fraction;
    on hover scales up and changes color. Avoids cluttering the name row
@@ -2011,7 +2035,7 @@ tr.set-header:hover .set-badge,
   <div class="ctrl-group prize-filter-group">
     <label class="ctrl-label">Prize Filter</label>
     <div class="prize-filter-buttons">
-      <button id="lop-toggle" type="button" aria-pressed="false">★ LOP</button>
+      <button id="lop-toggle" type="button" aria-pressed="false"><img class="btn-icon" src="img/last-one.png" alt="" onerror="this.style.display='none'">LOP</button>
       <button id="grail-toggle" type="button" aria-pressed="false"><img class="btn-icon" src="img/dbz-z.png" alt="" onerror="this.style.display='none'">Grail</button>
     </div>
   </div>
@@ -2132,6 +2156,14 @@ tr.set-header:hover .set-badge,
   <!-- Mobile card list (1.2) — populated by the same renderTable() pass.
        Visibility is controlled by CSS at the (max-width:700px) breakpoint. -->
   <div id="card-list" class="card-list" aria-label="Figure cards"></div>
+</section>
+
+<!-- Akira Toriyama manga-spine art — sits between the figures listing
+     and the "Buy Direct" footer. Centered, container-width, original
+     aspect preserved. onerror hides the img cleanly if the asset isn't
+     uploaded yet. -->
+<section id="toriyama-spine" aria-label="Original Dragon Ball manga artwork by Akira Toriyama">
+  <img src="img/manga-spine.png" alt="Dragon Ball manga spine artwork by Akira Toriyama" onerror="this.style.display='none'"/>
 </section>
 
 </main>
@@ -2416,20 +2448,12 @@ let lopOnly = false;
 let grailOnly = false;
 // Per-set collapse state. Each entry is a set name (matches d.set on a
 // figure). renderTable hides the data rows belonging to a collapsed set
-// and adds a `.collapsed` class to its set-header. Persisted in
-// localStorage so the choice survives reloads.
-const COLLAPSED_SETS_KEY = 'kuji.collapsedSets.v1';
+// and adds a `.collapsed` class to its set-header. Session-only — every
+// page load starts with all sets expanded; collapses are intentionally
+// not persisted to localStorage.
 let collapsedSets = new Set();
-try{
-  const raw = localStorage.getItem(COLLAPSED_SETS_KEY);
-  if(raw){
-    const arr = JSON.parse(raw);
-    if(Array.isArray(arr)) collapsedSets = new Set(arr.filter(x => typeof x === 'string'));
-  }
-}catch(e){}
-function saveCollapsedSets(){
-  try{ localStorage.setItem(COLLAPSED_SETS_KEY, JSON.stringify([...collapsedSets])); }catch(e){}
-}
+// Drop any prior persisted value left over from a previous version.
+try{ localStorage.removeItem('kuji.collapsedSets.v1'); }catch(e){}
 // 2.1/2.9 View mode — 'all' | 'watchlist' | 'collection' | 'set' (set-detail)
 let viewMode = 'all';
 let activeSet = null;        // when viewMode==='set' this is the set name
@@ -3863,8 +3887,8 @@ document.getElementById('reset-btn').addEventListener('click',()=>{
 // Per-set collapse / expand — event-delegated so it survives every
 // renderTable() pass. Clicks the right-side button on a set-header row
 // (table) or card-set-header (mobile); flips display on every
-// .data-row / .figure-card with the matching data-set-name and saves
-// the new state to localStorage so it persists across reloads.
+// .data-row / .figure-card with the matching data-set-name. State is
+// session-only — page reloads reset everything to expanded.
 document.body.addEventListener('click', e => {
   const btn = e.target.closest && e.target.closest('.set-collapse-btn');
   if(!btn) return;
@@ -3874,7 +3898,6 @@ document.body.addEventListener('click', e => {
   if(!sn) return;
   const willCollapse = !collapsedSets.has(sn);
   if(willCollapse) collapsedSets.add(sn); else collapsedSets.delete(sn);
-  saveCollapsedSets();
   // Update set-headers + their rows in place (no re-render needed).
   const sel = `[data-set-name="${(window.CSS && CSS.escape) ? CSS.escape(sn) : sn.replace(/"/g,'\\"')}"]`;
   document.querySelectorAll(sel).forEach(el => {
@@ -4378,8 +4401,13 @@ function renderSetCompletion(){
       if(p.isLOP)   titleParts.push('— Last One Prize');
       titleParts.push(p.owned ? '· OWNED' : '· missing');
       const title = esc(titleParts.filter(Boolean).join(' '));
+      // LOP tiles render the LAST ONE icon image (img/last-one.png)
+      // instead of the ★ character that prizeShortLabel would return.
+      const tileBody = p.isLOP
+        ? '<img class="sc-tile-img" src="img/last-one.png" alt="" onerror="this.style.display=\'none\'">'
+        : esc(prizeShortLabel(p.prize));
       return '<a class="' + cls.join(' ') + '" href="#/sets/' + setSlug + '" '
-           + 'title="' + title + '">' + esc(prizeShortLabel(p.prize)) + '</a>';
+           + 'title="' + title + '">' + tileBody + '</a>';
     }).join('');
 
     const nameAttrs = isAlmost ? ' data-remaining-label="' + esc(remainingLabel) + '"' : '';
