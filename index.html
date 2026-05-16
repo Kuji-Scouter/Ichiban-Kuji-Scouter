@@ -673,7 +673,38 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   height:auto;
   filter:drop-shadow(0 4px 12px rgba(0,0,0,.45));
 }
-#footer{background:#0d0d15;border-top:1px solid #1e1e2e;padding:clamp(20px,2vw,36px) clamp(14px,1.4vw,28px);max-width:var(--container-max);margin:0 auto}
+#footer{
+  position:relative;       /* anchor for the corner watermark ::before */
+  overflow:hidden;          /* clip the watermark to the footer box */
+  background:#0d0d15;
+  border-top:1px solid #1e1e2e;
+  padding:clamp(20px,2vw,36px) clamp(14px,1.4vw,28px);
+  max-width:var(--container-max);
+  margin:0 auto;
+}
+/* Capsule Corp ink-sketch watermark in the bottom-left of the footer.
+   Source image is black ink on a white page — flipped with CSS
+   filter:invert(1) so the page becomes black, then mix-blend-mode:screen
+   drops that now-black fill and lets only the (inverted-to-white) ink
+   lines reach the footer's dark bg. Sits behind the footer columns. */
+#footer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url('img/capsule-corp-watermark.png') left bottom / auto 100% no-repeat;
+  filter:invert(1);
+  mix-blend-mode:screen;
+  opacity:.20;
+  pointer-events:none;
+  z-index:0;
+}
+/* Ensure all footer columns / links render ABOVE the watermark. */
+#footer > *{position:relative;z-index:1}
+/* On phones, soften the watermark slightly so it doesn't crowd the
+   narrower footer layout. */
+@media(max-width:600px){
+  #footer::before{opacity:.12;background-size:auto 90%}
+}
 .footer-section{margin-bottom:14px}
 .footer-title{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:14px;letter-spacing:1px;color:var(--orange);margin-bottom:8px}
 .footer-links{display:flex;flex-wrap:wrap;gap:8px}
@@ -1996,22 +2027,9 @@ tr.set-header:hover .set-badge,
   </div>
 </section>
 
-<!-- Top 10 — trophy SVG (1.8 polish) replaces emoji so the icon renders
-     identically across platforms. -->
-<section id="top10-section" aria-labelledby="top10-toggle">
-  <button id="top10-toggle" type="button" aria-expanded="false" aria-controls="top10-body">
-    <svg class="trophy-svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5a2 2 0 0 0-2 2v2a4 4 0 0 0 4 4 6 6 0 0 0 4 3.93V18H8v2h8v-2h-3v-1.07A6 6 0 0 0 17 13a4 4 0 0 0 4-4V7a2 2 0 0 0-2-2zM5 9V7h2v3.83A2 2 0 0 1 5 9zm14 0a2 2 0 0 1-2 1.83V7h2v2z"/></svg>
-    <span>Top 10 Most Valuable Figures</span>
-    <span class="chevron" aria-hidden="true">▼</span>
-  </button>
-  <div id="top10-body" role="region" aria-label="Top 10 most valuable figures">
-    <div class="top10-list" id="top10-list"></div>
-  </div>
-</section>
-
 <!-- ── Chunk 2: Collector panel (set-completion) ──
-     Sits between the Top 10 section and the filter strip on the main
-     view; auto-hidden in set-detail mode or when the user owns nothing. -->
+     Sits ABOVE the Top 10 section on the main view per user request;
+     auto-hidden in set-detail mode or when the user owns nothing. -->
 <aside id="collector-panels" hidden aria-label="Your collection at a glance">
   <section id="set-completion-section" class="cp-section collapsed" hidden aria-labelledby="sc-title">
     <button type="button" class="cp-header" id="sc-toggle" aria-expanded="false" aria-controls="sc-body">
@@ -2041,6 +2059,19 @@ tr.set-header:hover .set-badge,
     </div>
   </section>
 </aside>
+
+<!-- Top 10 — trophy SVG (1.8 polish) replaces emoji so the icon renders
+     identically across platforms. -->
+<section id="top10-section" aria-labelledby="top10-toggle">
+  <button id="top10-toggle" type="button" aria-expanded="false" aria-controls="top10-body">
+    <svg class="trophy-svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5a2 2 0 0 0-2 2v2a4 4 0 0 0 4 4 6 6 0 0 0 4 3.93V18H8v2h8v-2h-3v-1.07A6 6 0 0 0 17 13a4 4 0 0 0 4-4V7a2 2 0 0 0-2-2zM5 9V7h2v3.83A2 2 0 0 1 5 9zm14 0a2 2 0 0 1-2 1.83V7h2v2z"/></svg>
+    <span>Top 10 Most Valuable Figures</span>
+    <span class="chevron" aria-hidden="true">▼</span>
+  </button>
+  <div id="top10-body" role="region" aria-label="Top 10 most valuable figures">
+    <div class="top10-list" id="top10-list"></div>
+  </div>
+</section>
 
 <!-- ── Controls — flat, all filters visible (matches the original
      live-site layout). The View selector (All / Watchlist / Collection)
@@ -4739,6 +4770,7 @@ const RAW_SETS = [
     ["Prize E","Super Saiyan Goku",1101099,null,3454,65,"Movies Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_E_694eac07eec49.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Prize F","Dende",1101104,null,7222,110,"Namek Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_F_694eac07ef274.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["LOP","Porunga",1101105,null,53851,525,"Namek Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_LO_694eac07f13eb.jpg",{"ebayHistory":[{"date":"2026-02-13","price":387.26},{"date":"2026-02-27","price":264.99},{"date":"2026-03-03","price":232.5},{"date":"2026-03-19","price":225},{"date":"2026-03-26","price":240},{"date":"2026-04-05","price":236.2},{"date":"2026-04-12","price":245},{"date":"2026-04-15","price":216.19},{"date":"2026-04-23","price":302.93},{"date":"2026-05-02","price":310.67}],"ebayUpdated":"2026-05-03","mercariUpdated":"2026-05-01"}],
+    ["Goku Day Ver.","Super Saiyan Goku",1101110,null,null,null,"Namek Saga","Dragon Ball Z",null,"https://static.myfigurecollection.net/upload/items/2/1101110-30516.jpg",null],
   ]},
   {set:"EX: Super Decisive Battle of the World", setNameJP:"一番くじ ドラゴンボール EX 天下分け目の超決戦!!", dateStr:"July 2021", type:"masterlise", saga:"Saiyan Saga", anime:"Dragon Ball Z", prizes:[
     ["Prize A","Vegeta",1146802,null,19939,140,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-ex-l-ultime-combat-decisif/main_A_694eab9126e78.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
@@ -5018,7 +5050,7 @@ const RAW_SETS = [
     ["LOP","Majin Buu (Fat)",3007386,104.99,12560,null,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-majin-buu-battle-super-saiyan-figure-169196?variation=334396&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_LO_6971a7519c35c.webp",null],
   ]},
   {set:"Dragonball Snap Collection", setNameJP:"一番くじ ドラゴンボール DRAGONBALL SNAP COLLECTION", dateStr:"September 2024", type:"non-masterlise", saga:"Dragon Ball Saga?", anime:"Dragon Ball", prizes:[
-    ["Prize A","Son Goku (Snap Figure)",2263796,39.99,7069,57,"Android Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-goku-snap-collection-figure-140705?variation=277871&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection/main_A_6929b30ff3af4.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
+    ["Prize A","Son Goku (Snap Figure)",2263796,59.99,7069,57,"Android Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-goku-snap-collection-figure-140705?variation=277871&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection/main_A_6929b30ff3af4.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Prize B","Son Gohan (Snap Figure)",2263799,59.99,3927,57,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-ichibansho-gohan-snap-collection-figure-140706?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection/main_B_6929b30ff3dc5.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Prize C","Kid Goku w/ Aviator Cap (Snap Figure)",2263805,39.99,4712,49,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-son-goku-kid-snap-collection-figure-140703?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection/main_C_6929b30ff404e.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Prize D","Launch (Snap Figure)",2263810,44.99,5498,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-launch-snap-collection-figure-140704?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-dragonball-snap-collection/main_D_6929b31000675.jpg",{"mercariUpdated":"2026-05-01"}],
