@@ -1691,6 +1691,18 @@ tr.set-header:hover .set-badge,
   font-size:12px;color:var(--grey);margin-bottom:10px;
 }
 .sc-summary strong{color:var(--white);font-weight:800}
+/* Two-line summary: prize count + estimated value. The value line gets
+   a gold accent so the headline price reads at a glance from across
+   the Collection panel. */
+.sc-summary-line{display:block;line-height:1.55}
+.sc-value-line{margin-top:2px}
+.sc-value-label{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--grey)}
+.sc-value-amount{
+  color:var(--gold);font-size:15px;font-weight:800;
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing:.4px;
+}
+.sc-value-missing{font-size:11px;color:#666}
 
 /* Empty state shown when the user owns nothing yet — turns the panel
    from an invisible reward into a discovery prompt. */
@@ -4565,8 +4577,34 @@ function renderSetCompletion(){
   // not the headline number.)
   const totalOwned = ownedRows.reduce((n, r) => n + r.owned, 0);
   const totalAcrossSets = ownedRows.reduce((n, r) => n + r.total, 0);
-  summary.innerHTML = '<strong>' + totalOwned + '</strong> / ' + totalAcrossSets
-    + ' prizes across <strong>' + ownedRows.length + '</strong> set' + (ownedRows.length===1?'':'s');
+  // Estimated collection value — sum each owned figure's eBay price
+  // (preferring eBay USD; falling back to Mercari JPY → USD if no eBay).
+  // Tracks how many figures had a price vs how many were skipped so the
+  // user can see how complete the estimate is.
+  let valueUsd = 0, valuedCount = 0, missingCount = 0;
+  DATA.forEach(d => {
+    if(!collection.has(d.key)) return;
+    const usd = (d.ebay != null) ? +d.ebay
+              : (d.mercari != null) ? (d.mercari / JPY_PER_USD)
+              : null;
+    if(usd != null){ valueUsd += usd; valuedCount++; }
+    else missingCount++;
+  });
+  const valueConverted = convertFromTo(valueUsd, 'USD', displayCurrency);
+  const valueStr = formatCurrency(valueConverted, displayCurrency);
+  const missingNote = missingCount > 0
+    ? ` <span class="sc-value-missing">(${missingCount} without market data)</span>`
+    : '';
+  summary.innerHTML =
+      '<div class="sc-summary-line">'
+    +   '<strong>' + totalOwned + '</strong> / ' + totalAcrossSets
+    +   ' prizes across <strong>' + ownedRows.length + '</strong> set' + (ownedRows.length===1?'':'s')
+    + '</div>'
+    + '<div class="sc-summary-line sc-value-line">'
+    +   '<span class="sc-value-label">Estimated value</span> '
+    +   '<strong class="sc-value-amount">~' + esc(valueStr) + '</strong>'
+    +   missingNote
+    + '</div>';
   if(controls){
     controls.hidden = false;
     // Sync the controls' visual state to the saved prefs (only needed on
