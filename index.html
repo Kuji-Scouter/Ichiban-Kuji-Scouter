@@ -125,6 +125,23 @@ body{
   mix-blend-mode:screen;
   opacity:.07;
 }
+/* Bulma + Nimbus — fixed top-left corner watermark that stays put while
+   the page scrolls. Mirror partner to the Shenron right-side overlay.
+   Source is a full-color Toriyama illustration, so it gets grayscale
+   before invert+screen so it reads as a monochrome ink sketch matching
+   the Capsule Corp ink in the footer. */
+#corner-watermark{
+  position:fixed;
+  top:0;left:0;
+  width:clamp(160px, 22vw, 320px);
+  height:clamp(200px, 28vw, 400px);
+  pointer-events:none;
+  z-index:100;
+  background:url('img/art-bulma-nimbus.jpg') left top / contain no-repeat;
+  filter:grayscale(1) invert(1) contrast(1.05);
+  mix-blend-mode:screen;
+  opacity:.10;
+}
 /* Give regular content a stacking baseline so the watermark layers
    above it cleanly. CRITICAL: exclude the lightbox, compare modal,
    compare bar, and skip-link — those rely on their own position:fixed
@@ -132,12 +149,13 @@ body{
    forced them into normal flow at the bottom of the page (which
    caused clicking a figure thumb to scroll to the bottom instead of
    opening the lightbox as a modal). */
-body > *:not(#page-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(.skip-link){position:relative;z-index:1}
+body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(.skip-link){position:relative;z-index:1}
 
 /* Phone widths get a fainter watermark so the smaller viewport
    doesn't feel claustrophobic with the dragon overlay. */
 @media(max-width:600px){
   #page-watermark{opacity:.05}
+  #corner-watermark{opacity:.07; width:clamp(120px, 32vw, 200px); height:clamp(150px, 40vw, 260px)}
 }
 /* Shared fluid container width — fills wider monitors but stays readable */
 :root{--container-max:min(1600px, 96vw)}
@@ -188,7 +206,7 @@ body > *:not(#page-watermark):not(#lightbox):not(#compare-modal):not(#compare-ba
   font-size:clamp(11px,0.8vw + 6px,16px);color:var(--grey);letter-spacing:2px;
   text-transform:uppercase;margin-top:6px;
 }
- 
+
 /* ── Stats Bar ── */
 #stats-bar{
   display:flex;gap:clamp(8px,1vw,18px);
@@ -210,7 +228,7 @@ body > *:not(#page-watermark):not(#lightbox):not(#compare-modal):not(#compare-ba
 .stat-sub{font-size:clamp(10px,0.55vw + 6px,12px);color:#a8c0a8;margin-top:1px}
  
 /* ── Top 10 ── */
-#top10-section{max-width:var(--container-max);margin:0 auto 16px;padding:0 clamp(12px,1.2vw,28px)}
+#top10-section{max-width:var(--container-max);margin:0 auto 16px;padding:0 clamp(12px,1.2vw,28px);position:relative}
 #top10-toggle{
   display:flex;align-items:center;gap:10px;width:100%;
   background:var(--surface);border:1px solid #2a2a3a;
@@ -222,8 +240,17 @@ body > *:not(#page-watermark):not(#lightbox):not(#compare-modal):not(#compare-ba
 #top10-toggle:hover{background:#1a1a24}
 #top10-toggle .chevron{margin-left:auto;transition:transform .3s;font-size:14px;color:var(--grey)}
 #top10-toggle.open .chevron{transform:rotate(180deg)}
-#top10-body{display:none;background:var(--surface);border:1px solid #2a2a3a;border-top:none;border-radius:0 0 8px 8px;padding:12px 16px}
+#top10-body{display:none;background:var(--surface);border:1px solid #2a2a3a;border-top:none;border-radius:0 0 8px 8px;padding:12px 16px;position:relative;overflow:hidden}
 #top10-body.visible{display:block}
+#top10-body::before{
+  content:"";position:absolute;inset:0;
+  /* center top + 90% width so the TOP of the Buu banner is what shows
+     through, and the slight downscale lets a little more of the image
+     fit before vertical cropping than a pure `cover` would. */
+  background:url('img/art-buu-vs-saiyans.jpg') center top / 90% auto no-repeat;
+  opacity:.10;pointer-events:none;z-index:0;
+}
+#top10-body > *{position:relative;z-index:1}
 .top10-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
 .top10-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:6px;border:1px solid #1e1e2e}
 .top10-rank{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:22px;min-width:36px;text-align:center}
@@ -687,7 +714,48 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 .lb-link:hover{background:rgba(110,220,255,.12)}
  
 /* No results */
-#no-results{text-align:center;padding:40px;color:var(--grey);font-size:14px;display:none}
+#no-results{text-align:center;padding:24px;color:var(--grey);font-size:14px;display:none}
+
+/* Empty-state card — used when Wishlist/Collection have no figures yet
+   (kid-Goku art) and when active filters return zero matches (Trunks
+   art, added in a later commit). Single CSS rule, two states. */
+.empty-state-card{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:24px;
+  align-items:center;
+  max-width:760px;margin:24px auto;
+  padding:20px 28px;
+  background:linear-gradient(135deg,rgba(255,107,0,.04),rgba(127,230,255,.03));
+  border:1px solid #2a2a3a;border-radius:10px;
+  text-align:left;
+}
+.empty-state-card img{
+  width:200px;height:auto;display:block;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.55));
+}
+.empty-state-card .empty-state-text h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;letter-spacing:1px;
+  color:var(--white);margin:0 0 6px;
+}
+.empty-state-card .empty-state-text p{
+  font-size:13px;color:var(--grey);line-height:1.5;margin:0;
+}
+/* Inline icon helper for body-copy / legend / empty-state text where we
+   want the same radar / dragonball glyphs the buttons use. Sized to the
+   surrounding text's cap-height so each icon reads as one "word". */
+.copy-icon{
+  height:1.05em;width:auto;display:inline-block;
+  vertical-align:-0.18em;
+  margin:0 1px;
+}
+@media(max-width:700px){
+  .empty-state-card{
+    grid-template-columns:1fr;text-align:center;padding:18px;
+  }
+  .empty-state-card img{width:140px;margin:0 auto}
+}
  
 /* ── Footer ── */
 /* Akira Toriyama manga-spine art — centered banner above the footer.
@@ -728,19 +796,45 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   background:url('img/capsule-corp-watermark.png') left bottom / auto 100% no-repeat;
   filter:invert(1);
   mix-blend-mode:screen;
-  opacity:.20;
+  opacity:.07;
   pointer-events:none;
   z-index:0;
 }
 /* Ensure all footer columns / links render ABOVE the watermark. */
 #footer > *{position:relative;z-index:1}
 /* On phones, soften the watermark slightly so it doesn't crowd the
-   narrower footer layout. */
+   narrower footer layout — matches the phone-only dim on the Shenron
+   overlay. */
 @media(max-width:600px){
-  #footer::before{opacity:.12;background-size:auto 90%}
+  #footer::before{opacity:.05;background-size:auto 90%}
 }
 .footer-section{margin-bottom:14px}
 .footer-title{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:14px;letter-spacing:1px;color:var(--orange);margin-bottom:8px}
+/* ── Tier-3 data freshness badge ──────────────────────────────────────
+   Sits just above the disclaimer in the footer. Surfaces the latest
+   ebayUpdated date across DATA so visitors know the price feed isn't
+   stale. .refresh-dot pulses a soft cyan to read as "live feed". */
+.refresh-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  margin:14px 0 10px;
+  padding:6px 12px;
+  background:rgba(127,230,255,.06);
+  border:1px solid rgba(127,230,255,.20);
+  border-radius:999px;
+  font-size:12px;color:#cfe6ef;
+  font-family:'Nunito',sans-serif;letter-spacing:.2px;
+}
+.refresh-badge .refresh-dot{
+  color:var(--cyan,#7fe6ff);font-size:10px;line-height:1;
+  animation:refreshPulse 2.4s ease-in-out infinite;
+}
+@keyframes refreshPulse{
+  0%,100%{opacity:.45}
+  50%{opacity:1}
+}
+@media (prefers-reduced-motion: reduce){
+  .refresh-badge .refresh-dot{animation:none}
+}
 .footer-links{display:flex;flex-wrap:wrap;gap:8px}
 .footer-link{
   display:inline-block;padding:5px 12px;background:var(--surface);
@@ -1999,6 +2093,7 @@ tr.set-header:hover .set-badge,
      attached in CSS so it can be swapped/tuned without touching markup.
      aria-hidden so screen readers skip the decoration. -->
 <div id="page-watermark" aria-hidden="true"></div>
+<div id="corner-watermark" aria-hidden="true"></div>
 
 <!-- Skip-link for keyboard users — jumps straight to main content. -->
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -2247,7 +2342,7 @@ tr.set-header:hover .set-badge,
           <th class="sortable" data-col="bbts" style="text-align:right">BBTS / MSRP <span class="sort-icon" aria-hidden="true"></span></th>
           <th class="sortable" data-col="mercari" style="text-align:right">Mercari JP — Avg <span class="sort-icon" aria-hidden="true"></span></th>
           <th class="sortable" data-col="ebay" style="text-align:right">eBay — Avg <span class="sort-icon" aria-hidden="true"></span></th>
-          <th aria-label="Save / own">★</th>
+          <th aria-label="Save / own"><img class="copy-icon" src="img/radar.png" alt=""/><img class="copy-icon" src="img/dragonball.png" alt=""/></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -2313,7 +2408,7 @@ tr.set-header:hover .set-badge,
         <p><strong>Set type colour key</strong>: <span style="color:var(--orange)">Masterlise</span> · <span style="color:var(--purple)">Non-Masterlise</span> · <span style="color:var(--cyan)">SMSP</span> · <span style="color:var(--green)">40th Anniversary</span>. Grails are flagged with a 💎 next to the prize letter.</p>
         <p><strong>Prices</strong>: Mercari Japan and eBay show the rolling 3-month average sold price; MSRP is the original retail price. Switch the displayed currency (USD / JPY / EUR / GBP / AUD) with the picker at the top-right of the page — every price column converts in real time. Click 🔍 next to a Mercari or eBay price to open a fresh sold-listings search on that marketplace.</p>
         <p><strong>Prize Filter</strong>: ★ LOP shows only Last-One-Prize figures (the consolation prize for the last ticket in a sealed set); ★ Grail shows only the rare-value figures flagged with 💎. Toggling both shows the union.</p>
-        <p><strong>Save figures</strong>: ★ on a row adds it to your Wishlist; ✓ marks it as Owned. Switch to the ★ Wishlist or ✓ Collection view (top-right of the filter strip) to see only your saved figures. Saved data lives in this browser only — use ↓ Export to back it up as a JSON file (the file contains only your save list) and ↑ Import on another browser to restore.</p>
+        <p><strong>Save figures</strong>: <img class="copy-icon" src="img/radar.png" alt="Wishlist"/> on a row adds it to your Wishlist; <img class="copy-icon" src="img/dragonball.png" alt="Collection"/> marks it as Owned. Switch to the <img class="copy-icon" src="img/radar.png" alt=""/> Wishlist or <img class="copy-icon" src="img/dragonball.png" alt=""/> Collection view (top-right of the filter strip) to see only your saved figures. Saved data lives in this browser only — use ↓ Export to back it up as a JSON file (the file contains only your save list) and ↑ Import on another browser to restore.</p>
         <p><strong>Set pages</strong>: click any Kuji set name (in the table or the set-header rows) to open a focused page for that set, with all its prizes plus an EV-per-ticket calculator comparing average secondary value to average MSRP.</p>
       </div>
     </details>
@@ -2322,6 +2417,12 @@ tr.set-header:hover .set-badge,
       <label class="footer-link footer-action" for="import-data-input" tabindex="0">↑ Import</label>
       <input id="import-data-input" type="file" accept="application/json,.json" hidden/>
     </div>
+  </div>
+  <!-- Tier 3 — data freshness badge. Populated by renderRefreshBadge();
+       hidden until at least one figure carries an ebayUpdated date. -->
+  <div id="refresh-badge" class="refresh-badge" hidden>
+    <span class="refresh-dot" aria-hidden="true">●</span>
+    <span id="refresh-badge-text"></span>
   </div>
   <div class="disclaimer">
     <p>Mercari Japan and eBay prices are <strong>read-only snapshots</strong> of recent sold-listing averages, not live data. BBTS cells link to the live product page when the figure is currently listed and otherwise show MSRP as plain text; cells without a recorded MSRP are left blank. Reference data originally compiled by Myk; figure-image catalogue courtesy of <a href="http://db-kuji.com" style="color:var(--orange)" target="_blank">db-kuji.com</a>.</p>
@@ -3405,6 +3506,36 @@ function renderTable(){
 
   if(filtered.length===0){
     tbody.innerHTML='';
+    // Pick the right empty-state messaging. If the user is on Wishlist or
+    // Collection AND has actually flagged nothing yet, show the inviting
+    // "Start your collection" card; otherwise (active filters returning
+    // nothing, set-detail with no match) show the "no figures match"
+    // copy. All three empty states share the same Trunks art.
+    if(viewMode === 'watchlist' && watchlist.size === 0){
+      noRes.innerHTML = `<div class="empty-state-card">
+        <img src="img/art-trunks.jpg" alt=""/>
+        <div class="empty-state-text">
+          <h2>Start your wishlist</h2>
+          <p>Tap the <img class="copy-icon" src="img/radar.png" alt="Wishlist"/> on any figure to track it here. Once you mark one, it'll show up so you can see what you're chasing at a glance.</p>
+        </div>
+      </div>`;
+    } else if(viewMode === 'collection' && collection.size === 0){
+      noRes.innerHTML = `<div class="empty-state-card">
+        <img src="img/art-trunks.jpg" alt=""/>
+        <div class="empty-state-text">
+          <h2>Start your collection</h2>
+          <p>Tap the <img class="copy-icon" src="img/dragonball.png" alt="Collection"/> on any figure in the table to mark it as owned. Your set-by-set progress shows up in the Collection Progress radar above.</p>
+        </div>
+      </div>`;
+    } else {
+      noRes.innerHTML = `<div class="empty-state-card">
+        <img src="img/art-trunks.jpg" alt=""/>
+        <div class="empty-state-text">
+          <h2>No figures match your filters</h2>
+          <p>Try widening your saga, year, or set filter — or hit Reset to clear them all. The figure you're looking for is out there somewhere.</p>
+        </div>
+      </div>`;
+    }
     noRes.style.display='block';
     info.textContent='';
     return;
@@ -5313,6 +5444,68 @@ refreshFxRates();
 renderCompareBar();
 renderSetCompletion();
 updateCollectorPanelsVisibility();
+
+// ── External eBay price feed (data/ebay-prices.json) ──────────────────
+// On-demand snapshots maintained per figure — refreshed when Claude is
+// asked to scrape a specific figure / set, NOT on a schedule. We merge
+// the file's contents into the in-memory DATA array on boot so the
+// table / sparklines / Top 10 reflect the latest refresh as soon as
+// it lands. If the file is missing or empty the site keeps using
+// whatever is baked into the HTML — graceful degradation.
+fetch('data/ebay-prices.json', {cache: 'no-cache'})
+  .then(r => r.ok ? r.json() : null)
+  .then(prices => {
+    if(!prices || typeof prices !== 'object') return;
+    let merged = 0;
+    Object.entries(prices).forEach(([key, payload]) => {
+      if(!payload || typeof payload !== 'object') return;
+      const d = DATA.find(f => f.key === key);
+      if(!d) return;
+      if(Array.isArray(payload.ebayHistory)) d.ebayHistory = payload.ebayHistory;
+      if(typeof payload.ebayUpdated === 'string') d.ebayUpdated = payload.ebayUpdated;
+      // Update the headline ebay value too — use the most recent sample.
+      if(Array.isArray(payload.ebayHistory) && payload.ebayHistory.length){
+        const latest = payload.ebayHistory[payload.ebayHistory.length - 1];
+        if(latest && latest.price != null) d.ebay = +latest.price;
+      }
+      merged++;
+    });
+    if(merged > 0){
+      // Re-render the dependent surfaces with the new prices.
+      renderTable();
+      renderStats();
+      renderTop10();
+      if(typeof renderSetCompletion === 'function') renderSetCompletion();
+    }
+    renderRefreshBadge();
+  })
+  .catch(() => { renderRefreshBadge(); /* graceful: keep in-HTML data */ });
+
+// Tier 3 — populate the footer "last refreshed" badge from the latest
+// ebayUpdated date across DATA. Hidden if nothing has a date.
+function renderRefreshBadge(){
+  const el = document.getElementById('refresh-badge');
+  const text = document.getElementById('refresh-badge-text');
+  if(!el || !text) return;
+  let latest = '';
+  for(const d of DATA){
+    if(typeof d.ebayUpdated === 'string' && d.ebayUpdated > latest) latest = d.ebayUpdated;
+  }
+  if(!latest){ el.hidden = true; return; }
+  const parsed = new Date(latest + 'T00:00:00Z');
+  if(isNaN(parsed.getTime())){ el.hidden = true; return; }
+  const diffDays = Math.max(0, Math.floor((Date.now() - parsed.getTime()) / 86400000));
+  let when;
+  if(diffDays === 0) when = 'today';
+  else if(diffDays === 1) when = 'yesterday';
+  else if(diffDays < 14) when = `${diffDays} days ago`;
+  else when = parsed.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+  text.textContent = `eBay prices last refreshed ${when}`;
+  el.hidden = false;
+}
+// First paint uses in-HTML data; the fetch then re-renders with fresh
+// dates once data/ebay-prices.json arrives.
+renderRefreshBadge();
 
 </script>
 </body>
