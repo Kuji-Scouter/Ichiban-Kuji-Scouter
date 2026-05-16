@@ -1,0 +1,3494 @@
+[
+  {
+    "key": "Dragon Ball Memories|Prize A|Super Saiyan Goku",
+    "set": "Dragon Ball Memories",
+    "prize": "Prize A",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Memories|Prize B|Super Saiyan Vegeta",
+    "set": "Dragon Ball Memories",
+    "prize": "Prize B",
+    "character": "Super Saiyan Vegeta",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Memories|Prize C|Super Saiyan Blue Goku",
+    "set": "Dragon Ball Memories",
+    "prize": "Prize C",
+    "character": "Super Saiyan Blue Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Memories|LOP|Super Saiyan Blue Vegeta",
+    "set": "Dragon Ball Memories",
+    "prize": "LOP",
+    "character": "Super Saiyan Blue Vegeta",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Saiyajin, Koko ni Kiwamareri|Prize A|UI Goku",
+    "set": "Saiyajin, Koko ni Kiwamareri",
+    "prize": "Prize A",
+    "character": "UI Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Saiyajin, Koko ni Kiwamareri|Prize B|Super Saiyan Goku",
+    "set": "Saiyajin, Koko ni Kiwamareri",
+    "prize": "Prize B",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Saiyajin, Koko ni Kiwamareri|Prize C|Super Saiyan Blue Goku",
+    "set": "Saiyajin, Koko ni Kiwamareri",
+    "prize": "Prize C",
+    "character": "Super Saiyan Blue Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Saiyajin, Koko ni Kiwamareri|Prize D|Goku",
+    "set": "Saiyajin, Koko ni Kiwamareri",
+    "prize": "Prize D",
+    "character": "Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Saiyajin, Koko ni Kiwamareri|Prize E|Super Saiyan 'Rose' Goku Black",
+    "set": "Saiyajin, Koko ni Kiwamareri",
+    "prize": "Prize E",
+    "character": "Super Saiyan 'Rose' Goku Black",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of Son Goku|Prize A|Super Saiyan Blue Goku",
+    "set": "History of Son Goku",
+    "prize": "Prize A",
+    "character": "Super Saiyan Blue Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of Son Goku|Prize B|Super Saiyan Goku",
+    "set": "History of Son Goku",
+    "prize": "Prize B",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of Son Goku|LOP|Super Saiyan Goku",
+    "set": "History of Son Goku",
+    "prize": "LOP",
+    "character": "Super Saiyan Goku",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Battle of World|Collab Prize|Shallot",
+    "set": "Battle of World",
+    "prize": "Collab Prize",
+    "character": "Shallot",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of World|Prize A|Super Saiyan Goku",
+    "set": "Battle of World",
+    "prize": "Prize A",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of World|Prize B|Super Saiyan / Super Saiyan 2 Gohan",
+    "set": "Battle of World",
+    "prize": "Prize B",
+    "character": "Super Saiyan / Super Saiyan 2 Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of World|Prize C|Majin Vegeta",
+    "set": "Battle of World",
+    "prize": "Prize C",
+    "character": "Majin Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of World|Prize D|UI Goku",
+    "set": "Battle of World",
+    "prize": "Prize D",
+    "character": "UI Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of World|LOP|Super Saiyan Goku",
+    "set": "Battle of World",
+    "prize": "LOP",
+    "character": "Super Saiyan Goku",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "The 20th Film|Prize A|Super Saiyan Broly",
+    "set": "The 20th Film",
+    "prize": "Prize A",
+    "character": "Super Saiyan Broly",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The 20th Film|Prize B|Super Saiyan Blue Gogeta",
+    "set": "The 20th Film",
+    "prize": "Prize B",
+    "character": "Super Saiyan Blue Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The 20th Film|Prize C|Super Saiyan Gogeta",
+    "set": "The 20th Film",
+    "prize": "Prize C",
+    "character": "Super Saiyan Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The 20th Film|Prize D|Super Saiyan Blue Goku",
+    "set": "The 20th Film",
+    "prize": "Prize D",
+    "character": "Super Saiyan Blue Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The 20th Film|Prize E|Super Saiyan Goku",
+    "set": "The 20th Film",
+    "prize": "Prize E",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The 20th Film|LOP|Super Saiyan Broly",
+    "set": "The 20th Film",
+    "prize": "LOP",
+    "character": "Super Saiyan Broly",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Super Dragon Ball Heroes|Prize A|Super Saiyan 4 Xeno Vegito",
+    "set": "Super Dragon Ball Heroes",
+    "prize": "Prize A",
+    "character": "Super Saiyan 4 Xeno Vegito",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes|Prize B|UI Goku",
+    "set": "Super Dragon Ball Heroes",
+    "prize": "Prize B",
+    "character": "UI Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes|Prize C|Super Saiyan Blue Vegito",
+    "set": "Super Dragon Ball Heroes",
+    "prize": "Prize C",
+    "character": "Super Saiyan Blue Vegito",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes|Prize D|The Masked Saiyan",
+    "set": "Super Dragon Ball Heroes",
+    "prize": "Prize D",
+    "character": "The Masked Saiyan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes|Prize E|Super Saiyan 4 Gogeta",
+    "set": "Super Dragon Ball Heroes",
+    "prize": "Prize E",
+    "character": "Super Saiyan 4 Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes|LOP|Super Saiyan 4 Xeno Gogeta",
+    "set": "Super Dragon Ball Heroes",
+    "prize": "LOP",
+    "character": "Super Saiyan 4 Xeno Gogeta",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "The Greatest Saiyan|Prize A|Super Saiyan 4 Gogeta",
+    "set": "The Greatest Saiyan",
+    "prize": "Prize A",
+    "character": "Super Saiyan 4 Gogeta",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "The Greatest Saiyan|Prize B|Super Saiyan 4 Goku",
+    "set": "The Greatest Saiyan",
+    "prize": "Prize B",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "The Greatest Saiyan|Prize C|Super Saiyan 4 Vegeta",
+    "set": "The Greatest Saiyan",
+    "prize": "Prize C",
+    "character": "Super Saiyan 4 Vegeta",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "The Greatest Saiyan|LOP|Golden Great Ape (Oozaru)",
+    "set": "The Greatest Saiyan",
+    "prize": "LOP",
+    "character": "Golden Great Ape (Oozaru)",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Extreme Saiyan|Prize A|UI Goku",
+    "set": "Extreme Saiyan",
+    "prize": "Prize A",
+    "character": "UI Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Extreme Saiyan|Prize B|Super Saiyan Blue Vegito",
+    "set": "Extreme Saiyan",
+    "prize": "Prize B",
+    "character": "Super Saiyan Blue Vegito",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Extreme Saiyan|Prize C|Super Saiyan Blue Gogeta",
+    "set": "Extreme Saiyan",
+    "prize": "Prize C",
+    "character": "Super Saiyan Blue Gogeta",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Extreme Saiyan|Prize D|Gogeta",
+    "set": "Extreme Saiyan",
+    "prize": "Prize D",
+    "character": "Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Extreme Saiyan|LOP|UI \"Sign\" Goku",
+    "set": "Extreme Saiyan",
+    "prize": "LOP",
+    "character": "UI \"Sign\" Goku",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "History of Rivals|Prize A|Yamcha",
+    "set": "History of Rivals",
+    "prize": "Prize A",
+    "character": "Yamcha",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of Rivals|Prize B|Broly",
+    "set": "History of Rivals",
+    "prize": "Prize B",
+    "character": "Broly",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "History of Rivals|Prize C|Super Saiyan Blue Goku",
+    "set": "History of Rivals",
+    "prize": "Prize C",
+    "character": "Super Saiyan Blue Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of Rivals|LOP|Yamcha with Puar",
+    "set": "History of Rivals",
+    "prize": "LOP",
+    "character": "Yamcha with Puar",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Ultimate Variation|Prize A|Super Saiyan Goku",
+    "set": "Ultimate Variation",
+    "prize": "Prize A",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ultimate Variation|Prize B|UI Goku",
+    "set": "Ultimate Variation",
+    "prize": "Prize B",
+    "character": "UI Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ultimate Variation|Prize C|Super Saiyan Broly",
+    "set": "Ultimate Variation",
+    "prize": "Prize C",
+    "character": "Super Saiyan Broly",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ultimate Variation|Prize D|Super Saiyan Blue Gogeta",
+    "set": "Ultimate Variation",
+    "prize": "Prize D",
+    "character": "Super Saiyan Blue Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ultimate Variation|Prize E|UI \"Sign\" Goku",
+    "set": "Ultimate Variation",
+    "prize": "Prize E",
+    "character": "UI \"Sign\" Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ultimate Variation|Prize F|Super Saiyan Blue Vegeta",
+    "set": "Ultimate Variation",
+    "prize": "Prize F",
+    "character": "Super Saiyan Blue Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ultimate Variation|LOP|Shenron",
+    "set": "Ultimate Variation",
+    "prize": "LOP",
+    "character": "Shenron",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Strong Chains!!|Prize A|Master Roshi / Jackie Chun",
+    "set": "Strong Chains!!",
+    "prize": "Prize A",
+    "character": "Master Roshi / Jackie Chun",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Strong Chains!!|Prize B|Krillin",
+    "set": "Strong Chains!!",
+    "prize": "Prize B",
+    "character": "Krillin",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Strong Chains!!|Prize C|Vegeta",
+    "set": "Strong Chains!!",
+    "prize": "Prize C",
+    "character": "Vegeta",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Strong Chains!!|Prize D|Goku",
+    "set": "Strong Chains!!",
+    "prize": "Prize D",
+    "character": "Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Strong Chains!!|LOP|Krillin & Gohan",
+    "set": "Strong Chains!!",
+    "prize": "LOP",
+    "character": "Krillin & Gohan",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball VS Omnibus|Prize A|UI Goku",
+    "set": "Dragon Ball VS Omnibus",
+    "prize": "Prize A",
+    "character": "UI Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball VS Omnibus|Prize B|Jiren",
+    "set": "Dragon Ball VS Omnibus",
+    "prize": "Prize B",
+    "character": "Jiren",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball VS Omnibus|Prize C|Super Saiyan Gogeta",
+    "set": "Dragon Ball VS Omnibus",
+    "prize": "Prize C",
+    "character": "Super Saiyan Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball VS Omnibus|Prize D|Super Saiyan Broly",
+    "set": "Dragon Ball VS Omnibus",
+    "prize": "Prize D",
+    "character": "Super Saiyan Broly",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball VS Omnibus|Prize E|Super Saiyan 3 Goku",
+    "set": "Dragon Ball VS Omnibus",
+    "prize": "Prize E",
+    "character": "Super Saiyan 3 Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball VS Omnibus|Prize F|Kid Buu",
+    "set": "Dragon Ball VS Omnibus",
+    "prize": "Prize F",
+    "character": "Kid Buu",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball VS Omnibus|LOP|Great Ape Vegeta (Oozaru)",
+    "set": "Dragon Ball VS Omnibus",
+    "prize": "LOP",
+    "character": "Great Ape Vegeta (Oozaru)",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Super Dragon Ball Heroes Saga|Prize A|Super Saiyan 4 Broly",
+    "set": "Super Dragon Ball Heroes Saga",
+    "prize": "Prize A",
+    "character": "Super Saiyan 4 Broly",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes Saga|Prize B|Super Saiyan God Xeno Trunks",
+    "set": "Super Dragon Ball Heroes Saga",
+    "prize": "Prize B",
+    "character": "Super Saiyan God Xeno Trunks",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes Saga|Prize C|Super Saiyan Blue Gogeta",
+    "set": "Super Dragon Ball Heroes Saga",
+    "prize": "Prize C",
+    "character": "Super Saiyan Blue Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes Saga|Prize D|Super Saiyan Rose Goku Black",
+    "set": "Super Dragon Ball Heroes Saga",
+    "prize": "Prize D",
+    "character": "Super Saiyan Rose Goku Black",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes Saga|Prize E|UI Goku",
+    "set": "Super Dragon Ball Heroes Saga",
+    "prize": "Prize E",
+    "character": "UI Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes Saga|LOP|Super Saiyan 4 Dark Broly",
+    "set": "Super Dragon Ball Heroes Saga",
+    "prize": "LOP",
+    "character": "Super Saiyan 4 Dark Broly",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Warriors Who Protect the Earth|Prize A|Goku & Gohan",
+    "set": "EX: Warriors Who Protect the Earth",
+    "prize": "Prize A",
+    "character": "Goku & Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Warriors Who Protect the Earth|Prize B|Piccolo",
+    "set": "EX: Warriors Who Protect the Earth",
+    "prize": "Prize B",
+    "character": "Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Warriors Who Protect the Earth|Prize C|Tien",
+    "set": "EX: Warriors Who Protect the Earth",
+    "prize": "Prize C",
+    "character": "Tien",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Warriors Who Protect the Earth|Prize D|Yamcha",
+    "set": "EX: Warriors Who Protect the Earth",
+    "prize": "Prize D",
+    "character": "Yamcha",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Warriors Who Protect the Earth|Prize E|Chiaotzu",
+    "set": "EX: Warriors Who Protect the Earth",
+    "prize": "Prize E",
+    "character": "Chiaotzu",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Warriors Who Protect the Earth|LOP|Goku & Gohan",
+    "set": "EX: Warriors Who Protect the Earth",
+    "prize": "LOP",
+    "character": "Goku & Gohan",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Z|Prize A|Goku & Frieza",
+    "set": "Dragon Ball vs Omnibus Z",
+    "prize": "Prize A",
+    "character": "Goku & Frieza",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Z|Prize B|Super Saiyan Broly",
+    "set": "Dragon Ball vs Omnibus Z",
+    "prize": "Prize B",
+    "character": "Super Saiyan Broly",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Z|Prize C|Super Saiyan Blue Gogeta",
+    "set": "Dragon Ball vs Omnibus Z",
+    "prize": "Prize C",
+    "character": "Super Saiyan Blue Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Z|Prize D|Legendary Super Saiyan Broly",
+    "set": "Dragon Ball vs Omnibus Z",
+    "prize": "Prize D",
+    "character": "Legendary Super Saiyan Broly",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Z|Prize E|Super Saiyan Goku",
+    "set": "Dragon Ball vs Omnibus Z",
+    "prize": "Prize E",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Z|Prize F|Dende",
+    "set": "Dragon Ball vs Omnibus Z",
+    "prize": "Prize F",
+    "character": "Dende",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Z|LOP|Porunga",
+    "set": "Dragon Ball vs Omnibus Z",
+    "prize": "LOP",
+    "character": "Porunga",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Z|Goku Day Ver.|Super Saiyan Goku",
+    "set": "Dragon Ball vs Omnibus Z",
+    "prize": "Goku Day Ver.",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Super Decisive Battle of the World|Prize A|Vegeta",
+    "set": "EX: Super Decisive Battle of the World",
+    "prize": "Prize A",
+    "character": "Vegeta",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Super Decisive Battle of the World|Prize B|Nappa",
+    "set": "EX: Super Decisive Battle of the World",
+    "prize": "Prize B",
+    "character": "Nappa",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Super Decisive Battle of the World|Prize C|Kaioken Goku",
+    "set": "EX: Super Decisive Battle of the World",
+    "prize": "Prize C",
+    "character": "Kaioken Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Super Decisive Battle of the World|Prize D|Gohan",
+    "set": "EX: Super Decisive Battle of the World",
+    "prize": "Prize D",
+    "character": "Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Super Decisive Battle of the World|Prize E|Saibaman",
+    "set": "EX: Super Decisive Battle of the World",
+    "prize": "Prize E",
+    "character": "Saibaman",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Super Decisive Battle of the World|LOP|Nappa",
+    "set": "EX: Super Decisive Battle of the World",
+    "prize": "LOP",
+    "character": "Nappa",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Back to the Film|Prize A|Super Saiyan Broly",
+    "set": "Back to the Film",
+    "prize": "Prize A",
+    "character": "Super Saiyan Broly",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Back to the Film|Prize B|Super Saiyan Gogeta",
+    "set": "Back to the Film",
+    "prize": "Prize B",
+    "character": "Super Saiyan Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Back to the Film|Prize C|Super Saiyan Broly 93'",
+    "set": "Back to the Film",
+    "prize": "Prize C",
+    "character": "Super Saiyan Broly 93'",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Back to the Film|Prize C (alt)|Super Saiyan Broly 94'",
+    "set": "Back to the Film",
+    "prize": "Prize C (alt)",
+    "character": "Super Saiyan Broly 94'",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Back to the Film|Prize D|Super Saiyan God Vegeta",
+    "set": "Back to the Film",
+    "prize": "Prize D",
+    "character": "Super Saiyan God Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Back to the Film|Prize E|Golden Frieza",
+    "set": "Back to the Film",
+    "prize": "Prize E",
+    "character": "Golden Frieza",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Back to the Film|Prize F|Cooler (Final Form)",
+    "set": "Back to the Film",
+    "prize": "Prize F",
+    "character": "Cooler (Final Form)",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Back to the Film|LOP|Super Saiyan Broly",
+    "set": "Back to the Film",
+    "prize": "LOP",
+    "character": "Super Saiyan Broly",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 3rd Mission|Prize A|Super Saiyan 4 Broly",
+    "set": "Super Dragon Ball Heroes: 3rd Mission",
+    "prize": "Prize A",
+    "character": "Super Saiyan 4 Broly",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 3rd Mission|Prize B|Super Saiyan 4 Xeno Vegito",
+    "set": "Super Dragon Ball Heroes: 3rd Mission",
+    "prize": "Prize B",
+    "character": "Super Saiyan 4 Xeno Vegito",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 3rd Mission|Prize C|Super Saiyan Blue Vegito",
+    "set": "Super Dragon Ball Heroes: 3rd Mission",
+    "prize": "Prize C",
+    "character": "Super Saiyan Blue Vegito",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 3rd Mission|Prize D|Super Saiyan Rose Crimson Masked Saiyan",
+    "set": "Super Dragon Ball Heroes: 3rd Mission",
+    "prize": "Prize D",
+    "character": "Super Saiyan Rose Crimson Masked Saiyan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 3rd Mission|Prize E|Super Saiyan 4 Xeno Goku",
+    "set": "Super Dragon Ball Heroes: 3rd Mission",
+    "prize": "Prize E",
+    "character": "Super Saiyan 4 Xeno Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 3rd Mission|Prize F|Supreme Kai of Time",
+    "set": "Super Dragon Ball Heroes: 3rd Mission",
+    "prize": "Prize F",
+    "character": "Supreme Kai of Time",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 3rd Mission|LOP|Super Saiyan 4 Broly",
+    "set": "Super Dragon Ball Heroes: 3rd Mission",
+    "prize": "LOP",
+    "character": "Super Saiyan 4 Broly",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Super|Prize A|Super Saiyan Blue Goku & Vegeta",
+    "set": "Dragon Ball vs Omnibus Super",
+    "prize": "Prize A",
+    "character": "Super Saiyan Blue Goku & Vegeta",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Super|Prize B|Super Saiyan Broly",
+    "set": "Dragon Ball vs Omnibus Super",
+    "prize": "Prize B",
+    "character": "Super Saiyan Broly",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Super|Prize C|Super Saiyan 4 Gogeta",
+    "set": "Dragon Ball vs Omnibus Super",
+    "prize": "Prize C",
+    "character": "Super Saiyan 4 Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Super|Prize D|Omega Shenron",
+    "set": "Dragon Ball vs Omnibus Super",
+    "prize": "Prize D",
+    "character": "Omega Shenron",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Super|Prize E|Super Future Trunks",
+    "set": "Dragon Ball vs Omnibus Super",
+    "prize": "Prize E",
+    "character": "Super Future Trunks",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Super|Prize F|Perfect Cell",
+    "set": "Dragon Ball vs Omnibus Super",
+    "prize": "Prize F",
+    "character": "Perfect Cell",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Super|Prize G|Cell Junior",
+    "set": "Dragon Ball vs Omnibus Super",
+    "prize": "Prize G",
+    "character": "Cell Junior",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Super|LOP|Ultimate Shenron",
+    "set": "Dragon Ball vs Omnibus Super",
+    "prize": "LOP",
+    "character": "Ultimate Shenron",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Mystical Adventure|Prize A|Goku",
+    "set": "EX: Mystical Adventure",
+    "prize": "Prize A",
+    "character": "Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Mystical Adventure|Prize B|Piccolo Daimao",
+    "set": "EX: Mystical Adventure",
+    "prize": "Prize B",
+    "character": "Piccolo Daimao",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Mystical Adventure|Prize C|Tao Pai Pai",
+    "set": "EX: Mystical Adventure",
+    "prize": "Prize C",
+    "character": "Tao Pai Pai",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Mystical Adventure|Prize D|Emperor Pilaf",
+    "set": "EX: Mystical Adventure",
+    "prize": "Prize D",
+    "character": "Emperor Pilaf",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Mystical Adventure|Prize E|Shu & Mai",
+    "set": "EX: Mystical Adventure",
+    "prize": "Prize E",
+    "character": "Shu & Mai",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Mystical Adventure|LOP|Cyborg Tao Pai Pai",
+    "set": "EX: Mystical Adventure",
+    "prize": "LOP",
+    "character": "Cyborg Tao Pai Pai",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Super: Super Hero|Prize A|Ultimate Gohan",
+    "set": "Dragon Ball Super: Super Hero",
+    "prize": "Prize A",
+    "character": "Ultimate Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Super: Super Hero|Prize B|Piccolo",
+    "set": "Dragon Ball Super: Super Hero",
+    "prize": "Prize B",
+    "character": "Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Super: Super Hero|Prize C|Goku",
+    "set": "Dragon Ball Super: Super Hero",
+    "prize": "Prize C",
+    "character": "Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Super: Super Hero|Prize D|Vegeta",
+    "set": "Dragon Ball Super: Super Hero",
+    "prize": "Prize D",
+    "character": "Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Super: Super Hero|Prize E|Gamma #1",
+    "set": "Dragon Ball Super: Super Hero",
+    "prize": "Prize E",
+    "character": "Gamma #1",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Super: Super Hero|Prize F|Gamma #2",
+    "set": "Dragon Ball Super: Super Hero",
+    "prize": "Prize F",
+    "character": "Gamma #2",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Super: Super Hero|Prize G|Pan",
+    "set": "Dragon Ball Super: Super Hero",
+    "prize": "Prize G",
+    "character": "Pan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Super: Super Hero|LOP|Shenron",
+    "set": "Dragon Ball Super: Super Hero",
+    "prize": "LOP",
+    "character": "Shenron",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Fear of Androids|Prize A|Android #16",
+    "set": "EX: Fear of Androids",
+    "prize": "Prize A",
+    "character": "Android #16",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fear of Androids|Prize B|Android #17",
+    "set": "EX: Fear of Androids",
+    "prize": "Prize B",
+    "character": "Android #17",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Fear of Androids|Prize C|Android #18",
+    "set": "EX: Fear of Androids",
+    "prize": "Prize C",
+    "character": "Android #18",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fear of Androids|Prize D|Android #19",
+    "set": "EX: Fear of Androids",
+    "prize": "Prize D",
+    "character": "Android #19",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Fear of Androids|Prize E|Android #20",
+    "set": "EX: Fear of Androids",
+    "prize": "Prize E",
+    "character": "Android #20",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Fear of Androids|LOP|Android #16",
+    "set": "EX: Fear of Androids",
+    "prize": "LOP",
+    "character": "Android #16",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "History of the Film|Prize A|Super Saiyan Gohan",
+    "set": "History of the Film",
+    "prize": "Prize A",
+    "character": "Super Saiyan Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of the Film|Prize B|Super Saiyan Goten",
+    "set": "History of the Film",
+    "prize": "Prize B",
+    "character": "Super Saiyan Goten",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of the Film|Prize C|Cooler",
+    "set": "History of the Film",
+    "prize": "Prize C",
+    "character": "Cooler",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of the Film|Prize C (alt)|Meta Cooler",
+    "set": "History of the Film",
+    "prize": "Prize C (alt)",
+    "character": "Meta Cooler",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of the Film|Prize D|Turles",
+    "set": "History of the Film",
+    "prize": "Prize D",
+    "character": "Turles",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of the Film|Prize E|Janemba",
+    "set": "History of the Film",
+    "prize": "Prize E",
+    "character": "Janemba",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of the Film|Prize F|Beerus",
+    "set": "History of the Film",
+    "prize": "Prize F",
+    "character": "Beerus",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "History of the Film|LOP|Super Saiyan Broly",
+    "set": "History of the Film",
+    "prize": "LOP",
+    "character": "Super Saiyan Broly",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultra|Prize A|Super Saiyan Gohan",
+    "set": "Dragon Ball vs Omnibus Ultra",
+    "prize": "Prize A",
+    "character": "Super Saiyan Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultra|Prize B|Ultimate Piccolo",
+    "set": "Dragon Ball vs Omnibus Ultra",
+    "prize": "Prize B",
+    "character": "Ultimate Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultra|Prize C|Imperfect Cell",
+    "set": "Dragon Ball vs Omnibus Ultra",
+    "prize": "Prize C",
+    "character": "Imperfect Cell",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultra|Prize D|Super Saiyan Goku",
+    "set": "Dragon Ball vs Omnibus Ultra",
+    "prize": "Prize D",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultra|Prize E|Goku",
+    "set": "Dragon Ball vs Omnibus Ultra",
+    "prize": "Prize E",
+    "character": "Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultra|Prize F|Super Saiyan Future Trunks",
+    "set": "Dragon Ball vs Omnibus Ultra",
+    "prize": "Prize F",
+    "character": "Super Saiyan Future Trunks",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultra|Prize G|Majin Vegeta",
+    "set": "Dragon Ball vs Omnibus Ultra",
+    "prize": "Prize G",
+    "character": "Majin Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultra|LOP|Majin Buu",
+    "set": "Dragon Ball vs Omnibus Ultra",
+    "prize": "LOP",
+    "character": "Majin Buu",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 4th Mission|Prize A|Super Saiyan 3 Rose Crimson Masked Saiyan",
+    "set": "Super Dragon Ball Heroes: 4th Mission",
+    "prize": "Prize A",
+    "character": "Super Saiyan 3 Rose Crimson Masked Saiyan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 4th Mission|Prize B|Super Saiyan Warrior in Black",
+    "set": "Super Dragon Ball Heroes: 4th Mission",
+    "prize": "Prize B",
+    "character": "Super Saiyan Warrior in Black",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 4th Mission|Prize C|Super Saiyan 4 Xeno Goku",
+    "set": "Super Dragon Ball Heroes: 4th Mission",
+    "prize": "Prize C",
+    "character": "Super Saiyan 4 Xeno Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 4th Mission|Prize D|Super Saiyan 4 Xeno Vegeta",
+    "set": "Super Dragon Ball Heroes: 4th Mission",
+    "prize": "Prize D",
+    "character": "Super Saiyan 4 Xeno Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 4th Mission|Prize E|Super Saiyan 4 Xeno Gogeta",
+    "set": "Super Dragon Ball Heroes: 4th Mission",
+    "prize": "Prize E",
+    "character": "Super Saiyan 4 Xeno Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 4th Mission|LOP|Super Saiyan 4 Xeno Gogeta",
+    "set": "Super Dragon Ball Heroes: 4th Mission",
+    "prize": "LOP",
+    "character": "Super Saiyan 4 Xeno Gogeta",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Great|Prize A|Gohan",
+    "set": "Dragon Ball vs Omnibus Great",
+    "prize": "Prize A",
+    "character": "Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Great|Prize B|Ultimate Piccolo",
+    "set": "Dragon Ball vs Omnibus Great",
+    "prize": "Prize B",
+    "character": "Ultimate Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Great|Prize C|Super Goku",
+    "set": "Dragon Ball vs Omnibus Great",
+    "prize": "Prize C",
+    "character": "Super Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Great|Prize D|Super Saiyan Gohan",
+    "set": "Dragon Ball vs Omnibus Great",
+    "prize": "Prize D",
+    "character": "Super Saiyan Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Great|Prize E|Mecha Frieza",
+    "set": "Dragon Ball vs Omnibus Great",
+    "prize": "Prize E",
+    "character": "Mecha Frieza",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Great|Prize F|King Cold",
+    "set": "Dragon Ball vs Omnibus Great",
+    "prize": "Prize F",
+    "character": "King Cold",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Great|LOP|Cell (Complete)",
+    "set": "Dragon Ball vs Omnibus Great",
+    "prize": "LOP",
+    "character": "Cell (Complete)",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "EX: Fear!! Frieza Army|Prize A|Frieza",
+    "set": "EX: Fear!! Frieza Army",
+    "prize": "Prize A",
+    "character": "Frieza",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fear!! Frieza Army|Prize B|Zarbon",
+    "set": "EX: Fear!! Frieza Army",
+    "prize": "Prize B",
+    "character": "Zarbon",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "EX: Fear!! Frieza Army|Prize C|Dodoria",
+    "set": "EX: Fear!! Frieza Army",
+    "prize": "Prize C",
+    "character": "Dodoria",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fear!! Frieza Army|Prize D|Cui",
+    "set": "EX: Fear!! Frieza Army",
+    "prize": "Prize D",
+    "character": "Cui",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fear!! Frieza Army|LOP|Frieza",
+    "set": "EX: Fear!! Frieza Army",
+    "prize": "LOP",
+    "character": "Frieza",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "The Ginyu Force!! Invasion|Prize A|Kaioken Goku",
+    "set": "The Ginyu Force!! Invasion",
+    "prize": "Prize A",
+    "character": "Kaioken Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Ginyu Force!! Invasion|Prize B|Captain Ginyu",
+    "set": "The Ginyu Force!! Invasion",
+    "prize": "Prize B",
+    "character": "Captain Ginyu",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Ginyu Force!! Invasion|Prize C|Recoome",
+    "set": "The Ginyu Force!! Invasion",
+    "prize": "Prize C",
+    "character": "Recoome",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Ginyu Force!! Invasion|Prize D|Burter",
+    "set": "The Ginyu Force!! Invasion",
+    "prize": "Prize D",
+    "character": "Burter",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Ginyu Force!! Invasion|Prize E|Jeice",
+    "set": "The Ginyu Force!! Invasion",
+    "prize": "Prize E",
+    "character": "Jeice",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Ginyu Force!! Invasion|Prize F|Guldo",
+    "set": "The Ginyu Force!! Invasion",
+    "prize": "Prize F",
+    "character": "Guldo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Ginyu Force!! Invasion|LOP|Ginyu (in Goku's body)",
+    "set": "The Ginyu Force!! Invasion",
+    "prize": "LOP",
+    "character": "Ginyu (in Goku's body)",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Beast|Prize A|Beast Gohan",
+    "set": "Dragon Ball vs Omnibus Beast",
+    "prize": "Prize A",
+    "character": "Beast Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Beast|Prize B|Orange Piccolo",
+    "set": "Dragon Ball vs Omnibus Beast",
+    "prize": "Prize B",
+    "character": "Orange Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Beast|Prize C|Cell Max",
+    "set": "Dragon Ball vs Omnibus Beast",
+    "prize": "Prize C",
+    "character": "Cell Max",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Beast|Prize D|Super Saiyan Gotenks",
+    "set": "Dragon Ball vs Omnibus Beast",
+    "prize": "Prize D",
+    "character": "Super Saiyan Gotenks",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Beast|Prize E|Gotenks",
+    "set": "Dragon Ball vs Omnibus Beast",
+    "prize": "Prize E",
+    "character": "Gotenks",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Beast|Prize F|Super Buu",
+    "set": "Dragon Ball vs Omnibus Beast",
+    "prize": "Prize F",
+    "character": "Super Buu",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Beast|LOP|Beast Gohan",
+    "set": "Dragon Ball vs Omnibus Beast",
+    "prize": "LOP",
+    "character": "Beast Gohan",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "EX: The Fierce Men of Turtle Hermit School|Prize A|Goku",
+    "set": "EX: The Fierce Men of Turtle Hermit School",
+    "prize": "Prize A",
+    "character": "Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: The Fierce Men of Turtle Hermit School|Prize B|Master Roshi",
+    "set": "EX: The Fierce Men of Turtle Hermit School",
+    "prize": "Prize B",
+    "character": "Master Roshi",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: The Fierce Men of Turtle Hermit School|Prize C|Grandpa Gohan",
+    "set": "EX: The Fierce Men of Turtle Hermit School",
+    "prize": "Prize C",
+    "character": "Grandpa Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: The Fierce Men of Turtle Hermit School|Prize D|Ox King",
+    "set": "EX: The Fierce Men of Turtle Hermit School",
+    "prize": "Prize D",
+    "character": "Ox King",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: The Fierce Men of Turtle Hermit School|LOP|Goku",
+    "set": "EX: The Fierce Men of Turtle Hermit School",
+    "prize": "LOP",
+    "character": "Goku",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Battle on Planet Namek|Prize A|Goku VS Frieza",
+    "set": "Battle on Planet Namek",
+    "prize": "Prize A",
+    "character": "Goku VS Frieza",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle on Planet Namek|Prize B|Krillin",
+    "set": "Battle on Planet Namek",
+    "prize": "Prize B",
+    "character": "Krillin",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle on Planet Namek|Prize C|Gohan",
+    "set": "Battle on Planet Namek",
+    "prize": "Prize C",
+    "character": "Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle on Planet Namek|Prize D|Frieza (2nd Form)",
+    "set": "Battle on Planet Namek",
+    "prize": "Prize D",
+    "character": "Frieza (2nd Form)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle on Planet Namek|Prize E|Frieza (3rd Form)",
+    "set": "Battle on Planet Namek",
+    "prize": "Prize E",
+    "character": "Frieza (3rd Form)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle on Planet Namek|LOP|Goku VS Frieza",
+    "set": "Battle on Planet Namek",
+    "prize": "LOP",
+    "character": "Goku VS Frieza",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Crash! Battle for the Universe|Prize A|Super Saiyan 2 Gohan",
+    "set": "Crash! Battle for the Universe",
+    "prize": "Prize A",
+    "character": "Super Saiyan 2 Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Crash! Battle for the Universe|Prize B|Dabura",
+    "set": "Crash! Battle for the Universe",
+    "prize": "Prize B",
+    "character": "Dabura",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Crash! Battle for the Universe|Prize C|Kid Majin Buu",
+    "set": "Crash! Battle for the Universe",
+    "prize": "Prize C",
+    "character": "Kid Majin Buu",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Crash! Battle for the Universe|Prize D|Super Saiyan Goku",
+    "set": "Crash! Battle for the Universe",
+    "prize": "Prize D",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Crash! Battle for the Universe|LOP|Great Saiyaman",
+    "set": "Crash! Battle for the Universe",
+    "prize": "LOP",
+    "character": "Great Saiyaman",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Brave|Prize A|Beast Gohan",
+    "set": "Dragon Ball vs Omnibus Brave",
+    "prize": "Prize A",
+    "character": "Beast Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Brave|Prize B|Orange Piccolo",
+    "set": "Dragon Ball vs Omnibus Brave",
+    "prize": "Prize B",
+    "character": "Orange Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Brave|Prize C|Super Saiyan Goku",
+    "set": "Dragon Ball vs Omnibus Brave",
+    "prize": "Prize C",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Brave|Prize D|Frieza (Full Power)",
+    "set": "Dragon Ball vs Omnibus Brave",
+    "prize": "Prize D",
+    "character": "Frieza (Full Power)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Brave|Prize E|Bulma",
+    "set": "Dragon Ball vs Omnibus Brave",
+    "prize": "Prize E",
+    "character": "Bulma",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Brave|LOP|Orange Piccolo",
+    "set": "Dragon Ball vs Omnibus Brave",
+    "prize": "LOP",
+    "character": "Orange Piccolo",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 5th Mission|Prize A|Full Power Super Saiyan Rose Crimson Masked Saiyan",
+    "set": "Super Dragon Ball Heroes: 5th Mission",
+    "prize": "Prize A",
+    "character": "Full Power Super Saiyan Rose Crimson Masked Saiyan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 5th Mission|Prize B|Super Saiyan Blue Goku (Universe Tree Power)",
+    "set": "Super Dragon Ball Heroes: 5th Mission",
+    "prize": "Prize B",
+    "character": "Super Saiyan Blue Goku (Universe Tree Power)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 5th Mission|Prize C|Super Saiyan 3 Warrior in Black",
+    "set": "Super Dragon Ball Heroes: 5th Mission",
+    "prize": "Prize C",
+    "character": "Super Saiyan 3 Warrior in Black",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 5th Mission|Prize D|Super Saiyan 3 Broly",
+    "set": "Super Dragon Ball Heroes: 5th Mission",
+    "prize": "Prize D",
+    "character": "Super Saiyan 3 Broly",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Super Dragon Ball Heroes: 5th Mission|LOP|Full Power Super Saiyan Rose Crimson Masked Saiyan",
+    "set": "Super Dragon Ball Heroes: 5th Mission",
+    "prize": "LOP",
+    "character": "Full Power Super Saiyan Rose Crimson Masked Saiyan",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "EX: Fierce Fighting!! World Tournament|Prize A|Goku",
+    "set": "EX: Fierce Fighting!! World Tournament",
+    "prize": "Prize A",
+    "character": "Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fierce Fighting!! World Tournament|Prize B|Chi-Chi",
+    "set": "EX: Fierce Fighting!! World Tournament",
+    "prize": "Prize B",
+    "character": "Chi-Chi",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fierce Fighting!! World Tournament|Prize C|Piccolo",
+    "set": "EX: Fierce Fighting!! World Tournament",
+    "prize": "Prize C",
+    "character": "Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fierce Fighting!! World Tournament|Prize D|Tournament Announcer",
+    "set": "EX: Fierce Fighting!! World Tournament",
+    "prize": "Prize D",
+    "character": "Tournament Announcer",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Fierce Fighting!! World Tournament|LOP|Goku",
+    "set": "EX: Fierce Fighting!! World Tournament",
+    "prize": "LOP",
+    "character": "Goku",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Duel to the Future|Prize A|Perfect Cell",
+    "set": "Duel to the Future",
+    "prize": "Prize A",
+    "character": "Perfect Cell",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Duel to the Future|Prize B|Future Trunks",
+    "set": "Duel to the Future",
+    "prize": "Prize B",
+    "character": "Future Trunks",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Duel to the Future|Prize C|Future Super Saiyan Gohan",
+    "set": "Duel to the Future",
+    "prize": "Prize C",
+    "character": "Future Super Saiyan Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Duel to the Future|Prize D|Vegeta",
+    "set": "Duel to the Future",
+    "prize": "Prize D",
+    "character": "Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Duel to the Future|Prize E|Mr. Satan",
+    "set": "Duel to the Future",
+    "prize": "Prize E",
+    "character": "Mr. Satan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Duel to the Future|LOP|Goku with King Kai",
+    "set": "Duel to the Future",
+    "prize": "LOP",
+    "character": "Goku with King Kai",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Amazing|Prize A|Goku with Gohan",
+    "set": "Dragon Ball vs Omnibus Amazing",
+    "prize": "Prize A",
+    "character": "Goku with Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Amazing|Prize B|Raditz",
+    "set": "Dragon Ball vs Omnibus Amazing",
+    "prize": "Prize B",
+    "character": "Raditz",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Amazing|Prize C|Gohan with Saiyan Pod",
+    "set": "Dragon Ball vs Omnibus Amazing",
+    "prize": "Prize C",
+    "character": "Gohan with Saiyan Pod",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Amazing|Prize D|Piccolo with Gohan",
+    "set": "Dragon Ball vs Omnibus Amazing",
+    "prize": "Prize D",
+    "character": "Piccolo with Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Amazing|Prize E|Super Vegeta",
+    "set": "Dragon Ball vs Omnibus Amazing",
+    "prize": "Prize E",
+    "character": "Super Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Amazing|LOP|Semi-perfect Cell",
+    "set": "Dragon Ball vs Omnibus Amazing",
+    "prize": "LOP",
+    "character": "Semi-perfect Cell",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "EX: Temple Above the Clouds|Prize A|Goku & Korin",
+    "set": "EX: Temple Above the Clouds",
+    "prize": "Prize A",
+    "character": "Goku & Korin",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Temple Above the Clouds|Prize B|Kami",
+    "set": "EX: Temple Above the Clouds",
+    "prize": "Prize B",
+    "character": "Kami",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Temple Above the Clouds|Prize C|Yajirobe",
+    "set": "EX: Temple Above the Clouds",
+    "prize": "Prize C",
+    "character": "Yajirobe",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Temple Above the Clouds|Prize D|Model of Shenron",
+    "set": "EX: Temple Above the Clouds",
+    "prize": "Prize D",
+    "character": "Model of Shenron",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Temple Above the Clouds|LOP|King Piccolo",
+    "set": "EX: Temple Above the Clouds",
+    "prize": "LOP",
+    "character": "King Piccolo",
+    "isLOP": true,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Daima|Prize A|Goku mini & Supreme Kai Shin",
+    "set": "Dragon Ball Daima",
+    "prize": "Prize A",
+    "character": "Goku mini & Supreme Kai Shin",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima|Prize B|Vegeta mini & Bulma mini",
+    "set": "Dragon Ball Daima",
+    "prize": "Prize B",
+    "character": "Vegeta mini & Bulma mini",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima|Prize C|Piccolo mini & Dende mini",
+    "set": "Dragon Ball Daima",
+    "prize": "Prize C",
+    "character": "Piccolo mini & Dende mini",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima|Prize D|Glorio",
+    "set": "Dragon Ball Daima",
+    "prize": "Prize D",
+    "character": "Glorio",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima|Prize E|Goku vs Vegeta",
+    "set": "Dragon Ball Daima",
+    "prize": "Prize E",
+    "character": "Goku vs Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima|LOP|Shenron",
+    "set": "Dragon Ball Daima",
+    "prize": "LOP",
+    "character": "Shenron",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultimate|Prize A|Super Saiyan 3 Goku",
+    "set": "Dragon Ball vs Omnibus Ultimate",
+    "prize": "Prize A",
+    "character": "Super Saiyan 3 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultimate|Prize B|Super Baby 2",
+    "set": "Dragon Ball vs Omnibus Ultimate",
+    "prize": "Prize B",
+    "character": "Super Baby 2",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultimate|Prize C|Super Saiyan Vegito",
+    "set": "Dragon Ball vs Omnibus Ultimate",
+    "prize": "Prize C",
+    "character": "Super Saiyan Vegito",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultimate|Prize D|Super Majin Buu",
+    "set": "Dragon Ball vs Omnibus Ultimate",
+    "prize": "Prize D",
+    "character": "Super Majin Buu",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultimate|Prize E|Bardock",
+    "set": "Dragon Ball vs Omnibus Ultimate",
+    "prize": "Prize E",
+    "character": "Bardock",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultimate|Prize F|Kakarot",
+    "set": "Dragon Ball vs Omnibus Ultimate",
+    "prize": "Prize F",
+    "character": "Kakarot",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Ultimate|LOP|Golden Oozaru Goku",
+    "set": "Dragon Ball vs Omnibus Ultimate",
+    "prize": "LOP",
+    "character": "Golden Oozaru Goku",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "EX: Goku Training Edition|Prize A|Goku & Krillin",
+    "set": "EX: Goku Training Edition",
+    "prize": "Prize A",
+    "character": "Goku & Krillin",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Goku Training Edition|Prize B|Bulma",
+    "set": "EX: Goku Training Edition",
+    "prize": "Prize B",
+    "character": "Bulma",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Goku Training Edition|Prize C|Yamcha",
+    "set": "EX: Goku Training Edition",
+    "prize": "Prize C",
+    "character": "Yamcha",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Goku Training Edition|Prize D|Oolong & Puar",
+    "set": "EX: Goku Training Edition",
+    "prize": "Prize D",
+    "character": "Oolong & Puar",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Goku Training Edition|Prize E|Chi-Chi",
+    "set": "EX: Goku Training Edition",
+    "prize": "Prize E",
+    "character": "Chi-Chi",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Goku Training Edition|LOP|Master Roshi",
+    "set": "EX: Goku Training Edition",
+    "prize": "LOP",
+    "character": "Master Roshi",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Daima 2|Prize A|Super Saiyan 4 Goku mini",
+    "set": "Dragon Ball Daima 2",
+    "prize": "Prize A",
+    "character": "Super Saiyan 4 Goku mini",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima 2|Prize B|Super Saiyan 2 & 3 Goku mini",
+    "set": "Dragon Ball Daima 2",
+    "prize": "Prize B",
+    "character": "Super Saiyan 2 & 3 Goku mini",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima 2|Prize C|Super Saiyan 2 & 3 Vegeta mini",
+    "set": "Dragon Ball Daima 2",
+    "prize": "Prize C",
+    "character": "Super Saiyan 2 & 3 Vegeta mini",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima 2|Prize D|Gomah",
+    "set": "Dragon Ball Daima 2",
+    "prize": "Prize D",
+    "character": "Gomah",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima 2|Prize E|Sky Seed Figure",
+    "set": "Dragon Ball Daima 2",
+    "prize": "Prize E",
+    "character": "Sky Seed Figure",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Daima 2|LOP|Porunga",
+    "set": "Dragon Ball Daima 2",
+    "prize": "LOP",
+    "character": "Porunga",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Cross|Prize A|Super Saiyan 4 Goku",
+    "set": "Dragon Ball vs Omnibus Cross",
+    "prize": "Prize A",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Cross|Prize B|Super Saiyan 3 Vegeta",
+    "set": "Dragon Ball vs Omnibus Cross",
+    "prize": "Prize B",
+    "character": "Super Saiyan 3 Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Cross|Prize C|Super Saiyan Goku",
+    "set": "Dragon Ball vs Omnibus Cross",
+    "prize": "Prize C",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Cross|Prize D|Vegeta",
+    "set": "Dragon Ball vs Omnibus Cross",
+    "prize": "Prize D",
+    "character": "Vegeta",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Cross|Prize E|Frieza",
+    "set": "Dragon Ball vs Omnibus Cross",
+    "prize": "Prize E",
+    "character": "Frieza",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball vs Omnibus Cross|LOP|Cell Explosion",
+    "set": "Dragon Ball vs Omnibus Cross",
+    "prize": "LOP",
+    "character": "Cell Explosion",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "The Chronicle of Goku|Prize A|Kid Goku",
+    "set": "The Chronicle of Goku",
+    "prize": "Prize A",
+    "character": "Kid Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Chronicle of Goku|Prize B|Bulma",
+    "set": "The Chronicle of Goku",
+    "prize": "Prize B",
+    "character": "Bulma",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Chronicle of Goku|Prize C|Super Saiyan Goku",
+    "set": "The Chronicle of Goku",
+    "prize": "Prize C",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Chronicle of Goku|Prize D|Super Saiyan 2 Goku",
+    "set": "The Chronicle of Goku",
+    "prize": "Prize D",
+    "character": "Super Saiyan 2 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Chronicle of Goku|Prize E|Majin Vegeta",
+    "set": "The Chronicle of Goku",
+    "prize": "Prize E",
+    "character": "Majin Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Chronicle of Goku|Prize F|Ultra Instinct Goku",
+    "set": "The Chronicle of Goku",
+    "prize": "Prize F",
+    "character": "Ultra Instinct Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "The Chronicle of Goku|LOP|Great Ape Goku (SOFVICS)",
+    "set": "The Chronicle of Goku",
+    "prize": "LOP",
+    "character": "Great Ape Goku (SOFVICS)",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball GT|Prize A|Super Saiyan 4 Goku",
+    "set": "Dragon Ball GT",
+    "prize": "Prize A",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball GT|Prize B|Super Saiyan 4 Vegeta",
+    "set": "Dragon Ball GT",
+    "prize": "Prize B",
+    "character": "Super Saiyan 4 Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball GT|Prize C|Son Goku GT",
+    "set": "Dragon Ball GT",
+    "prize": "Prize C",
+    "character": "Son Goku GT",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball GT|Prize D|Trunks GT",
+    "set": "Dragon Ball GT",
+    "prize": "Prize D",
+    "character": "Trunks GT",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball GT|Prize E|Pan GT & Giru",
+    "set": "Dragon Ball GT",
+    "prize": "Prize E",
+    "character": "Pan GT & Giru",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball GT|Prize F|Super Android 17",
+    "set": "Dragon Ball GT",
+    "prize": "Prize F",
+    "character": "Super Android 17",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball GT|LOP|Dragon Ball GT Logo",
+    "set": "Dragon Ball GT",
+    "prize": "LOP",
+    "character": "Dragon Ball GT Logo",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "EX: Showdown! Red Ribbon Army|Prize A|Son Goku",
+    "set": "EX: Showdown! Red Ribbon Army",
+    "prize": "Prize A",
+    "character": "Son Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Showdown! Red Ribbon Army|Prize B|Ninja Murasaki",
+    "set": "EX: Showdown! Red Ribbon Army",
+    "prize": "Prize B",
+    "character": "Ninja Murasaki",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Showdown! Red Ribbon Army|Prize C|General Blue",
+    "set": "EX: Showdown! Red Ribbon Army",
+    "prize": "Prize C",
+    "character": "General Blue",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Showdown! Red Ribbon Army|Prize D|Son Goku, Bulma & Krillin Submarine",
+    "set": "EX: Showdown! Red Ribbon Army",
+    "prize": "Prize D",
+    "character": "Son Goku, Bulma & Krillin Submarine",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "EX: Showdown! Red Ribbon Army|LOP|Android 8 & Son Goku",
+    "set": "EX: Showdown! Red Ribbon Army",
+    "prize": "LOP",
+    "character": "Android 8 & Son Goku",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Spectacle Battle|Prize A|Son Goku",
+    "set": "Spectacle Battle",
+    "prize": "Prize A",
+    "character": "Son Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Spectacle Battle|Prize B|Son Gohan",
+    "set": "Spectacle Battle",
+    "prize": "Prize B",
+    "character": "Son Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Spectacle Battle|Prize C|Piccolo",
+    "set": "Spectacle Battle",
+    "prize": "Prize C",
+    "character": "Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Spectacle Battle|Prize D|Vegeta",
+    "set": "Spectacle Battle",
+    "prize": "Prize D",
+    "character": "Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Spectacle Battle|Prize E|Super Saiyan Son Goku & Super Saiyan 2 Son Gohan",
+    "set": "Spectacle Battle",
+    "prize": "Prize E",
+    "character": "Super Saiyan Son Goku & Super Saiyan 2 Son Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Spectacle Battle|LOP|Super Saiyan Son Goku",
+    "set": "Spectacle Battle",
+    "prize": "LOP",
+    "character": "Super Saiyan Son Goku",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Masterlise Outside|Prize A|Ultra Instinct Son Goku & Son Gohan Beast",
+    "set": "Masterlise Outside",
+    "prize": "Prize A",
+    "character": "Ultra Instinct Son Goku & Son Gohan Beast",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of the Super Saiyan|Prize A|Super Saiyan 3 Goku",
+    "set": "Battle of the Super Saiyan",
+    "prize": "Prize A",
+    "character": "Super Saiyan 3 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of the Super Saiyan|Prize B|Super Saiyan Goku",
+    "set": "Battle of the Super Saiyan",
+    "prize": "Prize B",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of the Super Saiyan|Prize C|Frieza (Final Form)",
+    "set": "Battle of the Super Saiyan",
+    "prize": "Prize C",
+    "character": "Frieza (Final Form)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of the Super Saiyan|Prize D|Goten & Trunks",
+    "set": "Battle of the Super Saiyan",
+    "prize": "Prize D",
+    "character": "Goten & Trunks",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of the Super Saiyan|Prize E|Babidi",
+    "set": "Battle of the Super Saiyan",
+    "prize": "Prize E",
+    "character": "Babidi",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Battle of the Super Saiyan|LOP|Majin Buu (Fat)",
+    "set": "Battle of the Super Saiyan",
+    "prize": "LOP",
+    "character": "Majin Buu (Fat)",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragonball Snap Collection|Prize A|Son Goku (Snap Figure)",
+    "set": "Dragonball Snap Collection",
+    "prize": "Prize A",
+    "character": "Son Goku (Snap Figure)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragonball Snap Collection|Prize B|Son Gohan (Snap Figure)",
+    "set": "Dragonball Snap Collection",
+    "prize": "Prize B",
+    "character": "Son Gohan (Snap Figure)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragonball Snap Collection|Prize C|Kid Goku w/ Aviator Cap (Snap Figure)",
+    "set": "Dragonball Snap Collection",
+    "prize": "Prize C",
+    "character": "Kid Goku w/ Aviator Cap (Snap Figure)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragonball Snap Collection|Prize D|Launch (Snap Figure)",
+    "set": "Dragonball Snap Collection",
+    "prize": "Prize D",
+    "character": "Launch (Snap Figure)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragonball Snap Collection|LOP|Gohan Childhood Ver. — Shounen Ki (Snap Figure)",
+    "set": "Dragonball Snap Collection",
+    "prize": "LOP",
+    "character": "Gohan Childhood Ver. — Shounen Ki (Snap Figure)",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Fantastic Adventure|Prize A|Son Goku & Bulma on Bike",
+    "set": "Dragon Ball Fantastic Adventure",
+    "prize": "Prize A",
+    "character": "Son Goku & Bulma on Bike",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Fantastic Adventure|Prize B|Bulma with Mirror",
+    "set": "Dragon Ball Fantastic Adventure",
+    "prize": "Prize B",
+    "character": "Bulma with Mirror",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Fantastic Adventure|LOP|Son Goku",
+    "set": "Dragon Ball Fantastic Adventure",
+    "prize": "LOP",
+    "character": "Son Goku",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Dragon History|Prize A|Revible Moment — Goku vs Piccolo (Ma Junior)",
+    "set": "Dragon Ball Dragon History",
+    "prize": "Prize A",
+    "character": "Revible Moment — Goku vs Piccolo (Ma Junior)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Dragon History|Prize B|Revible Moment — Goku vs Vegeta",
+    "set": "Dragon Ball Dragon History",
+    "prize": "Prize B",
+    "character": "Revible Moment — Goku vs Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Dragon History|Prize C|Revible Moment — Goku vs Frieza",
+    "set": "Dragon Ball Dragon History",
+    "prize": "Prize C",
+    "character": "Revible Moment — Goku vs Frieza",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Dragon History|LOP|Revible Moment — Goku & Bulma",
+    "set": "Dragon Ball Dragon History",
+    "prize": "LOP",
+    "character": "Revible Moment — Goku & Bulma",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Dragon History II|Prize A|Revible Moment — Son Goku",
+    "set": "Dragon Ball Dragon History II",
+    "prize": "Prize A",
+    "character": "Revible Moment — Son Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Dragon History II|Prize B|Revible Moment — Oolong & Shenron",
+    "set": "Dragon Ball Dragon History II",
+    "prize": "Prize B",
+    "character": "Revible Moment — Oolong & Shenron",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Dragon History II|Prize C|Revible Moment — Vegeta vs Cell",
+    "set": "Dragon Ball Dragon History II",
+    "prize": "Prize C",
+    "character": "Revible Moment — Vegeta vs Cell",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Dragon History II|Prize D|Super Saiyan Gotenks & Ghost Revible Moment",
+    "set": "Dragon Ball Dragon History II",
+    "prize": "Prize D",
+    "character": "Super Saiyan Gotenks & Ghost Revible Moment",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Dragon History II|LOP|Revible Moment — Goku & Grandpa Gohan",
+    "set": "Dragon Ball Dragon History II",
+    "prize": "LOP",
+    "character": "Revible Moment — Goku & Grandpa Gohan",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball Fantastic Adventure 2|Prize A|Son Goku & Krillin (Milk Delivery)",
+    "set": "Dragon Ball Fantastic Adventure 2",
+    "prize": "Prize A",
+    "character": "Son Goku & Krillin (Milk Delivery)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball Fantastic Adventure 2|LOP|Son Goku & Chi-Chi",
+    "set": "Dragon Ball Fantastic Adventure 2",
+    "prize": "LOP",
+    "character": "Son Goku & Chi-Chi",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragonball Snap Collection 2|Prize A|Son Goku & Chi-Chi (Snap Figure)",
+    "set": "Dragonball Snap Collection 2",
+    "prize": "Prize A",
+    "character": "Son Goku & Chi-Chi (Snap Figure)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragonball Snap Collection 2|Prize B|Son Goku (Snap Figure)",
+    "set": "Dragonball Snap Collection 2",
+    "prize": "Prize B",
+    "character": "Son Goku (Snap Figure)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragonball Snap Collection 2|Prize C|Master Roshi (Kame-Sennin) (Snap Figure)",
+    "set": "Dragonball Snap Collection 2",
+    "prize": "Prize C",
+    "character": "Master Roshi (Kame-Sennin) (Snap Figure)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragonball Snap Collection 2|Prize D|Son Gohan (Snap Figure)",
+    "set": "Dragonball Snap Collection 2",
+    "prize": "Prize D",
+    "character": "Son Gohan (Snap Figure)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragonball Snap Collection 2|LOP|Son Gohan & Videl (Snap Figure)",
+    "set": "Dragonball Snap Collection 2",
+    "prize": "LOP",
+    "character": "Son Gohan & Videl (Snap Figure)",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize A|Son Goku (Red Gi)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize A",
+    "character": "Son Goku (Red Gi)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize A|Son Goku (Blue Gi)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize A",
+    "character": "Son Goku (Blue Gi)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize A|Fortuneteller Baba",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize A",
+    "character": "Fortuneteller Baba",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize A|Grandpa Gohan",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize A",
+    "character": "Grandpa Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize B|Master Roshi (Orange Gi)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize B",
+    "character": "Master Roshi (Orange Gi)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize B|Master Roshi (Black Gi)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize B",
+    "character": "Master Roshi (Black Gi)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize B|Turtle",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize B",
+    "character": "Turtle",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize B|Ox King",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize B",
+    "character": "Ox King",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize C|Bulma",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize C",
+    "character": "Bulma",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize C|Chi-Chi",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize C",
+    "character": "Chi-Chi",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize C|Lunch (Blue Hair)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize C",
+    "character": "Lunch (Blue Hair)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize C|Lunch (Blonde Hair)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize C",
+    "character": "Lunch (Blonde Hair)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize D|Krillin (Red Gi)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize D",
+    "character": "Krillin (Red Gi)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize D|Krillin (Suit)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize D",
+    "character": "Krillin (Suit)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize D|Oolong",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize D",
+    "character": "Oolong",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize D|Yamcha & Puar",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize D",
+    "character": "Yamcha & Puar",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize E|Tenshinhan",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize E",
+    "character": "Tenshinhan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize E|Chaozu",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize E",
+    "character": "Chaozu",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize F|Pilaf",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize F",
+    "character": "Pilaf",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize F|Shu",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize F",
+    "character": "Shu",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize F|Mai",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize F",
+    "character": "Mai",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize G|Karin",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize G",
+    "character": "Karin",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize G|Yajirobe",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize G",
+    "character": "Yajirobe",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|Prize G|Upa",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "Prize G",
+    "character": "Upa",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Dragon Ball ASSEMBLE COLLECTION|LOP|Dragon Ball Logo (GIGANT NAME)",
+    "set": "Dragon Ball ASSEMBLE COLLECTION",
+    "prize": "LOP",
+    "character": "Dragon Ball Logo (GIGANT NAME)",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "SMSP — The Vegeta|01 The Brush|Vegeta SSJ",
+    "set": "SMSP — The Vegeta",
+    "prize": "01 The Brush",
+    "character": "Vegeta SSJ",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Vegeta|02 The Original|Vegeta SSJ",
+    "set": "SMSP — The Vegeta",
+    "prize": "02 The Original",
+    "character": "Vegeta SSJ",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "SMSP — The Vegeta|03 The Tones|Vegeta SSJ",
+    "set": "SMSP — The Vegeta",
+    "prize": "03 The Tones",
+    "character": "Vegeta SSJ",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "SMSP — The Vegeta|04 Two Dimensions|Vegeta SSJ",
+    "set": "SMSP — The Vegeta",
+    "prize": "04 Two Dimensions",
+    "character": "Vegeta SSJ",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Vegeta|Genkidamatsuri Ver.|Vegeta SSJ",
+    "set": "SMSP — The Vegeta",
+    "prize": "Genkidamatsuri Ver.",
+    "character": "Vegeta SSJ",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Son Goku|01 The Brush|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "01 The Brush",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "SMSP — The Son Goku|02 The Original|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "02 The Original",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "SMSP — The Son Goku|03 The Tones|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "03 The Tones",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Son Goku|04 Two Dimensions|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "04 Two Dimensions",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "SMSP — The Son Goku|Genkidamatsuri Ver.|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "Genkidamatsuri Ver.",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Son Goku|Lunar New Year Ver.|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "Lunar New Year Ver.",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Son Goku|Xenoverse 2 Collectors Edition|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "Xenoverse 2 Collectors Edition",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Son Goku|1.5 Original II|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "1.5 Original II",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": true,
+    "tier1": true
+  },
+  {
+    "key": "SMSP — The Son Goku|1.5 Brush II|Super Saiyan Goku",
+    "set": "SMSP — The Son Goku",
+    "prize": "1.5 Brush II",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Super Saiyan 4 Son Gokou (GT)|01 The Brush|Super Saiyan 4 Goku",
+    "set": "SMSP — The Super Saiyan 4 Son Gokou (GT)",
+    "prize": "01 The Brush",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Super Saiyan 4 Son Gokou (GT)|02 The Original|Super Saiyan 4 Goku",
+    "set": "SMSP — The Super Saiyan 4 Son Gokou (GT)",
+    "prize": "02 The Original",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Super Saiyan 4 Son Gokou (GT)|03 The Tones|Super Saiyan 4 Goku",
+    "set": "SMSP — The Super Saiyan 4 Son Gokou (GT)",
+    "prize": "03 The Tones",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Super Saiyan 4 Son Gokou (GT)|04 Two Dimensions|Super Saiyan 4 Goku",
+    "set": "SMSP — The Super Saiyan 4 Son Gokou (GT)",
+    "prize": "04 Two Dimensions",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Gogeta (Broly Movie)|01 The Brush|Super Saiyan Gogeta",
+    "set": "SMSP — The Gogeta (Broly Movie)",
+    "prize": "01 The Brush",
+    "character": "Super Saiyan Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Gogeta (Broly Movie)|02 The Original|Super Saiyan Gogeta",
+    "set": "SMSP — The Gogeta (Broly Movie)",
+    "prize": "02 The Original",
+    "character": "Super Saiyan Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Gogeta (Broly Movie)|03 The Tones|Super Saiyan Gogeta",
+    "set": "SMSP — The Gogeta (Broly Movie)",
+    "prize": "03 The Tones",
+    "character": "Super Saiyan Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "SMSP — The Gogeta (Broly Movie)|04 Two Dimensions|Super Saiyan Gogeta",
+    "set": "SMSP — The Gogeta (Broly Movie)",
+    "prize": "04 Two Dimensions",
+    "character": "Super Saiyan Gogeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Bardock|01 The Brush|Bardock",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Bardock",
+    "prize": "01 The Brush",
+    "character": "Bardock",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Bardock|02 The Original|Bardock",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Bardock",
+    "prize": "02 The Original",
+    "character": "Bardock",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Bardock|03 The Tones|Bardock",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Bardock",
+    "prize": "03 The Tones",
+    "character": "Bardock",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Bardock|04 Two Dimensions|Bardock",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Bardock",
+    "prize": "04 Two Dimensions",
+    "character": "Bardock",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku|01 The Brush|Super Saiyan Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku",
+    "prize": "01 The Brush",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku|02 The Original|Super Saiyan Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku",
+    "prize": "02 The Original",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku|03 The Tones|Super Saiyan Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku",
+    "prize": "03 The Tones",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku|04 Two Dimensions|Super Saiyan Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku",
+    "prize": "04 Two Dimensions",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku|Daimatsuri Ver.|Super Saiyan Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Son Goku",
+    "prize": "Daimatsuri Ver.",
+    "character": "Super Saiyan Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Gogeta SSGSS|01 The Brush|Gogeta SSGSS",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Gogeta SSGSS",
+    "prize": "01 The Brush",
+    "character": "Gogeta SSGSS",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Gogeta SSGSS|02 The Original|Gogeta SSGSS",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Gogeta SSGSS",
+    "prize": "02 The Original",
+    "character": "Gogeta SSGSS",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Gogeta SSGSS|03 The Tones|Gogeta SSGSS",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Gogeta SSGSS",
+    "prize": "03 The Tones",
+    "character": "Gogeta SSGSS",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Gogeta SSGSS|04 Two Dimensions|Gogeta SSGSS",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: Gogeta SSGSS",
+    "prize": "04 Two Dimensions",
+    "character": "Gogeta SSGSS",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: SS4 Goku|01 The Brush|Super Saiyan 4 Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: SS4 Goku",
+    "prize": "01 The Brush",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: SS4 Goku|02 The Original|Super Saiyan 4 Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: SS4 Goku",
+    "prize": "02 The Original",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: SS4 Goku|03 The Tones|Super Saiyan 4 Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: SS4 Goku",
+    "prize": "03 The Tones",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "BWFC 10th — Tenkaichi Budokai 3 SMSP: SS4 Goku|04 Two Dimensions|Super Saiyan 4 Goku",
+    "set": "BWFC 10th — Tenkaichi Budokai 3 SMSP: SS4 Goku",
+    "prize": "04 Two Dimensions",
+    "character": "Super Saiyan 4 Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 1|Prize A|Volume 1 Comics Vignette (Goku as a kid)",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 1",
+    "prize": "Prize A",
+    "character": "Volume 1 Comics Vignette (Goku as a kid)",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 1|Prize B|Son Goku & Majin Buu",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 1",
+    "prize": "Prize B",
+    "character": "Son Goku & Majin Buu",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 1|LOP|SSJ Goku Giga Manga Structure (Last One Ver.)",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 1",
+    "prize": "LOP",
+    "character": "SSJ Goku Giga Manga Structure (Last One Ver.)",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 2|Prize A|40th Anniversary Figure — Son Goku",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 2",
+    "prize": "Prize A",
+    "character": "40th Anniversary Figure — Son Goku",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 2|Prize B|40th Anniversary Figure — Vegeta",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 2",
+    "prize": "Prize B",
+    "character": "40th Anniversary Figure — Vegeta",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 2|Prize C|40th Anniversary Figure — Son Gohan",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 2",
+    "prize": "Prize C",
+    "character": "40th Anniversary Figure — Son Gohan",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 2|Prize D|40th Anniversary Figure — Piccolo",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 2",
+    "prize": "Prize D",
+    "character": "40th Anniversary Figure — Piccolo",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 2|Prize E|40th Anniversary Figure — Krillin",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 2",
+    "prize": "Prize E",
+    "character": "40th Anniversary Figure — Krillin",
+    "isLOP": false,
+    "isGrail": false,
+    "tier1": false
+  },
+  {
+    "key": "Ichiban Kuji DRAGON BALL 40th — Part 2|LOP|Shenron",
+    "set": "Ichiban Kuji DRAGON BALL 40th — Part 2",
+    "prize": "LOP",
+    "character": "Shenron",
+    "isLOP": true,
+    "isGrail": false,
+    "tier1": true
+  }
+]
