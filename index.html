@@ -125,10 +125,14 @@ body{
   mix-blend-mode:screen;
   opacity:.07;
 }
-/* No longer strictly required (watermark's z-index now positions it
-   directly), but harmless and keeps a clean stacking context for any
-   future fixed-position children of <body>. */
-body > *:not(#page-watermark){position:relative;z-index:1}
+/* Give regular content a stacking baseline so the watermark layers
+   above it cleanly. CRITICAL: exclude the lightbox, compare modal,
+   compare bar, and skip-link — those rely on their own position:fixed
+   + z-index:9000+ to behave as proper overlays. Catching them here
+   forced them into normal flow at the bottom of the page (which
+   caused clicking a figure thumb to scroll to the bottom instead of
+   opening the lightbox as a modal). */
+body > *:not(#page-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(.skip-link){position:relative;z-index:1}
 
 /* Phone widths get a fainter watermark so the smaller viewport
    doesn't feel claustrophobic with the dragon overlay. */
@@ -335,9 +339,39 @@ body > *:not(#page-watermark){position:relative;z-index:1}
 #controls .reset-buttons button:hover{border-color:var(--orange);color:var(--orange)}
 
 /* Active states — preserved palette from the previous design. */
+/* Inactive LOP button — force the label to white so the text reads
+   clearly next to the LAST ONE icon. The scoped #controls
+   .prize-filter-buttons button { color: var(--grey) } above this
+   would otherwise win on specificity, so anchor under #controls too.
+   !important is overkill specificity-wise but guards against any
+   browser-cached older rule that might still be in flight. */
+#controls #lop-toggle{color:var(--white) !important}
+/* Match the !important on the inactive rule so the active state can
+   still take over the colour when the filter is on. */
+#controls #lop-toggle.active{background:var(--lop-bg);border-color:var(--gold);color:var(--gold) !important}
 #lop-toggle.active{background:var(--lop-bg);border-color:var(--gold);color:var(--gold)}
 #grail-toggle.active{background:#2a2a3a;border-color:#888;color:var(--white)}
 .view-tab.active{background:rgba(255,107,0,.12);border-color:var(--orange);color:var(--orange)}
+
+/* Match LOP's "white inactive label, gold-tinted active state" on the
+   other three brand-icon buttons the user singled out: Grail filter,
+   Wishlist view tab, Collection view tab. The "All" view tab keeps
+   its orange active highlight since it's the default view.
+   !important is used because the underlying #controls .prize-filter-
+   buttons / #controls .view-tab rules pin colour at specificity 111
+   which would otherwise win over plain id-only selectors. */
+#controls #grail-toggle,
+#controls .view-tab[data-view="watchlist"],
+#controls .view-tab[data-view="collection"]{
+  color:var(--white) !important;
+}
+#controls #grail-toggle.active,
+#controls .view-tab[data-view="watchlist"].active,
+#controls .view-tab[data-view="collection"].active{
+  background-color:var(--lop-bg) !important;
+  border-color:var(--gold) !important;
+  color:var(--gold) !important;
+}
 
 /* Count chip on the View / Reset pills (e.g. "Wishlist 0", "All 362"). */
 .view-count{
