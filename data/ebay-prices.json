@@ -506,9 +506,15 @@
         "price": 393.6,
         "title": "(from index.html baseline)",
         "url": ""
+      },
+      {
+        "date": "2026-05-16",
+        "price": 600.0,
+        "title": "(manual override — pinned at $600, brand-new market)",
+        "url": ""
       }
     ],
-    "ebayUpdated": "2026-05-03"
+    "ebayUpdated": "2026-05-16"
   },
   "Saiyajin, Koko ni Kiwamareri|Prize E|Super Saiyan 'Rose' Goku Black": {
     "ebayHistory": [
@@ -1477,6 +1483,12 @@
         "price": 656.8,
         "title": "(from index.html baseline)",
         "url": ""
+      },
+      {
+        "date": "2026-05-16",
+        "price": 800.0,
+        "title": "(manual override — pinned at $800, brand-new market)",
+        "url": ""
       }
     ],
     "ebayUpdated": "2026-05-16"
@@ -2056,6 +2068,12 @@
         "date": "2026-05-02",
         "price": 310.67,
         "title": "(from index.html baseline)",
+        "url": ""
+      },
+      {
+        "date": "2026-05-16",
+        "price": 500.0,
+        "title": "(manual override — pinned at $500, brand-new market)",
         "url": ""
       }
     ],
