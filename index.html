@@ -1134,57 +1134,34 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .lb-watch:hover .btn-icon,
 .lb-own:hover .btn-icon{transform:scale(1.08)}
 
-/* ── Multi-copy: tile ×N superscript + per-set "✏️ qty" editor ─────
-   The tile-corner badge is zero-cost when count ≤ 1 (not rendered).
-   The editor panel is hidden until the user clicks the "✏️" toggle
-   that appears beside the fraction, so the default Collection
-   Progress layout stays exactly as it was for single-copy users. */
-.sc-tile{position:relative}
-.sc-tile-qty{
-  position:absolute;top:-6px;right:-6px;
-  min-width:14px;height:14px;padding:0 3px;
+/* ── Multi-copy ownership cluster ──────────────────────────────────
+   Tiny `−  ×N  +` controls that live right after the Own button.
+   When not owned: cluster is hidden entirely.
+   When owned with count = 1 (the common case): only the faint `+`
+     shows, so the UI looks unchanged for 99 % of users.
+   When owned with count ≥ 2: `−` button + `×N` chip + `+` button. */
+.own-extras{
+  display:none;align-items:center;gap:4px;
+  margin-left:2px;
+  font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;
+}
+.own-extras.is-owned-extras{display:inline-flex}
+.own-plus, .own-minus{
+  width:28px;min-height:28px;
   display:inline-flex;align-items:center;justify-content:center;
-  background:#4caf50;color:#fff;
-  border-radius:999px;font-size:9px;font-weight:800;
-  font-family:'Nunito',sans-serif;letter-spacing:.2px;line-height:1;
-  box-shadow:0 0 0 1.5px var(--surface);  /* clean separation from tile edge */
-  pointer-events:none;
+  background:transparent;border:1px solid #2a2a3a;border-radius:5px;
+  color:var(--grey);cursor:pointer;font-weight:800;font-size:14px;line-height:1;
+  padding:0;
 }
-.sc-qty-editor{
-  grid-column:2 / -1;
-  margin-top:6px;padding:8px 10px;
-  background:rgba(76,175,80,.06);
-  border:1px solid rgba(76,175,80,.25);border-radius:6px;
-  display:flex;flex-direction:column;gap:4px;
+.own-plus:hover, .own-minus:hover{border-color:#4caf50;color:#4caf50;background:rgba(76,175,80,.10)}
+.own-count{
+  padding:2px 7px;border-radius:999px;
+  background:rgba(76,175,80,.18);border:1px solid #4caf50;
+  color:#4caf50;letter-spacing:.4px;line-height:1;
 }
-.qty-row{
-  display:flex;align-items:center;gap:8px;
-  font-family:'Nunito',sans-serif;font-size:12px;color:var(--white);
-}
-.qty-prize-tag{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:22px;height:22px;padding:0 5px;
-  border-radius:4px;font-weight:800;font-size:11px;
-  background:#13131c;border:1px solid var(--accent-cyan);color:var(--white);
-}
-.qty-prize-tag.grail{border-color:var(--gold);color:var(--gold)}
-.qty-prize-tag.lop{border-color:var(--gold);padding:0}
-.qty-prize-icon{display:block;width:18px;height:18px;object-fit:contain}
-.qty-prize-char{flex:1;color:var(--grey);font-size:11px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.qty-btn{
-  width:26px;height:26px;border-radius:4px;
-  background:transparent;border:1px solid #2a2a3a;color:var(--grey);
-  font-weight:800;font-size:14px;cursor:pointer;line-height:1;padding:0;
-}
-.qty-btn:hover:not(:disabled){border-color:#4caf50;color:#4caf50;background:rgba(76,175,80,.10)}
-.qty-btn:disabled{opacity:.3;cursor:not-allowed}
-.qty-count{
-  min-width:28px;padding:2px 8px;text-align:center;
-  border-radius:999px;background:rgba(76,175,80,.18);border:1px solid #4caf50;
-  color:#4caf50;font-weight:800;font-size:12px;letter-spacing:.4px;line-height:1;
-}
-@media(max-width:600px){
-  .qty-btn{width:32px;height:32px;font-size:15px}
+.col-actions .own-plus, .col-actions .own-minus{width:24px;min-height:24px;font-size:13px}
+@media (max-width:600px){
+  .own-plus, .own-minus{min-height:44px;width:32px}
 }
 
 /* ── 1.6 Lightbox upgrade ─────────────────────────────────────────────── */
@@ -1979,12 +1956,10 @@ tr.set-header:hover .set-badge,
 .sc-row-collapse:hover{color:var(--accent-cyan);background:rgba(31,219,231,.1)}
 .sc-row-collapse:focus-visible{outline:1px solid var(--accent-cyan);outline-offset:1px}
 /* When the row is collapsed: rotate the chevron 180° and hide the
-   tile row + inline quantity editor. The set thumb, name, fraction,
-   and progress bar all stay visible so collapsed rows still show
-   overall completion at a glance. */
+   tile row. The set thumb, name, fraction, and progress bar all stay
+   visible so collapsed rows still show overall completion at a glance. */
 .sc-row.row-collapsed .sc-row-collapse{transform:rotate(180deg)}
-.sc-row.row-collapsed .sc-tiles,
-.sc-row.row-collapsed .sc-qty-editor{display:none}
+.sc-row.row-collapsed .sc-tiles{display:none}
 
 /* Progress bar — beefed up from 4px → 10px, with a subtle inner highlight. */
 .sc-row .sc-bar{
@@ -3274,27 +3249,34 @@ function toggleOwn(id){
   if(typeof renderSetCompletion === 'function') renderSetCompletion();
 }
 
-// Multi-copy quantity controls — delegated at body scope so it survives
-// every Collection Progress re-render. The editor panel is always
-// visible for any set whose collection isn't empty.
+// Delegated handler for the multi-copy +/- buttons. Lives at body
+// scope so it survives every renderTable / renderMobileCards /
+// openLightbox pass without per-call rebinding. Click on +/- adjusts
+// the count for the given figure id; if the user owns 0 the cluster
+// is hidden anyway so + is unreachable until they tap "Own".
 document.body.addEventListener('click', e => {
-  const qtyBtn = e.target.closest && e.target.closest('.qty-plus, .qty-minus');
-  if(!qtyBtn) return;
+  const btn = e.target.closest && e.target.closest('.own-plus, .own-minus');
+  if(!btn) return;
   e.preventDefault();
   e.stopPropagation();
-  const id = +qtyBtn.dataset.figId;
+  const id = +btn.dataset.figId;
   const k = KEY_BY_ID[id]; if(!k) return;
   const current = getOwnedCount(k);
-  if(qtyBtn.classList.contains('qty-plus')){
-    setOwnedCount(k, current + 1);
+  if(btn.classList.contains('own-plus')){
+    // First click on + when count is 0 should also mark the figure as
+    // owned (some users may discover + without first toggling Own).
+    if(current === 0) setOwnedCount(k, 1);
+    else setOwnedCount(k, current + 1);
   } else {
-    if(current <= 1) return;  // minus is disabled at count 1
+    // Minus only fires when count ≥ 2 (button is hidden otherwise),
+    // so decrement is safe. Floors at 1 — to fully remove the figure,
+    // the user toggles the Own button.
+    if(current <= 1) return;
     setOwnedCount(k, current - 1);
   }
   updateViewCounts();
-  // Re-render Set Completion so the summary value, the ×N tile badge,
-  // and the editor's count chip all update in lockstep.
   if(typeof renderSetCompletion === 'function') renderSetCompletion();
+  refreshOwnExtras(id);
 });
 
 // ── Multi-copy controls ─────────────────────────────────────────────
@@ -3750,6 +3732,7 @@ function buildFigureCard(d, hideSet){
         <a href="${mercariJpSearchUrl(d)}" target="_blank" rel="noopener">Mercari JP ↗</a>
         <button class="watch-btn ${watchOn?'is-watching':''}" data-fig-id="${d.id}" type="button" aria-pressed="${watchOn}"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${watchOn?'Watching':'Watch'}</span></button>
         <button class="own-btn ${ownOn?'is-owned':''}" data-fig-id="${d.id}" type="button" aria-pressed="${ownOn}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${ownOn?'Owned':'Own'}</span></button>
+        ${ownershipExtrasHtml(d.id)}
         <button class="compare-btn ${isComparing(d.id)?'is-comparing':''}" data-fig-id="${d.id}" type="button" aria-pressed="${isComparing(d.id)}">${isComparing(d.id)?'⇄ Comparing':'+ Compare'}</button>
       </div>
     </div>
@@ -3919,6 +3902,7 @@ function renderTable(){
               aria-pressed="${watchOn}" title="${watchOn?'Remove from watchlist':'Add to watchlist'}"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"></button>
       <button class="fig-action-btn own-btn ${ownOn?'is-owned':''}" data-fig-id="${d.id}" type="button"
               aria-pressed="${ownOn}" title="${ownOn?'Remove from collection':'Mark as owned'}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"></button>
+      ${ownershipExtrasHtml(d.id)}
       <button class="fig-action-btn compare-btn ${cmpOn?'is-comparing':''}" data-fig-id="${d.id}" type="button"
               aria-pressed="${cmpOn}" title="${cmpOn?'Remove from compare':'Add to compare'}">${cmpOn?'⇄':'+⇄'}</button>
     </td>`;
@@ -4240,6 +4224,7 @@ function openLightbox(e){
     ${bbtsActionLink}
     <button type="button" class="lb-watch ${watchOn?'is-on':''}" data-fig-id="${id}"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${watchOn?'Watching':'Watch'}</span></button>
     <button type="button" class="lb-own ${ownOn?'is-on':''}" data-fig-id="${id}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${ownOn?'Owned':'Own'}</span></button>
+    ${ownershipExtrasHtml(id)}
   `;
   actions.querySelectorAll('.lb-watch').forEach(btn => btn.addEventListener('click', () => {
     toggleWatch(id);
@@ -4964,47 +4949,19 @@ function renderSetCompletion(){
       if(p.owned) cls.push('owned');
       if(p.isGrail) cls.push('grail');
       if(p.isLOP) cls.push('lop');
-      if(p.count >= 2) cls.push('multi');
       const titleParts = [p.prize, p.character || ''];
       if(p.isGrail) titleParts.push('— Grail');
       if(p.isLOP)   titleParts.push('— Last One Prize');
-      titleParts.push(p.owned ? (p.count >= 2 ? '· OWNED ×' + p.count : '· OWNED') : '· missing');
+      titleParts.push(p.owned ? '· OWNED' : '· missing');
       const title = esc(titleParts.filter(Boolean).join(' '));
       // LOP tiles render the LAST ONE icon image (img/last-one.png)
       // instead of the ★ character that prizeShortLabel would return.
       const tileBody = p.isLOP
         ? '<img class="sc-tile-img" src="img/last-one.png" alt="" onerror="this.style.display=\'none\'">'
         : esc(prizeShortLabel(p.prize));
-      // Quantity superscript — only when the user owns ≥2 of this prize.
-      // Zero footprint on the tile when count is 0 or 1.
-      const qtyBadge = p.count >= 2
-        ? '<span class="sc-tile-qty">×' + p.count + '</span>'
-        : '';
       return '<a class="' + cls.join(' ') + '" href="#/sets/' + setSlug + '" '
-           + 'title="' + title + '">' + tileBody + qtyBadge + '</a>';
+           + 'title="' + title + '">' + tileBody + '</a>';
     }).join('');
-
-    // Inline quantity editor — one row of +/- controls per OWNED prize.
-    // Hidden by default; revealed when the user clicks the "✏️ qty" toggle
-    // on this set's row. Lets users add doubles/triples without leaving
-    // Collection Progress and without cluttering the table / cards.
-    const qtyEditorRows = r.prizes
-      .filter(p => p.owned)
-      .map(p => {
-        const labelBody = p.isLOP
-          ? '<img class="qty-prize-icon" src="img/last-one.png" alt="LOP">'
-          : esc(prizeShortLabel(p.prize));
-        return '<div class="qty-row" data-fig-id="' + p.id + '">'
-          +   '<span class="qty-prize-tag' + (p.isGrail?' grail':'') + (p.isLOP?' lop':'') + '">' + labelBody + '</span>'
-          +   '<span class="qty-prize-char">' + esc(p.character || '') + '</span>'
-          +   '<button type="button" class="qty-btn qty-minus" data-fig-id="' + p.id + '" data-act="dec" aria-label="One fewer"' + (p.count <= 1 ? ' disabled' : '') + '>−</button>'
-          +   '<span class="qty-count">' + p.count + '</span>'
-          +   '<button type="button" class="qty-btn qty-plus" data-fig-id="' + p.id + '" data-act="inc" aria-label="One more">+</button>'
-          + '</div>';
-      }).join('');
-    const qtyEditorHtml = qtyEditorRows
-      ? '<div class="sc-qty-editor">' + qtyEditorRows + '</div>'
-      : '';
 
     const nameAttrs = isAlmost ? ' data-remaining-label="' + esc(remainingLabel) + '"' : '';
 
@@ -5027,7 +4984,6 @@ function renderSetCompletion(){
       + '</div>'
       + '<div class="sc-frac">' + r.owned + ' / ' + r.total + collapseBtn + '</div>'
       + '<div class="sc-tiles">' + tiles + '</div>'
-      + qtyEditorHtml
       + '<div class="sc-bar"><div class="sc-bar-fill" style="width:' + pct + '%"></div></div>'
       + '</div>';
   }
@@ -5309,7 +5265,7 @@ const RAW_SETS = [
     ["Prize E","Super Saiyan Goku",1101099,null,3454,65,"Movies Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_E_694eac07eec49.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Prize F","Dende",1101104,null,7222,110,"Namek Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_F_694eac07ef274.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["LOP","Porunga",1101105,null,53851,525,"Namek Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_LO_694eac07f13eb.jpg",{"ebayHistory":[{"date":"2026-02-13","price":387.26},{"date":"2026-02-27","price":264.99},{"date":"2026-03-03","price":232.5},{"date":"2026-03-19","price":225},{"date":"2026-03-26","price":240},{"date":"2026-04-05","price":236.2},{"date":"2026-04-12","price":245},{"date":"2026-04-15","price":216.19},{"date":"2026-04-23","price":302.93},{"date":"2026-05-02","price":310.67}],"ebayUpdated":"2026-05-03","mercariUpdated":"2026-05-01"}],
-    ["Goku Day Ver.","Super Saiyan Goku",1101110,null,null,null,"Namek Saga","Dragon Ball Z",null,"https://static.myfigurecollection.net/upload/items/2/1101110-30516.jpg",null],
+    ["Goku Day Ver.","Super Saiyan Goku",1101110,null,11775,null,"Namek Saga","Dragon Ball Z",null,"https://static.myfigurecollection.net/upload/items/2/1101110-30516.jpg",{"mercariUpdated":"2026-05-17"}],
   ]},
   {set:"EX: Super Decisive Battle of the World", setNameJP:"一番くじ ドラゴンボール EX 天下分け目の超決戦!!", dateStr:"July 2021", type:"masterlise", saga:"Saiyan Saga", anime:"Dragon Ball Z", prizes:[
     ["Prize A","Vegeta",1146802,null,19939,140,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-ex-l-ultime-combat-decisif/main_A_694eab9126e78.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
@@ -5545,13 +5501,13 @@ const RAW_SETS = [
     ["LOP","Cell Explosion",2598651,null,7850,110,"Android Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-cross/main_LO_6929b308a4558.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
   ]},
   {set:"The Chronicle of Goku", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_avif/media/lottery/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_69fcfd5880bb0.webp", setNameJP:"一番くじ ドラゴンボール THE CHRONICLE OF GOKU", dateStr:"May 2026", type:"masterlise", saga:"Namek Saga?", anime:"Dragon Ball Z", prizes:[
-    ["Prize A","Kid Goku",3180345,39.99,null,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-masterlise-ichibansho-goku-chronicle-goku-figure-178284?variation=350075&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_A_69f7d376558ae.webp",null],
-    ["Prize B","Bulma",3180346,44.99,null,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/Product/VariationDetails/350082?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_B_69f7d37655ffc.webp",null],
-    ["Prize C","Super Saiyan Goku",3180348,64.99,null,85,"Namek Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-goku-chronicle-goku-figure-178286?variation=350085&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_C_69efce7d88cd9.webp",{"ebayUpdated":"2026-05-01"}],
-    ["Prize D","Super Saiyan 2 Goku",3180349,64.99,null,null,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-2-goku-chronicle-goku-figure-178287?variation=350088&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_D_69f7d37656c23.webp",null],
-    ["Prize E","Majin Vegeta",3180350,64.99,null,null,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-majin-vegeta-chronicle-goku-figure-178288?variation=350090&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_E_69f7d3765720f.webp",null],
-    ["Prize F","Ultra Instinct Goku",3180351,64.99,null,null,"Tournament of Power Saga","Dragon Ball Super","https://www.bigbadtoystore.com/product/dragon-ball-super-masterlise-ichibansho-goku-ultra-instinct-chronicle-goku-figure-178289?variation=350092&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_F_69f7d3765781a.webp",null],
-    ["LOP","Great Ape Goku (SOFVICS)",3180355,114.99,null,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-sofvics-great-ape-goku-chronicle-goku-figure-178290?variation=350094&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_LO_69f7d3765997f.webp",null],
+    ["Prize A","Kid Goku",3180345,39.99,2355,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-masterlise-ichibansho-goku-chronicle-goku-figure-178284?variation=350075&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_A_69f7d376558ae.webp",{"mercariUpdated":"2026-05-17"}],
+    ["Prize B","Bulma",3180346,44.99,10990,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/Product/VariationDetails/350082?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_B_69f7d37655ffc.webp",{"mercariUpdated":"2026-05-17"}],
+    ["Prize C","Super Saiyan Goku",3180348,64.99,10205,85,"Namek Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-goku-chronicle-goku-figure-178286?variation=350085&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_C_69efce7d88cd9.webp",{"ebayUpdated":"2026-05-01","mercariUpdated":"2026-05-17"}],
+    ["Prize D","Super Saiyan 2 Goku",3180349,64.99,13345,null,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-2-goku-chronicle-goku-figure-178287?variation=350088&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_D_69f7d37656c23.webp",{"mercariUpdated":"2026-05-17"}],
+    ["Prize E","Majin Vegeta",3180350,64.99,3925,null,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-majin-vegeta-chronicle-goku-figure-178288?variation=350090&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_E_69f7d3765720f.webp",{"mercariUpdated":"2026-05-17"}],
+    ["Prize F","Ultra Instinct Goku",3180351,64.99,3925,null,"Tournament of Power Saga","Dragon Ball Super","https://www.bigbadtoystore.com/product/dragon-ball-super-masterlise-ichibansho-goku-ultra-instinct-chronicle-goku-figure-178289?variation=350092&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_F_69f7d3765781a.webp",{"mercariUpdated":"2026-05-17"}],
+    ["LOP","Great Ape Goku (SOFVICS)",3180355,114.99,10205,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-sofvics-great-ape-goku-chronicle-goku-figure-178290?variation=350094&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_LO_69f7d3765997f.webp",{"mercariUpdated":"2026-05-17"}],
   ]},
   {set:"Dragon Ball GT", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_avif/media/lottery/dragon-ball/yi-fankuji-doragonborugt/main_6a0921680db81.webp", setNameJP:"一番くじ ドラゴンボールGT", dateStr:"August 2026", type:"masterlise", saga:"Black Star Dragon Ball Saga?", anime:"Dragon Ball GT", prizes:[
     ["Prize A","Super Saiyan 4 Goku",3412183,64.99,null,null,"Super 17 Saga","Dragon Ball GT","https://www.bigbadtoystore.com/product/dragon-ball-gt-ichibansho-super-saiyan-4-goku-figure-187093?variation=366370&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/yi-fankuji-doragonborugt/main_A_69f7e21da2184.webp",null],
