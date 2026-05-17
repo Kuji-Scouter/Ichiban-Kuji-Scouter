@@ -152,10 +152,15 @@ body{
 body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(.skip-link){position:relative;z-index:1}
 
 /* Phone widths get a fainter watermark so the smaller viewport
-   doesn't feel claustrophobic with the dragon overlay. */
+   doesn't feel claustrophobic with the dragon overlay. The Bulma
+   corner watermark is hidden entirely below 600px — at narrow
+   widths the Shenron image overflows leftward (background-size
+   contain on a phone viewport), so the two overlap visually even
+   though they don't share pixels. Hiding Bulma frees the top-left
+   for the MatchesPeaches header chip + currency picker. */
 @media(max-width:600px){
-  #page-watermark{opacity:.05}
-  #corner-watermark{opacity:.07; width:clamp(120px, 32vw, 200px); height:clamp(150px, 40vw, 260px)}
+  #page-watermark{opacity:.04}
+  #corner-watermark{display:none}
 }
 /* Shared fluid container width — fills wider monitors but stays readable */
 :root{--container-max:min(1600px, 96vw)}
@@ -285,6 +290,31 @@ body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare
   display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;
 }
 .ctrl-group{display:flex;flex-direction:column;gap:4px;flex:1 1 0;min-width:0}
+/* Mobile filter collapse — wrapper holds every control after Search.
+   Default desktop behaviour: `display:contents` so children flow as
+   direct flex items of #controls (no visible wrapper). On mobile the
+   wrapper collapses to `display:none` and a "Filters ▾" pill above
+   takes its place. */
+#filter-collapse-body{display:contents}
+#filter-collapse-toggle{
+  display:none;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:12px 16px;min-height:44px;
+  background:var(--surface);border:1px solid #2a2a3a;
+  border-left:3px solid var(--orange);border-radius:8px;
+  color:var(--white);font-family:'Bebas Neue', system-ui, sans-serif;
+  font-size:15px;letter-spacing:1px;cursor:pointer;
+}
+#filter-collapse-toggle .fct-chevron{margin-left:auto;color:var(--grey);transition:transform .25s}
+#filter-collapse-toggle[aria-expanded="true"] .fct-chevron{transform:rotate(180deg)}
+#filter-collapse-toggle .fct-count{
+  background:var(--orange);color:#000;padding:2px 8px;border-radius:999px;
+  font-size:11px;font-weight:800;font-family:'Nunito',sans-serif;letter-spacing:0;
+}
+@media(max-width:700px){
+  #filter-collapse-toggle{display:inline-flex}
+  #filter-collapse-body{display:none}
+  #filter-collapse-body.is-open{display:contents}
+}
 /* Hard flex-break — pins the layout to "6 controls on row 1, 6 on row 2"
    regardless of viewport width. Takes 100% of remaining row width with
    zero height so every following ctrl-group flows onto the next line. */
@@ -1207,9 +1237,32 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   font-size:11px;padding:5px 10px;border-radius:5px;background:transparent;
   border:1px solid #2a2a3a;color:var(--grey);text-decoration:none;cursor:pointer;
   font-weight:700;font-family:'Nunito',sans-serif;
+  /* Touch target: ≥44px tap area per Apple HIG. Visual height stays
+     compact via line-height; box-sizing keeps the painted button
+     looking the same size it always did. */
+  min-height:44px;display:inline-flex;align-items:center;
 }
 .figure-card .fc-actions .is-watching{background:rgba(255,215,0,.15);border-color:var(--gold);color:var(--gold)}
 .figure-card .fc-actions .is-owned{background:rgba(76,175,80,.15);border-color:#4caf50;color:#4caf50}
+
+/* Mobile-only card compression: tighter thumb + padding, smaller
+   gaps. With 388 cards × ~40 px saved each, the full-list scroll
+   drops by ~15 k pixels. */
+@media (max-width:600px){
+  .figure-card{
+    padding:10px;
+    grid-template-columns:72px 1fr;
+    gap:10px;
+  }
+  .figure-card .fc-thumb{width:72px;height:72px}
+  .figure-card .fc-body{gap:4px}
+  .figure-card .fc-grid{gap:4px 10px;margin-top:2px}
+  .figure-card .fc-actions{gap:5px;margin-top:4px}
+  /* Make the 3 marketplace search links short + icon-flavoured so
+     they fit one row; Watch/Own/Compare get the second row at full
+     touch-target size. */
+  .figure-card .fc-actions a{padding:0 8px;font-size:10.5px;min-height:36px}
+}
 
 /* Card-list set headers — same visual language as the table set-headers
    so users moving between desktop and mobile recognise the grouping. */
@@ -1439,7 +1492,18 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
 .stat-value::after {content:"\25c0";right:-1.2em}
 @media(max-width:700px){
   .stat-value::before,.stat-value::after{display:none}
-  .stat-card .stat-char{width:32%;max-width:80px;opacity:.85}
+  /* Mobile stat-card char: switch object-fit to `contain` so the
+     landscape source image (512×360) isn't cropped into a tight portrait
+     close-up. Anchor to the left edge of the card so the text on the
+     right has clear breathing room. Slightly lower opacity since the
+     image is now full-width without crop. */
+  .stat-card .stat-char{
+    width:42%;max-width:90px;height:auto;
+    top:50%;left:6px;right:auto;bottom:auto;
+    transform:translateY(-50%);
+    object-fit:contain;object-position:left center;
+    opacity:.55;
+  }
 }
 /* One-shot scan-in: fade + drift up. JS adds .scan-in once on first
    render. Reduced-motion users skip the animation entirely. */
@@ -2227,6 +2291,15 @@ tr.set-header:hover .set-badge,
     <label class="ctrl-label" for="search-input">Search</label>
     <input type="text" id="search-input" placeholder="Search anything…"/>
   </div>
+  <!-- Mobile-only "Filters ▾" toggle. On desktop this is forced display:none.
+       On mobile it sits below Search and toggles the rest of the controls
+       (everything wrapped in #filter-collapse-body below). -->
+  <button id="filter-collapse-toggle" type="button" aria-expanded="false" aria-controls="filter-collapse-body">
+    <span class="fct-label">Filters</span>
+    <span class="fct-count" id="fct-count" hidden></span>
+    <span class="fct-chevron" aria-hidden="true">▾</span>
+  </button>
+  <div id="filter-collapse-body">
   <div class="ctrl-group ctrl-character">
     <label class="ctrl-label" for="character-input">Character</label>
     <input type="text" id="character-input" placeholder="Filter by character…"/>
@@ -2319,6 +2392,7 @@ tr.set-header:hover .set-badge,
       <button id="reset-btn" type="button" title="Reset all filters">↺ Reset</button>
     </div>
   </div>
+  </div><!-- /#filter-collapse-body -->
 </section>
 
 <!-- Result count line. Reset has moved into the View ctrl-group above
@@ -4110,6 +4184,37 @@ document.getElementById('grail-toggle').addEventListener('click',function(){
   this.setAttribute('aria-pressed', grailOnly);
   renderTable();
 });
+
+// Mobile filter accordion: toggle the collapsed body open/closed and
+// keep the chevron + aria-expanded in sync. Also computes how many
+// filters are currently active so the toggle pill shows a count
+// badge like "Filters (3) ▾".
+(function(){
+  const toggle = document.getElementById('filter-collapse-toggle');
+  const body   = document.getElementById('filter-collapse-body');
+  const badge  = document.getElementById('fct-count');
+  if(!toggle || !body) return;
+  toggle.addEventListener('click', () => {
+    const isOpen = body.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  // Recompute the active-filter badge whenever an input changes.
+  function refreshBadge(){
+    if(!badge) return;
+    const fields = ['character-input','filter-year','filter-set','filter-type','filter-saga','filter-anime','min-secondary','max-secondary','min-msrp','max-msrp'];
+    let n = 0;
+    fields.forEach(id => { const el = document.getElementById(id); if(el && el.value) n++; });
+    if(typeof lopOnly !== 'undefined' && lopOnly) n++;
+    if(typeof grailOnly !== 'undefined' && grailOnly) n++;
+    if(typeof viewMode !== 'undefined' && (viewMode === 'watchlist' || viewMode === 'collection')) n++;
+    if(n > 0){ badge.hidden = false; badge.textContent = n; }
+    else { badge.hidden = true; badge.textContent = ''; }
+  }
+  document.getElementById('controls').addEventListener('input', refreshBadge);
+  document.getElementById('controls').addEventListener('click', refreshBadge);
+  // First-paint sync — reflects any state restored from URL hash / localStorage.
+  setTimeout(refreshBadge, 0);
+})();
 
 document.getElementById('reset-btn').addEventListener('click',()=>{
   ['search-input','character-input','filter-year','filter-set','filter-type','filter-saga','filter-anime','min-secondary','max-secondary','min-msrp','max-msrp']
