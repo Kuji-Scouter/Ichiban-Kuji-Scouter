@@ -161,6 +161,16 @@ body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare
   #page-watermark{opacity:.04}
   #corner-watermark{opacity:.04}
 }
+/* Fade both watermarks out once the user reaches the manga-spine art
+   so they never overlap with the Capsule Corp footer ink or the
+   Toriyama spine banner. Body gets a `below-fold` class via JS when
+   #toriyama-spine enters the viewport. */
+body.below-fold #page-watermark,
+body.below-fold #corner-watermark{
+  opacity:0;
+  transition:opacity .25s ease-out;
+}
+#page-watermark, #corner-watermark{transition:opacity .25s ease-out}
 /* Shared fluid container width — fills wider monitors but stays readable */
 :root{--container-max:min(1600px, 96vw)}
  
@@ -5841,6 +5851,25 @@ function renderRefreshBadge(){
 // First paint uses in-HTML data; the fetch then re-renders with fresh
 // dates once data/ebay-prices.json arrives.
 renderRefreshBadge();
+
+// Hide the side watermarks (Cell on right, Shenron on left) once the
+// user scrolls down to the Toriyama manga-spine art. Without this,
+// Shenron's coiled body would scroll under the Capsule Corp ink in
+// the footer and the spine banner, distorting both. IntersectionObserver
+// flips a `below-fold` class on <body>; CSS handles the fade.
+(function(){
+  const spine = document.getElementById('toriyama-spine');
+  if(!spine || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      // Hide when the spine intersects the viewport OR is above it
+      // (we've scrolled past it). Show when it's fully below us still.
+      const past = entry.isIntersecting || entry.boundingClientRect.top <= 0;
+      document.body.classList.toggle('below-fold', past);
+    });
+  }, { threshold: 0, rootMargin: '0px' });
+  io.observe(spine);
+})();
 
 </script>
 </body>
