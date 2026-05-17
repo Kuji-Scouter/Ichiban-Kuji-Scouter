@@ -1134,6 +1134,59 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .lb-watch:hover .btn-icon,
 .lb-own:hover .btn-icon{transform:scale(1.08)}
 
+/* ── Multi-copy: tile ×N superscript + per-set "✏️ qty" editor ─────
+   The tile-corner badge is zero-cost when count ≤ 1 (not rendered).
+   The editor panel is hidden until the user clicks the "✏️" toggle
+   that appears beside the fraction, so the default Collection
+   Progress layout stays exactly as it was for single-copy users. */
+.sc-tile{position:relative}
+.sc-tile-qty{
+  position:absolute;top:-6px;right:-6px;
+  min-width:14px;height:14px;padding:0 3px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#4caf50;color:#fff;
+  border-radius:999px;font-size:9px;font-weight:800;
+  font-family:'Nunito',sans-serif;letter-spacing:.2px;line-height:1;
+  box-shadow:0 0 0 1.5px var(--surface);  /* clean separation from tile edge */
+  pointer-events:none;
+}
+.sc-qty-editor{
+  grid-column:2 / -1;
+  margin-top:6px;padding:8px 10px;
+  background:rgba(76,175,80,.06);
+  border:1px solid rgba(76,175,80,.25);border-radius:6px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.qty-row{
+  display:flex;align-items:center;gap:8px;
+  font-family:'Nunito',sans-serif;font-size:12px;color:var(--white);
+}
+.qty-prize-tag{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:22px;height:22px;padding:0 5px;
+  border-radius:4px;font-weight:800;font-size:11px;
+  background:#13131c;border:1px solid var(--accent-cyan);color:var(--white);
+}
+.qty-prize-tag.grail{border-color:var(--gold);color:var(--gold)}
+.qty-prize-tag.lop{border-color:var(--gold);padding:0}
+.qty-prize-icon{display:block;width:18px;height:18px;object-fit:contain}
+.qty-prize-char{flex:1;color:var(--grey);font-size:11px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qty-btn{
+  width:26px;height:26px;border-radius:4px;
+  background:transparent;border:1px solid #2a2a3a;color:var(--grey);
+  font-weight:800;font-size:14px;cursor:pointer;line-height:1;padding:0;
+}
+.qty-btn:hover:not(:disabled){border-color:#4caf50;color:#4caf50;background:rgba(76,175,80,.10)}
+.qty-btn:disabled{opacity:.3;cursor:not-allowed}
+.qty-count{
+  min-width:28px;padding:2px 8px;text-align:center;
+  border-radius:999px;background:rgba(76,175,80,.18);border:1px solid #4caf50;
+  color:#4caf50;font-weight:800;font-size:12px;letter-spacing:.4px;line-height:1;
+}
+@media(max-width:600px){
+  .qty-btn{width:32px;height:32px;font-size:15px}
+}
+
 /* ── 1.6 Lightbox upgrade ─────────────────────────────────────────────── */
 #lightbox-inner{position:relative;max-width:min(720px,92vw)}
 #lightbox-close{top:10px;right:10px;position:absolute}
@@ -1914,17 +1967,24 @@ tr.set-header:hover .set-badge,
 /* Inline "filter table to this set" icon. Appears next to the fraction;
    on hover scales up and changes color. Avoids cluttering the name row
    while staying tappable on mobile. */
-.sc-filter-btn{
+.sc-row-collapse{
   margin-left:6px;padding:0;background:transparent;border:0;
   width:22px;height:22px;border-radius:4px;
   color:var(--grey);cursor:pointer;
   display:inline-flex;align-items:center;justify-content:center;
   font-size:13px;line-height:1;
-  transition:color .15s,background .15s;
+  transition:color .15s,background .15s,transform .2s;
   vertical-align:-2px;
 }
-.sc-filter-btn:hover{color:var(--accent-cyan);background:rgba(31,219,231,.1)}
-.sc-filter-btn:focus-visible{outline:1px solid var(--accent-cyan);outline-offset:1px}
+.sc-row-collapse:hover{color:var(--accent-cyan);background:rgba(31,219,231,.1)}
+.sc-row-collapse:focus-visible{outline:1px solid var(--accent-cyan);outline-offset:1px}
+/* When the row is collapsed: rotate the chevron 180° and hide the
+   tile row + inline quantity editor. The set thumb, name, fraction,
+   and progress bar all stay visible so collapsed rows still show
+   overall completion at a glance. */
+.sc-row.row-collapsed .sc-row-collapse{transform:rotate(180deg)}
+.sc-row.row-collapsed .sc-tiles,
+.sc-row.row-collapsed .sc-qty-editor{display:none}
 
 /* Progress bar — beefed up from 4px → 10px, with a subtle inner highlight. */
 .sc-row .sc-bar{
@@ -1977,7 +2037,7 @@ tr.set-header:hover .set-badge,
   .sc-row{grid-template-columns:40px 1fr auto;column-gap:8px;padding:8px}
   .sc-thumb{width:40px;height:40px}
   .sc-tile{min-width:24px;height:24px;font-size:11px}
-  .sc-filter-btn{width:28px;height:28px;font-size:14px}
+  .sc-row-collapse{width:28px;height:28px;font-size:14px}
   .sc-chip{padding:5px 12px;font-size:12px}
 }
 
@@ -2250,7 +2310,7 @@ tr.set-header:hover .set-badge,
         <div class="sc-chips" role="tablist" aria-label="Filter sets">
           <button class="sc-chip active" data-filter="all" type="button">All</button>
           <button class="sc-chip" data-filter="incomplete" type="button">Incomplete</button>
-          <button class="sc-chip" data-filter="almost" type="button">Almost done</button>
+          <button class="sc-chip" data-filter="complete" type="button">Complete</button>
         </div>
         <label class="sc-sort">
           <span class="sc-sort-label">Sort</span>
@@ -2796,6 +2856,52 @@ const COLLECTION_KEY = 'kuji.collection.v1';
 const watchlist = loadFigureSet(WATCHLIST_KEY);
 const collection = loadFigureSet(COLLECTION_KEY);
 
+// ── Multi-copy collection counts ──────────────────────────────────────
+// Some collectors own >1 of the same figure (doubles bought for trade,
+// open vs sealed pairs, etc.). `collectionCounts` mirrors `collection`
+// with a per-figure quantity ≥ 1. Any key NOT in this Map but present
+// in `collection` is treated as count 1 — keeps the storage backward-
+// compatible with everyone whose history is "I own each thing once".
+const COLLECTION_COUNTS_KEY = 'kuji.collection.counts.v1';
+const collectionCounts = (() => {
+  try {
+    const raw = localStorage.getItem(COLLECTION_COUNTS_KEY);
+    if (!raw) return new Map();
+    const obj = JSON.parse(raw);
+    if (!obj || typeof obj !== 'object') return new Map();
+    const m = new Map();
+    Object.entries(obj).forEach(([k, v]) => {
+      const n = Math.max(1, Math.floor(+v) || 1);
+      if (typeof k === 'string' && n > 1) m.set(k, n);
+    });
+    return m;
+  } catch (e) { return new Map(); }
+})();
+function saveCollectionCounts() {
+  try {
+    const obj = {};
+    collectionCounts.forEach((n, k) => { if (n > 1) obj[k] = n; });
+    localStorage.setItem(COLLECTION_COUNTS_KEY, JSON.stringify(obj));
+  } catch (e) {}
+}
+function getOwnedCount(key) {
+  if (!collection.has(key)) return 0;
+  return collectionCounts.get(key) || 1;
+}
+function setOwnedCount(key, n) {
+  n = Math.max(0, Math.floor(n) || 0);
+  if (n === 0) {
+    collection.delete(key);
+    collectionCounts.delete(key);
+  } else {
+    collection.add(key);
+    if (n > 1) collectionCounts.set(key, n);
+    else collectionCounts.delete(key);
+  }
+  saveFigureSet(COLLECTION_KEY, collection);
+  saveCollectionCounts();
+}
+
 function loadFigureSet(storeKey){
   try{
     const raw = localStorage.getItem(storeKey);
@@ -3154,11 +3260,78 @@ function toggleWatch(id){
 }
 function toggleOwn(id){
   const k = KEY_BY_ID[+id]; if(!k) return;
-  if(collection.has(k)) collection.delete(k); else collection.add(k);
+  if(collection.has(k)) {
+    // Fully remove — drop count too so the next "Own" click starts at 1.
+    collection.delete(k);
+    collectionCounts.delete(k);
+  } else {
+    collection.add(k);
+  }
   saveFigureSet(COLLECTION_KEY, collection);
+  saveCollectionCounts();
   updateViewCounts();
   // Chunk 2: set completion progress depends on the collection.
   if(typeof renderSetCompletion === 'function') renderSetCompletion();
+}
+
+// Multi-copy quantity controls — delegated at body scope so it survives
+// every Collection Progress re-render. The editor panel is always
+// visible for any set whose collection isn't empty.
+document.body.addEventListener('click', e => {
+  const qtyBtn = e.target.closest && e.target.closest('.qty-plus, .qty-minus');
+  if(!qtyBtn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const id = +qtyBtn.dataset.figId;
+  const k = KEY_BY_ID[id]; if(!k) return;
+  const current = getOwnedCount(k);
+  if(qtyBtn.classList.contains('qty-plus')){
+    setOwnedCount(k, current + 1);
+  } else {
+    if(current <= 1) return;  // minus is disabled at count 1
+    setOwnedCount(k, current - 1);
+  }
+  updateViewCounts();
+  // Re-render Set Completion so the summary value, the ×N tile badge,
+  // and the editor's count chip all update in lockstep.
+  if(typeof renderSetCompletion === 'function') renderSetCompletion();
+});
+
+// ── Multi-copy controls ─────────────────────────────────────────────
+// Renders a tiny `+` / count-badge / `-` cluster that lives next to
+// the Own button. When the user owns exactly one (the default), only
+// a faint `+` shows so the UI stays uncluttered. When they own 2+,
+// the count appears as a chip and the `-` button shows.
+function ownershipExtrasHtml(id){
+  const k = KEY_BY_ID[+id];
+  const n = k ? getOwnedCount(k) : 0;
+  const ownedClass = n > 0 ? 'is-owned-extras' : '';
+  const countLabel = n >= 2 ? ('×' + n) : '';
+  const showMinus = n >= 2;
+  return (
+    '<span class="own-extras ' + ownedClass + '" data-fig-id="' + id + '">'
+  +   '<button type="button" class="own-minus" data-act="dec" data-fig-id="' + id + '"'
+  +     (showMinus ? '' : ' hidden') + ' aria-label="Owned one fewer">−</button>'
+  +   '<span class="own-count"' + (countLabel ? '' : ' hidden') + '>' + countLabel + '</span>'
+  +   '<button type="button" class="own-plus" data-act="inc" data-fig-id="' + id + '" aria-label="Owned one more">+</button>'
+  + '</span>'
+  );
+}
+// Called after any +/- click: refreshes every .own-extras for this id
+// and updates the dependent surfaces (Collection Value, Set Completion).
+function refreshOwnExtras(id){
+  const k = KEY_BY_ID[+id]; if(!k) return;
+  const n = getOwnedCount(k);
+  document.querySelectorAll('.own-extras[data-fig-id="' + id + '"]').forEach(node => {
+    node.classList.toggle('is-owned-extras', n > 0);
+    const minus = node.querySelector('.own-minus');
+    const count = node.querySelector('.own-count');
+    if (minus) minus.hidden = (n < 2);
+    if (count) {
+      if (n >= 2) { count.hidden = false; count.textContent = '×' + n; }
+      else { count.hidden = true; count.textContent = ''; }
+    }
+  });
 }
 function updateViewCounts(){
   // Wishlist and Collection counts were removed from the view tabs to
@@ -3957,6 +4130,7 @@ function bindCardActions(root){
       const lbl = btn.querySelector('.btn-label');
       if(lbl) lbl.textContent = owned ? 'Owned' : 'Own';
       btn.title = owned ? 'Remove from collection' : 'Mark as owned';
+      refreshOwnExtras(id);
       if(viewMode === 'collection' && !owned) renderTable();
     });
   });
@@ -4095,6 +4269,7 @@ function openLightbox(e){
       const l = b.querySelector('.btn-label');
       if(l) l.textContent = on ? 'Owned' : 'Own';
     });
+    refreshOwnExtras(id);
   }));
 
   lb.classList.add('open');
@@ -4563,6 +4738,8 @@ function closeCompareModal(){
 const SC_PREFS_KEY = 'kuji.sc.prefs.v1';
 let scFilter = 'all';        // 'all' | 'incomplete' | 'almost'
 let scSort   = 'completion-desc';
+// Per-row collapse state (session-only — re-applied on every render).
+const scCollapsedRows = new Set();
 // Panel always starts collapsed on every page load — the user can
 // expand it mid-session, but reloading resets to collapsed. (Persisting
 // collapsed state caused returning visitors to land on a pre-expanded
@@ -4582,6 +4759,11 @@ let scCollapsed = true;
     // The "grails" filter was removed; fall back to "all" rather than
     // silently filter with no UI to undo it.
     if(scFilter === 'grails') scFilter = 'all';
+    // The "almost" filter was replaced by "complete"; map the prior
+    // state to "incomplete" since that's the closest semantic match
+    // (almost-done rows were a subset of incomplete) and is still a
+    // valid chip the user can re-toggle.
+    if(scFilter === 'almost') scFilter = 'incomplete';
   }catch(e){}
 })();
 function saveScPrefs(){
@@ -4651,12 +4833,14 @@ function renderSetCompletion(){
     c.total++;
     if(isOwned) c.owned++;
     c.prizes.push({
+      id: d.id,
       key: d.key,
       prize: d.prize,
       character: d.character,
       isGrail: !!d.isGrail,
       isLOP: !!d.isLOP,
       owned: isOwned,
+      count: getOwnedCount(d.key),
     });
   });
 
@@ -4684,21 +4868,30 @@ function renderSetCompletion(){
   const totalAcrossSets = ownedRows.reduce((n, r) => n + r.total, 0);
   // Estimated collection value — sum each owned figure's eBay price
   // (preferring eBay USD; falling back to Mercari JPY → USD if no eBay).
-  // Tracks how many figures had a price vs how many were skipped so the
-  // user can see how complete the estimate is.
-  let valueUsd = 0, valuedCount = 0, missingCount = 0;
+  // Multiplied by the owned-count so doubles / triples / etc. contribute
+  // their full value. Tracks how many figures had a price vs how many
+  // were skipped so the user can see how complete the estimate is.
+  let valueUsd = 0, valuedCount = 0, missingCount = 0, totalCopies = 0;
   DATA.forEach(d => {
-    if(!collection.has(d.key)) return;
+    const n = getOwnedCount(d.key);
+    if(n === 0) return;
+    totalCopies += n;
     const usd = (d.ebay != null) ? +d.ebay
               : (d.mercari != null) ? (d.mercari / JPY_PER_USD)
               : null;
-    if(usd != null){ valueUsd += usd; valuedCount++; }
-    else missingCount++;
+    if(usd != null){ valueUsd += usd * n; valuedCount += n; }
+    else missingCount += n;
   });
   const valueConverted = convertFromTo(valueUsd, 'USD', displayCurrency);
   const valueStr = formatCurrency(valueConverted, displayCurrency);
   const missingNote = missingCount > 0
     ? ` <span class="sc-value-missing">(${missingCount} without market data)</span>`
+    : '';
+  // If the user has any doubles, mention total copy count so the number
+  // is unambiguous (otherwise it looks like the price doesn't match
+  // the prize count above).
+  const copiesNote = totalCopies > collection.size
+    ? ` <span class="sc-value-missing">(${totalCopies} copies total)</span>`
     : '';
   summary.innerHTML =
       '<div class="sc-summary-line">'
@@ -4708,6 +4901,7 @@ function renderSetCompletion(){
     + '<div class="sc-summary-line sc-value-line">'
     +   '<span class="sc-value-label">Estimated value</span> '
     +   '<strong class="sc-value-amount">~' + esc(valueStr) + '</strong>'
+    +   copiesNote
     +   missingNote
     + '</div>';
   if(controls){
@@ -4723,9 +4917,8 @@ function renderSetCompletion(){
 
   // Apply the active filter chip.
   function passesFilter(r){
-    const pct = r.owned / r.total;
     if(scFilter === 'incomplete') return r.owned < r.total;
-    if(scFilter === 'almost')     return r.owned < r.total && pct >= 0.75;
+    if(scFilter === 'complete')   return r.owned === r.total;
     return true; // 'all'
   }
   const filteredRows = ownedRows.filter(passesFilter);
@@ -4771,35 +4964,70 @@ function renderSetCompletion(){
       if(p.owned) cls.push('owned');
       if(p.isGrail) cls.push('grail');
       if(p.isLOP) cls.push('lop');
+      if(p.count >= 2) cls.push('multi');
       const titleParts = [p.prize, p.character || ''];
       if(p.isGrail) titleParts.push('— Grail');
       if(p.isLOP)   titleParts.push('— Last One Prize');
-      titleParts.push(p.owned ? '· OWNED' : '· missing');
+      titleParts.push(p.owned ? (p.count >= 2 ? '· OWNED ×' + p.count : '· OWNED') : '· missing');
       const title = esc(titleParts.filter(Boolean).join(' '));
       // LOP tiles render the LAST ONE icon image (img/last-one.png)
       // instead of the ★ character that prizeShortLabel would return.
       const tileBody = p.isLOP
         ? '<img class="sc-tile-img" src="img/last-one.png" alt="" onerror="this.style.display=\'none\'">'
         : esc(prizeShortLabel(p.prize));
+      // Quantity superscript — only when the user owns ≥2 of this prize.
+      // Zero footprint on the tile when count is 0 or 1.
+      const qtyBadge = p.count >= 2
+        ? '<span class="sc-tile-qty">×' + p.count + '</span>'
+        : '';
       return '<a class="' + cls.join(' ') + '" href="#/sets/' + setSlug + '" '
-           + 'title="' + title + '">' + tileBody + '</a>';
+           + 'title="' + title + '">' + tileBody + qtyBadge + '</a>';
     }).join('');
+
+    // Inline quantity editor — one row of +/- controls per OWNED prize.
+    // Hidden by default; revealed when the user clicks the "✏️ qty" toggle
+    // on this set's row. Lets users add doubles/triples without leaving
+    // Collection Progress and without cluttering the table / cards.
+    const qtyEditorRows = r.prizes
+      .filter(p => p.owned)
+      .map(p => {
+        const labelBody = p.isLOP
+          ? '<img class="qty-prize-icon" src="img/last-one.png" alt="LOP">'
+          : esc(prizeShortLabel(p.prize));
+        return '<div class="qty-row" data-fig-id="' + p.id + '">'
+          +   '<span class="qty-prize-tag' + (p.isGrail?' grail':'') + (p.isLOP?' lop':'') + '">' + labelBody + '</span>'
+          +   '<span class="qty-prize-char">' + esc(p.character || '') + '</span>'
+          +   '<button type="button" class="qty-btn qty-minus" data-fig-id="' + p.id + '" data-act="dec" aria-label="One fewer"' + (p.count <= 1 ? ' disabled' : '') + '>−</button>'
+          +   '<span class="qty-count">' + p.count + '</span>'
+          +   '<button type="button" class="qty-btn qty-plus" data-fig-id="' + p.id + '" data-act="inc" aria-label="One more">+</button>'
+          + '</div>';
+      }).join('');
+    const qtyEditorHtml = qtyEditorRows
+      ? '<div class="sc-qty-editor">' + qtyEditorRows + '</div>'
+      : '';
 
     const nameAttrs = isAlmost ? ' data-remaining-label="' + esc(remainingLabel) + '"' : '';
 
-    // Filter-table-to-this-set button — sets the main Kuji Set dropdown
-    // and re-runs the table render. Saves a trip to the filter strip.
-    const filterBtn = '<button type="button" class="sc-filter-btn" '
-      + 'data-filter-set="' + esc(r.setName) + '" '
-      + 'title="Show only this set in the table below" aria-label="Filter table to ' + esc(r.setName) + '">▼</button>';
+    // Per-row collapse toggle. Hides this row's tiles, quantity editor,
+    // and progress bar so the user can fold rows they aren't actively
+    // scanning. Rotates 180° when collapsed. State is session-only and
+    // re-applied on every render via the scCollapsedRows Set.
+    const isRowCollapsed = scCollapsedRows.has(r.setName);
+    if(isRowCollapsed) classes.push('row-collapsed');
+    const collapseBtn = '<button type="button" class="sc-row-collapse" '
+      + 'data-collapse-set="' + esc(r.setName) + '" '
+      + 'title="' + (isRowCollapsed ? 'Expand' : 'Collapse') + ' this row" '
+      + 'aria-label="' + (isRowCollapsed ? 'Expand' : 'Collapse') + ' ' + esc(r.setName) + '" '
+      + 'aria-expanded="' + (!isRowCollapsed) + '">▼</button>';
 
     return '<div class="' + classes.join(' ') + '">'
       + '<div class="sc-thumb" ' + thumbStyle + '>' + thumbInner + '</div>'
       + '<div class="sc-name"' + nameAttrs + '>'
       +   '<a href="#/sets/' + setSlug + '">' + esc(r.setName) + '</a>'
       + '</div>'
-      + '<div class="sc-frac">' + r.owned + ' / ' + r.total + filterBtn + '</div>'
+      + '<div class="sc-frac">' + r.owned + ' / ' + r.total + collapseBtn + '</div>'
       + '<div class="sc-tiles">' + tiles + '</div>'
+      + qtyEditorHtml
       + '<div class="sc-bar"><div class="sc-bar-fill" style="width:' + pct + '%"></div></div>'
       + '</div>';
   }
@@ -4899,19 +5127,19 @@ if(_scSort){
     renderSetCompletion();
   });
 }
-// Filter-table-to-set buttons (event-delegated since rows are
-// re-rendered on every render pass).
+// Per-row collapse toggle (event-delegated since rows are re-rendered
+// on every render pass). Click "▼" → row collapses (tiles + qty editor
+// + bar hide). Click "▲" → row expands.
 document.addEventListener('click', e => {
-  const btn = e.target.closest && e.target.closest('.sc-filter-btn');
+  const btn = e.target.closest && e.target.closest('.sc-row-collapse');
   if(!btn) return;
-  const setName = btn.dataset.filterSet;
+  e.preventDefault();
+  e.stopPropagation();
+  const setName = btn.dataset.collapseSet;
   if(!setName) return;
-  const sel = document.getElementById('filter-set');
-  if(!sel) return;
-  sel.value = setName;
-  sel.dispatchEvent(new Event('change', {bubbles: true}));
-  const tbl = document.getElementById('table-wrap') || document.getElementById('figures-view');
-  if(tbl) tbl.scrollIntoView({behavior: 'smooth', block: 'start'});
+  if(scCollapsedRows.has(setName)) scCollapsedRows.delete(setName);
+  else scCollapsedRows.add(setName);
+  if(typeof renderSetCompletion === 'function') renderSetCompletion();
 });
 // View-tab switch + hash change: collector panels should hide on the
 // set-detail page (the existing renderers and showSetDetailView don't
