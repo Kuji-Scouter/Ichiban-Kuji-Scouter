@@ -5037,6 +5037,18 @@ window.addEventListener('popstate', () => {
     modal.setAttribute('aria-hidden', 'true');
     img.src = ''; // free the bitmap
   }
+  // Self-heal on broken image src — if the chosen file 404s (e.g. an
+  // upload was missed), keep picking until we find one that loads.
+  // Bounded by gallery length so we never infinite-loop if EVERY file
+  // is missing.
+  let _failAttempts = 0;
+  img.addEventListener('error', () => {
+    if(!modal || modal.hidden) return; // ignore the deliberate src='' on dismiss
+    if(_failAttempts >= gallery.length){ _failAttempts = 0; return; }
+    _failAttempts++;
+    img.src = pick();
+  });
+  img.addEventListener('load', () => { _failAttempts = 0; });
   logo.addEventListener('click', e => { e.preventDefault(); open(); });
   logo.setAttribute('title', 'Click for a Toriyama surprise');
   if(close) close.addEventListener('click', dismiss);
