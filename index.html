@@ -827,12 +827,23 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 #art-modal-inner{
   position:relative;cursor:default;
   max-width:min(700px,92vw);max-height:90vh;
+  /* Scroll when the image + collector profile + caption exceed the
+     viewport (common on phones where 75vh of image already eats the
+     usable area). Without overflow-y the bottom rows of the profile
+     panel were clipped and unreachable. */
+  overflow-y:auto;overscroll-behavior:contain;
   display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding-right:2px; /* leave room for the scrollbar gutter */
 }
 #art-modal-img{
-  display:block;max-width:100%;max-height:75vh;
+  display:block;max-width:100%;
+  /* Reduced from 75vh → 55vh so the collector profile panel below
+     has guaranteed breathing room even on shorter viewports. The
+     overflow-y on the parent picks up any remaining overflow. */
+  max-height:55vh;
   border-radius:10px;
   box-shadow:0 16px 48px rgba(0,0,0,.6);
+  flex:0 0 auto;
 }
 #art-modal-caption{
   font-size:11px;color:var(--grey);letter-spacing:.4px;
@@ -947,8 +958,12 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   border:1px solid #2a2a3a;border-radius:10px;
   text-align:left;
 }
-.empty-state-card img{
-  width:200px;height:auto;display:block;
+/* Direct-child only so this doesn't override the small inline
+   .copy-icon images embedded inside the paragraph body. Without the
+   `>` qualifier, both art and inline icons match — and a 200px-wide
+   inline icon makes the body copy look broken. */
+.empty-state-card > img{
+  width:280px;height:auto;display:block;
   filter:drop-shadow(0 6px 18px rgba(0,0,0,.55));
 }
 .empty-state-card .empty-state-text h2{
@@ -971,7 +986,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   .empty-state-card{
     grid-template-columns:1fr;text-align:center;padding:18px;
   }
-  .empty-state-card img{width:140px;margin:0 auto}
+  .empty-state-card > img{width:200px;margin:0 auto}
 }
  
 /* ── Footer ── */
@@ -2019,6 +2034,7 @@ tr.set-header:hover .set-badge,
   font-size:22px;color:var(--gold);
   background:rgba(255,196,0,.08);border:1px solid rgba(255,196,0,.25);
 }
+.sc-empty-icon img{width:28px;height:28px;display:block}
 .sc-empty-text{font-size:13px;color:var(--white);line-height:1.45}
 .sc-empty-text strong{display:block;font-size:14px;font-weight:800;margin-bottom:2px}
 .sc-empty-text span{color:var(--grey);font-size:12px}
@@ -4935,6 +4951,14 @@ window.addEventListener('popstate', () => {
   const img   = document.getElementById('art-modal-img');
   const logo  = document.querySelector('.hero-logo');
   if(!modal || !logo) return;
+  // Easter-egg carousel rotation. Tournament-of-Power removed — it's
+  // now the Top 10 backdrop and would be redundant here. Added: the
+  // Buu banner that was demoted from Top 10 (still on disk, finally
+  // gets a home), the un-painted "gang with Roshi" piece (sister of
+  // the painted footer-right image), the Z-fighters lineup, the
+  // Capsule Corp racing car (Trunks + Bulma + Bulla), and Goku riding
+  // the red dragon-bird. All four new pieces extracted fresh from
+  // ~/Desktop/Art.zip in this round.
   const gallery = [
     'img/art-pirate-goku.jpg',
     'img/art-gt-trio.jpg',
@@ -4942,8 +4966,12 @@ window.addEventListener('popstate', () => {
     'img/art-f1-car.jpg',
     'img/art-z-trio-sunburst.jpg',
     'img/art-scooter-saiyans.jpg',
-    'img/art-tournament-of-power.jpg',
     'img/art-dragon-ball-promo.jpg',
+    'img/art-buu-vs-saiyans.jpg',
+    'img/art-gang-card.jpg',
+    'img/art-z-fighters-lineup.jpg',
+    'img/art-capsule-corp-race.jpg',
+    'img/art-goku-dragon-bird.jpg',
   ];
   let lastIdx = -1;
   function pick(){
@@ -5400,10 +5428,10 @@ function renderSetCompletion(){
     if(controls) controls.hidden = true;
     list.innerHTML =
       '<div class="sc-empty">'
-      + '<div class="sc-empty-icon">★</div>'
+      + '<div class="sc-empty-icon"><img src="img/dragonball.png" alt="" /></div>'
       + '<div class="sc-empty-text">'
       +   '<strong>Start your collection</strong>'
-      +   '<span>Tap the ☆ on any figure below to mark it as owned. '
+      +   '<span>Tap the <img class="copy-icon" src="img/dragonball.png" alt="Collection"/> on any figure below to mark it as owned. '
       +   'Your set-by-set progress will appear here.</span>'
       + '</div>'
       + '</div>';
