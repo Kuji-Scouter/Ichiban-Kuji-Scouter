@@ -151,7 +151,7 @@ body{
    forced them into normal flow at the bottom of the page (which
    caused clicking a figure thumb to scroll to the bottom instead of
    opening the lightbox as a modal). */
-body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(.skip-link){position:relative;z-index:1}
+body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(#about-modal):not(#art-modal):not(#achievement-toast):not(.skip-link){position:relative;z-index:1}
 
 /* Phone widths get fainter watermarks so the smaller viewport
    doesn't feel claustrophobic. Both Cell (right) and Shenron (left)
@@ -258,16 +258,20 @@ body.below-fold #corner-watermark{
 #top10-body.visible{display:block}
 #top10-body::before{
   content:"";position:absolute;inset:0;
-  /* Buu vs Saiyans banner as a punchy backdrop. cover sizing fills
-     the whole expanded body; opacity .22 makes the action readable
-     without overwhelming the price text (cards above stay fully
-     opaque so the numbers are never compromised). */
-  background:url('img/art-buu-vs-saiyans.jpg') center center / cover no-repeat;
-  opacity:.22;pointer-events:none;z-index:0;
+  /* Tournament-of-Power lineup as the Top 10's hero backdrop. Back
+     to `cover` sizing (fills the panel completely, with the source
+     image scaled up to crop wherever the aspect ratios don't line
+     up). At .25 opacity the art reads as ambient texture rather
+     than a competing hero, so the full-bleed presentation works
+     without overwhelming the figure data. Per-card gradient +
+     text-shadow on .top10-* labels keep each row legible. */
+  background:url('img/art-tournament-of-power.jpg') center center / cover no-repeat;
+  opacity:.25;pointer-events:none;z-index:0;
 }
 /* Soft top-bottom fade so the brighter banner blends into the panel
    chrome instead of having hard edges where it meets the rounded
-   corners. */
+   corners. Kept at .55 alpha (was already .55) — at the bumped art
+   opacity those fade bands need their full strength. */
 #top10-body::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg, rgba(13,13,21,.55) 0%, rgba(13,13,21,0) 18%, rgba(13,13,21,0) 82%, rgba(13,13,21,.55) 100%);
@@ -275,13 +279,22 @@ body.below-fold #corner-watermark{
 }
 #top10-body > *{position:relative;z-index:1}
 .top10-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
-.top10-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:6px;border:1px solid #1e1e2e}
+/* Per-card background: at .55 backdrop opacity the cards used to
+   blend into the lineup art and the rows lost their structure. A
+   subtle horizontal gradient from transparent (rank/char side) to
+   .45-alpha dark (price side) anchors the text columns without
+   smothering the art on the left half of each row. */
+.top10-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(90deg, rgba(13,13,21,0) 0%, rgba(13,13,21,.45) 100%);border-radius:6px;border:1px solid #1e1e2e}
 .top10-rank{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:22px;min-width:36px;text-align:center}
 .rank-1{color:#FFD700}.rank-2{color:#C0C0C0}.rank-3{color:#CD7F32}.rank-other{color:var(--grey)}
 .top10-info{flex:1;min-width:0}
-.top10-char{font-weight:700;font-size:12px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top10-meta{font-size:10px;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top10-price{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:18px;color:var(--orange);white-space:nowrap}
+/* Double-layer text-shadow (sharp drop + soft halo) keeps the white
+   character names, grey meta, and orange price all readable against
+   the .55-opacity Toriyama backdrop. The drop-shadow handles crisp
+   edges; the halo lifts contrast where art highlights brighten. */
+.top10-char{font-weight:700;font-size:12px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 2px rgba(0,0,0,.95), 0 0 4px rgba(0,0,0,.6)}
+.top10-meta{font-size:10px;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 2px rgba(0,0,0,.95), 0 0 4px rgba(0,0,0,.6)}
+.top10-price{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:18px;color:var(--orange);white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.95), 0 0 4px rgba(0,0,0,.6)}
  
 /* ── Controls (filter strip) ──
    Refactored 2026-05 for consistent rendering across resolutions.
@@ -737,6 +750,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   border-top:3px solid var(--orange);border-radius:10px;
   padding:18px;text-align:center;cursor:default;
   display:flex;flex-direction:column;align-items:center;gap:10px;
+  position:relative;
 }
 #lightbox-img{
   max-width:100%;max-height:60vh;
@@ -754,6 +768,161 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   font-size:18px;cursor:pointer;line-height:1;
 }
 #lightbox-close:hover{border-color:var(--orange);color:var(--orange)}
+
+/* ── About / credit modal ────────────────────────────────────────── */
+#about-modal{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(5,5,10,.92);
+  align-items:center;justify-content:center;
+  padding:24px;cursor:zoom-out;
+}
+#about-modal[aria-hidden="false"]{display:flex}
+#about-inner{
+  position:relative;cursor:default;
+  max-width:min(640px,92vw);max-height:90vh;overflow:auto;
+  background:var(--surface);border:1px solid #2a2a3a;
+  border-top:3px solid var(--orange);border-radius:12px;
+  padding:0;
+}
+#about-hero{
+  display:block;width:100%;height:auto;
+  max-height:240px;object-fit:cover;object-position:center 35%;
+  border-radius:12px 12px 0 0;
+}
+#about-inner h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;letter-spacing:1px;color:var(--orange);
+  margin:18px 24px 8px;
+}
+#about-inner p{
+  font-size:13px;color:#cdd0e0;line-height:1.55;
+  margin:0 24px 12px;
+}
+#about-inner p strong{color:var(--white)}
+.about-credits{
+  display:flex;flex-direction:column;gap:6px;
+  font-size:12px !important;color:var(--grey) !important;
+  background:#0d0d15;border-top:1px solid #2a2a3a;
+  padding:14px 24px !important;margin:14px 0 0 !important;
+  border-radius:0 0 12px 12px;
+}
+.about-credits a{color:var(--accent-cyan);text-decoration:none}
+.about-credits a:hover{text-decoration:underline}
+#about-close{
+  position:absolute;top:12px;right:12px;z-index:2;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(13,13,21,.85);border:1px solid #2a2a3a;color:var(--white);
+  font-size:18px;cursor:pointer;line-height:1;
+}
+#about-close:hover{border-color:var(--orange);color:var(--orange)}
+
+/* ── Easter-egg art carousel modal ───────────────────────────────── */
+#art-modal{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(5,5,10,.92);
+  align-items:center;justify-content:center;
+  padding:24px;cursor:zoom-out;
+}
+#art-modal[aria-hidden="false"]{display:flex}
+#art-modal-inner{
+  position:relative;cursor:default;
+  max-width:min(700px,92vw);max-height:90vh;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+#art-modal-img{
+  display:block;max-width:100%;max-height:75vh;
+  border-radius:10px;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);
+}
+#art-modal-caption{
+  font-size:11px;color:var(--grey);letter-spacing:.4px;
+  text-transform:uppercase;text-align:center;
+}
+/* Collector profile panel inside the scouter easter-egg modal —
+   rendered between the random Toriyama image and the caption.
+   Hidden when collection is empty (handled by the IIFE on open). */
+#art-modal-stats{
+  width:100%;max-width:360px;
+  margin-top:4px;
+  padding:10px 14px;
+  background:linear-gradient(145deg, rgba(20,20,30,.92) 0%, rgba(13,13,21,.92) 100%);
+  border:1px solid rgba(255,196,0,.30);
+  border-radius:8px;
+  display:flex;flex-direction:column;gap:6px;
+}
+#art-modal-stats[hidden]{display:none}
+#art-modal-stats .ams-title{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:14px;letter-spacing:1.5px;color:var(--orange);
+  text-align:center;margin-bottom:2px;
+}
+#art-modal-stats .ams-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:12px;
+  border-bottom:1px dashed rgba(255,255,255,.06);
+  padding-bottom:4px;
+}
+#art-modal-stats .ams-row:last-child{border-bottom:none;padding-bottom:0}
+#art-modal-stats .ams-row span{color:var(--grey);letter-spacing:.3px}
+#art-modal-stats .ams-row b{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:18px;letter-spacing:.5px;color:var(--gold);font-weight:normal;
+}
+#art-modal-close{
+  position:absolute;top:-12px;right:-12px;z-index:2;
+  width:36px;height:36px;border-radius:50%;
+  background:#0d0d15;border:1px solid #2a2a3a;color:var(--white);
+  font-size:18px;cursor:pointer;line-height:1;
+}
+#art-modal-close:hover{border-color:var(--orange);color:var(--orange)}
+
+/* Make the logo discoverable as a clickable easter egg. Subtle hover
+   pulse so it reads as interactive without being loud. */
+.hero-logo{cursor:pointer;transition:transform .25s ease-out, filter .25s}
+.hero-logo:hover{transform:scale(1.05);filter:drop-shadow(0 0 8px rgba(255,196,0,.5))}
+
+/* ── Achievement toast ──────────────────────────────────────────────
+   Bottom-right slide-in card fired by showAchievement({title,sub,art}).
+   Used by milestone triggers (10/25/50/100 figures, $500/$1k/$5k worth)
+   and set-completion triggers (one-away, complete). Auto-dismisses
+   after 3.5s. role=status + aria-live=polite so screen readers
+   announce without stealing focus. */
+#achievement-toast{
+  /* Layout-only styles. Opacity + transform are driven by the Web
+     Animations API in setupAchievementToast() — CSS transitions
+     were flaky in this codebase (some upstream rule was breaking
+     transition resolution on this element, despite no animation /
+     keyframe / parent opacity issue). JS-driven animation sidesteps
+     the issue entirely and is just as smooth. */
+  display:flex;position:fixed;bottom:24px;right:24px;z-index:9998;
+  width:min(320px, calc(100vw - 32px));
+  background:linear-gradient(145deg, rgba(20,20,30,.96) 0%, rgba(13,13,21,.96) 100%);
+  border:1px solid rgba(255,196,0,.45);
+  border-radius:10px;
+  box-shadow:0 12px 36px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.4);
+  padding:10px 12px;
+  align-items:center;gap:12px;
+  pointer-events:none;
+  opacity:0;
+}
+#achievement-art{
+  width:56px;height:56px;flex:0 0 auto;
+  border-radius:6px;object-fit:cover;
+  border:1px solid rgba(255,196,0,.35);
+}
+#achievement-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+#achievement-title{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:18px;letter-spacing:.6px;color:var(--gold);line-height:1.1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#achievement-sub{
+  font-size:11px;color:var(--grey);line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+@media(max-width:600px){
+  #achievement-toast{bottom:16px;right:16px;left:16px;width:auto}
+}
 .lb-link{
   font-family:'Nunito',sans-serif;font-size:12px;color:var(--cyan);
   text-decoration:none;border:1px solid rgba(110,220,255,.35);
@@ -848,13 +1017,29 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   pointer-events:none;
   z-index:0;
 }
+/* Original-gang ensemble color vignette anchored to the bottom-right
+   of the footer. No text overlaps this corner, so we let the color
+   come through directly instead of the invert+screen ink pipeline
+   used on the Capsule Corp side. Asymmetric treatment (logo left,
+   painted panel right) reads as intentional — they're different
+   KINDS of imagery rather than a mismatched pair. */
+#footer::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url('img/art-original-gang.jpg') right bottom / auto 100% no-repeat;
+  opacity:.22;
+  pointer-events:none;
+  z-index:0;
+}
 /* Ensure all footer columns / links render ABOVE the watermark. */
 #footer > *{position:relative;z-index:1}
-/* On phones, soften the watermark slightly so it doesn't crowd the
+/* On phones, soften both watermarks slightly so they don't crowd the
    narrower footer layout — matches the phone-only dim on the Shenron
    overlay. */
 @media(max-width:600px){
   #footer::before{opacity:.05;background-size:auto 90%}
+  #footer::after{opacity:.15;background-size:auto 90%}
 }
 .footer-section{margin-bottom:14px}
 .footer-title{font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-size:14px;letter-spacing:1px;color:var(--orange);margin-bottom:8px}
@@ -1207,6 +1392,10 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .lightbox-actions button:hover{border-color:var(--orange);color:var(--orange)}
 .lightbox-actions .lb-watch.is-on{background:rgba(255,215,0,.15);border-color:var(--gold);color:var(--gold)}
 .lightbox-actions .lb-own.is-on{background:rgba(76,175,80,.15);border-color:#4caf50;color:#4caf50}
+/* Compare button active state — cyan to match the per-row compare
+   toggle and the persistent #compare-bar. Sync function toggles
+   .is-comparing on the button when toggleCompare fires. */
+.lightbox-actions .lb-compare.is-comparing{background:rgba(127,230,255,.18);border-color:var(--accent-cyan);color:var(--accent-cyan)}
 
 /* ── 2.2 Set detail view ──────────────────────────────────────────────── */
 .set-detail-view{
@@ -2555,8 +2744,10 @@ tr.set-header:hover .set-badge,
       <button id="export-data-btn" type="button" class="footer-link footer-action">↓ Export</button>
       <label class="footer-link footer-action" for="import-data-input" tabindex="0">↑ Import</label>
       <input id="import-data-input" type="file" accept="application/json,.json" hidden/>
+      <button id="about-btn" type="button" class="footer-link footer-action" aria-haspopup="dialog">✦ About</button>
     </div>
   </div>
+
   <!-- Tier 3 — data freshness badge. Populated by renderRefreshBadge();
        hidden until at least one figure carries an ebayUpdated date. -->
   <div id="refresh-badge" class="refresh-badge" hidden>
@@ -2568,6 +2759,61 @@ tr.set-header:hover .set-badge,
     <p>Some links on this site (notably to Big Bad Toy Store) are affiliate links. If you click through and make a purchase, MatchesPeaches may earn a small commission at no extra cost to you. This helps support the channel and keeps this tracker free.</p>
   </div>
 </footer>
+
+<!-- About / credit modal — opens via #about-btn in the footer. Honors
+     the source community + Akira Toriyama. Sits at body level so the
+     #footer > * stacking rule doesn't override its fixed positioning. -->
+<div id="about-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="about-title" hidden>
+  <div id="about-inner" role="document" onclick="event.stopPropagation()">
+    <button id="about-close" type="button" aria-label="Close about dialog">✕</button>
+    <img id="about-hero" src="img/art-dragon-ball-promo.jpg" alt="Akira Toriyama's classic Dragon Ball promotional art"/>
+    <h2 id="about-title">A small tribute</h2>
+    <p>This price tracker is built by a Dragon Ball collector for Dragon Ball collectors. Every figure here is a recreation of one of <strong>Akira Toriyama</strong>'s panels — without his decades of work there's no kuji to chase, no grail to grade, no ★ to mark on a wishlist. The art scattered across this site is a small bow to that.</p>
+    <p class="about-credits">
+      <span>Figure catalogue + box-art image hosting · <a href="https://www.kuji-collection.com/en/ichiban-kuji/dragon-ball" target="_blank" rel="noopener">kuji-collection.com</a></span>
+      <span>Reference data originally compiled by Myk · indexed via <a href="https://myfigurecollection.net/browse.v4.php?rootId=21&amp;keywords=ichiban+kuji+dragon+ball" target="_blank" rel="noopener">MyFigureCollection</a></span>
+      <span>Site by <a href="https://www.youtube.com/@MatchesPeaches" target="_blank" rel="noopener">MatchesPeaches</a></span>
+    </p>
+  </div>
+</div>
+
+<!-- Easter-egg art modal — opens when the user clicks the scouter
+     logo. Picks one Toriyama piece at random from the gallery and
+     shows it large. Subtle hint via cursor:pointer + hover pulse on
+     the logo. Same body-level placement as #about-modal so the fixed
+     positioning isn't fought by the #footer > * rule. -->
+<div id="art-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Toriyama art surprise" hidden>
+  <div id="art-modal-inner" role="document" onclick="event.stopPropagation()">
+    <button id="art-modal-close" type="button" aria-label="Close">✕</button>
+    <img id="art-modal-img" src="" alt=""/>
+    <!-- Collector profile — populated from the user's collection on
+         every modal open. Hidden when collection is empty so a first-
+         time visitor still sees the art-only easter egg. -->
+    <div id="art-modal-stats" hidden>
+      <div class="ams-title">Your Collection</div>
+      <div class="ams-row"><span>Figures owned</span><b id="ams-figs">0</b></div>
+      <div class="ams-row"><span>Grails owned</span><b id="ams-grails">0</b></div>
+      <div class="ams-row"><span>Total worth</span><b id="ams-worth">—</b></div>
+      <div class="ams-row"><span>Sets in progress</span><b id="ams-prog">0</b></div>
+      <div class="ams-row"><span>Sets complete</span><b id="ams-done">0</b></div>
+    </div>
+    <div id="art-modal-caption">A small piece of Toriyama's universe. Click the logo again for another.</div>
+  </div>
+</div>
+
+<!-- Achievement toast — fired by showAchievement({title, sub, art}).
+     Body-level so #footer > * doesn't drag it into normal flow.
+     aria-live=polite + role=status so SR users get an announcement
+     without focus theft. The element is always laid out
+     (visibility:hidden + opacity:0 when off) so transitions work
+     without the display:none → flex paint trap. -->
+<div id="achievement-toast" role="status" aria-live="polite" aria-hidden="true">
+  <img id="achievement-art" src="" alt=""/>
+  <div id="achievement-text">
+    <div id="achievement-title"></div>
+    <div id="achievement-sub"></div>
+  </div>
+</div>
 
 <!-- ── Lightbox / detail modal (1.6) ─────────────────────────────────────
      Now a proper aria-modal dialog with backdrop-click + ESC dismissal,
@@ -2883,6 +3129,17 @@ function getOwnedCount(key) {
 }
 function setOwnedCount(key, n) {
   n = Math.max(0, Math.floor(n) || 0);
+  const wasOwned = collection.has(key);
+  const prevCount = wasOwned ? getOwnedCount(key) : 0;
+  const setName = key.split('|')[0];
+  // Same trigger detection as toggleOwn. Set-completion triggers
+  // fire only on the 0→positive transition; milestone triggers fire
+  // whenever the global figure-count / worth crosses a threshold
+  // (which can happen even on a multi-copy bump like 2 → 5).
+  const beforeSet = (!wasOwned && n > 0 && typeof _ownedInSet === 'function')
+    ? _ownedInSet(setName) : null;
+  const beforeStats = (n > prevCount && typeof _globalCollectionStats === 'function')
+    ? _globalCollectionStats() : null;
   if (n === 0) {
     collection.delete(key);
     collectionCounts.delete(key);
@@ -2893,6 +3150,13 @@ function setOwnedCount(key, n) {
   }
   saveFigureSet(COLLECTION_KEY, collection);
   saveCollectionCounts();
+  if(beforeSet){
+    const afterSet = _ownedInSet(setName);
+    _checkSetTriggers(setName, beforeSet.count, afterSet.count, afterSet.total);
+  }
+  if(beforeStats){
+    _checkMilestoneTriggers(beforeStats, _globalCollectionStats());
+  }
 }
 
 function loadFigureSet(storeKey){
@@ -3253,7 +3517,13 @@ function toggleWatch(id){
 }
 function toggleOwn(id){
   const k = KEY_BY_ID[+id]; if(!k) return;
-  if(collection.has(k)) {
+  const wasOwned = collection.has(k);
+  const setName = k.split('|')[0];
+  // Snapshot BEFORE the mutation: per-set counts (for one-away /
+  // complete triggers) AND global stats (for milestone triggers).
+  const beforeSet = wasOwned ? null : _ownedInSet(setName);
+  const beforeStats = wasOwned ? null : _globalCollectionStats();
+  if(wasOwned) {
     // Fully remove — drop count too so the next "Own" click starts at 1.
     collection.delete(k);
     collectionCounts.delete(k);
@@ -3265,6 +3535,118 @@ function toggleOwn(id){
   updateViewCounts();
   // Chunk 2: set completion progress depends on the collection.
   if(typeof renderSetCompletion === 'function') renderSetCompletion();
+  // Achievement triggers — only fire on increment direction so the
+  // toasts never play when the user un-toggles a figure.
+  if(!wasOwned && beforeSet){
+    const afterSet = _ownedInSet(setName);
+    _checkSetTriggers(setName, beforeSet.count, afterSet.count, afterSet.total);
+  }
+  if(!wasOwned && beforeStats){
+    _checkMilestoneTriggers(beforeStats, _globalCollectionStats());
+  }
+}
+
+// Set-completion achievement helpers — used by toggleOwn() and
+// setOwnedCount() to detect when the user crosses N-1 / N thresholds
+// in any single set and to fire the matching toast.
+function _ownedInSet(setName){
+  let count = 0, total = 0;
+  for(const d of DATA){
+    if(d.set !== setName) continue;
+    total++;
+    if(collection.has(d.key)) count++;
+  }
+  return {count, total};
+}
+function _checkSetTriggers(setName, prev, now, total){
+  if(total < 2) return; // single-figure sets can't have a one-away state
+  if(prev === total - 2 && now === total - 1){
+    window.showAchievement && window.showAchievement({
+      title: 'Almost there!',
+      sub: `1 figure to complete ${setName}`,
+      art: 'img/art-reaching-for-grail.jpg',
+    });
+  } else if(prev === total - 1 && now === total){
+    window.showAchievement && window.showAchievement({
+      title: 'Set complete!',
+      sub: `${setName} — every figure collected`,
+      art: 'img/art-f1-car.jpg',
+    });
+  }
+}
+
+// ── Milestone achievement triggers ───────────────────────────────────
+// T3 — figure-count milestones (10/25/50/100 figures owned).
+// T5 — collection-value milestones ($500/$1k/$5k total worth in USD).
+//
+// Each milestone fires AT MOST ONCE per browser (persisted to
+// localStorage under kuji.achievements.fired.v1). Threshold checks
+// run on every increment-direction collection mutation. Value
+// thresholds are compared in USD (canonical) so currency switches
+// don't accidentally re-fire.
+
+const ACHIEVEMENTS_KEY = 'kuji.achievements.fired.v1';
+const FIG_MILESTONES = [
+  { n: 10,  title: '10 figures collected!',  sub: "You're on your way." },
+  { n: 25,  title: '25 figures collected!',  sub: 'A real shelf now.' },
+  { n: 50,  title: '50 figures!',            sub: 'Halfway to a hundred.' },
+  { n: 100, title: '100 figures!',           sub: 'Genuine collector territory.' },
+];
+const WORTH_MILESTONES = [
+  { n: 500,  title: '$500 collection!',  sub: 'Real value on the shelf.' },
+  { n: 1000, title: '$1,000 collection!', sub: "You're stacking grails." },
+  { n: 5000, title: '$5,000 collection!', sub: 'Serious dragon-ball hunter.' },
+];
+
+function _loadFiredMilestones(){
+  try{
+    return JSON.parse(localStorage.getItem(ACHIEVEMENTS_KEY) || '{}') || {};
+  }catch{ return {}; }
+}
+function _markMilestoneFired(id){
+  try{
+    const fired = _loadFiredMilestones();
+    fired[id] = new Date().toISOString();
+    localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(fired));
+  }catch{}
+}
+function _globalCollectionStats(){
+  let figs = 0, worthUsd = 0;
+  for(const d of DATA){
+    if(!collection.has(d.key)) continue;
+    const n = getOwnedCount(d.key);
+    figs += n;
+    const v = figureValueUsd(d);
+    if(v && v.usd) worthUsd += v.usd * n;
+  }
+  return { figs, worthUsd };
+}
+function _checkMilestoneTriggers(prev, now){
+  if(!window.showAchievement) return;
+  const fired = _loadFiredMilestones();
+  // Figure-count milestones — fire when threshold first crossed
+  // (prev < n && now >= n) and not previously marked.
+  for(const m of FIG_MILESTONES){
+    const id = `figs-${m.n}`;
+    if(prev.figs < m.n && now.figs >= m.n && !fired[id]){
+      _markMilestoneFired(id);
+      window.showAchievement({
+        title: m.title, sub: m.sub,
+        art: 'img/art-bulma-nimbus.jpg',
+      });
+    }
+  }
+  // Worth milestones — same pattern, USD canonical.
+  for(const m of WORTH_MILESTONES){
+    const id = `worth-${m.n}`;
+    if(prev.worthUsd < m.n && now.worthUsd >= m.n && !fired[id]){
+      _markMilestoneFired(id);
+      window.showAchievement({
+        title: m.title, sub: m.sub,
+        art: 'img/art-z-trio-sunburst.jpg',
+      });
+    }
+  }
 }
 
 // Delegated handler for the multi-copy +/- buttons. Lives at body
@@ -3751,7 +4133,7 @@ function buildFigureCard(d, hideSet){
         <button class="watch-btn ${watchOn?'is-watching':''}" data-fig-id="${d.id}" type="button" aria-pressed="${watchOn}"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${watchOn?'Watching':'Watch'}</span></button>
         <button class="own-btn ${ownOn?'is-owned':''}" data-fig-id="${d.id}" type="button" aria-pressed="${ownOn}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${ownOn?'Owned':'Own'}</span></button>
         ${ownershipExtrasHtml(d.id)}
-        <button class="compare-btn ${isComparing(d.id)?'is-comparing':''}" data-fig-id="${d.id}" type="button" aria-pressed="${isComparing(d.id)}">${isComparing(d.id)?'⇄ Comparing':'+ Compare'}</button>
+        <button class="compare-btn ${isComparing(d.id)?'is-comparing':''}" data-fig-id="${d.id}" type="button" aria-pressed="${isComparing(d.id)}">${isComparing(d.id)?'⚖ Comparing':'⚖ Compare'}</button>
       </div>
     </div>
   </article>`;
@@ -3773,7 +4155,7 @@ function renderTable(){
     // copy. All three empty states share the same Trunks art.
     if(viewMode === 'watchlist' && watchlist.size === 0){
       noRes.innerHTML = `<div class="empty-state-card">
-        <img src="img/art-trunks.jpg" alt=""/>
+        <img src="img/art-bulma-goku-drive.jpg" alt=""/>
         <div class="empty-state-text">
           <h2>Start your wishlist</h2>
           <p>Tap the <img class="copy-icon" src="img/radar.png" alt="Wishlist"/> on any figure to track it here. Once you mark one, it'll show up so you can see what you're chasing at a glance.</p>
@@ -3781,7 +4163,7 @@ function renderTable(){
       </div>`;
     } else if(viewMode === 'collection' && collection.size === 0){
       noRes.innerHTML = `<div class="empty-state-card">
-        <img src="img/art-trunks.jpg" alt=""/>
+        <img src="img/art-goku-gaming.jpg" alt=""/>
         <div class="empty-state-text">
           <h2>Start your collection</h2>
           <p>Tap the <img class="copy-icon" src="img/dragonball.png" alt="Collection"/> on any figure in the table to mark it as owned. Your set-by-set progress shows up in the Collection Progress radar above.</p>
@@ -3922,7 +4304,7 @@ function renderTable(){
               aria-pressed="${ownOn}" title="${ownOn?'Remove from collection':'Mark as owned'}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"></button>
       ${ownershipExtrasHtml(d.id)}
       <button class="fig-action-btn compare-btn ${cmpOn?'is-comparing':''}" data-fig-id="${d.id}" type="button"
-              aria-pressed="${cmpOn}" title="${cmpOn?'Remove from compare':'Add to compare'}">${cmpOn?'⇄':'+⇄'}</button>
+              aria-pressed="${cmpOn}" title="${cmpOn?'Remove from compare':'Add to compare'}">⚖</button>
     </td>`;
  
     // Saga / Anime tags (with uncertain marker)
@@ -4234,6 +4616,7 @@ function openLightbox(e){
 
   const watchOn = isWatching(id);
   const ownOn = isOwned(id);
+  const cmpOn = isComparing(id);
   const bbtsActionLink = d.bbtsLink ? `<a href="${esc(d.bbtsLink)}" target="_blank" rel="noopener">BBTS Listing ↗</a>` : '';
   actions.innerHTML = `
     <a href="${mfcUrl(d)}" target="_blank" rel="noopener">MFC ↗</a>
@@ -4243,6 +4626,7 @@ function openLightbox(e){
     <button type="button" class="lb-watch ${watchOn?'is-on':''}" data-fig-id="${id}"><img class="btn-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${watchOn?'Watching':'Watch'}</span></button>
     <button type="button" class="lb-own ${ownOn?'is-on':''}" data-fig-id="${id}"><img class="btn-icon" src="img/dragonball.png" alt="" onerror="this.style.display='none'"><span class="btn-label">${ownOn?'Owned':'Own'}</span></button>
     ${ownershipExtrasHtml(id)}
+    <button type="button" class="lb-compare compare-btn ${cmpOn?'is-comparing':''}" data-fig-id="${id}" aria-pressed="${cmpOn}">${cmpOn?'⚖ Comparing':'⚖ Compare'}</button>
   `;
   actions.querySelectorAll('.lb-watch').forEach(btn => btn.addEventListener('click', () => {
     toggleWatch(id);
@@ -4273,6 +4657,13 @@ function openLightbox(e){
       if(l) l.textContent = on ? 'Owned' : 'Own';
     });
     refreshOwnExtras(id);
+  }));
+  // Lightbox compare button — toggleCompare() already calls
+  // syncCompareRowButtons(id) internally, which finds and updates
+  // every .compare-btn matching this id (table, mobile card, and
+  // this lightbox button). No extra wiring needed beyond the click.
+  actions.querySelectorAll('.lb-compare').forEach(btn => btn.addEventListener('click', () => {
+    toggleCompare(id);
   }));
 
   lb.classList.add('open');
@@ -4511,6 +4902,205 @@ window.addEventListener('popstate', () => {
   renderTable();
 });
 
+// ── About / credit modal ──────────────────────────────────────────────
+(function(){
+  const modal = document.getElementById('about-modal');
+  const btn   = document.getElementById('about-btn');
+  const close = document.getElementById('about-close');
+  if(!modal || !btn) return;
+  function open(){
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => close && close.focus(), 0);
+  }
+  function dismiss(){
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    btn.focus();
+  }
+  btn.addEventListener('click', open);
+  if(close) close.addEventListener('click', dismiss);
+  // Backdrop click dismisses; #about-inner has onclick stopPropagation.
+  modal.addEventListener('click', dismiss);
+  // Esc key dismisses when open.
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && !modal.hidden) dismiss();
+  });
+})();
+
+// ── Easter-egg: click the scouter logo for a random Toriyama panel ────
+(function(){
+  const modal = document.getElementById('art-modal');
+  const close = document.getElementById('art-modal-close');
+  const img   = document.getElementById('art-modal-img');
+  const logo  = document.querySelector('.hero-logo');
+  if(!modal || !logo) return;
+  const gallery = [
+    'img/art-pirate-goku.jpg',
+    'img/art-gt-trio.jpg',
+    'img/art-flying-formation.jpg',
+    'img/art-f1-car.jpg',
+    'img/art-z-trio-sunburst.jpg',
+    'img/art-scooter-saiyans.jpg',
+    'img/art-tournament-of-power.jpg',
+    'img/art-dragon-ball-promo.jpg',
+  ];
+  let lastIdx = -1;
+  function pick(){
+    // Avoid showing the same image twice in a row.
+    let i;
+    do { i = Math.floor(Math.random() * gallery.length); } while(gallery.length > 1 && i === lastIdx);
+    lastIdx = i;
+    return gallery[i];
+  }
+  // Collector profile — recomputed on every open so fresh toggles
+  // reflect immediately. Hidden when the user has nothing collected
+  // yet so the first-time experience is still the art-only easter
+  // egg. All helpers (figureValueUsd, convertFromTo, formatCurrency,
+  // displayCurrency, DATA, collection, getOwnedCount) come from the
+  // surrounding script scope.
+  function populateProfile(){
+    const statsEl = document.getElementById('art-modal-stats');
+    if(!statsEl) return;
+    if(!collection || collection.size === 0){
+      statsEl.hidden = true;
+      return;
+    }
+    const owned = DATA.filter(d => collection.has(d.key));
+    const figs = owned.reduce((n, d) => n + getOwnedCount(d.key), 0);
+    const grails = owned.filter(d => d.isGrail)
+                        .reduce((n, d) => n + getOwnedCount(d.key), 0);
+    const worthUsd = owned.reduce((sum, d) => {
+      const v = figureValueUsd(d);
+      return sum + (v && v.usd ? v.usd * getOwnedCount(d.key) : 0);
+    }, 0);
+    const worth = worthUsd > 0
+      ? formatCurrency(convertFromTo(worthUsd, 'USD', displayCurrency), displayCurrency)
+      : '—';
+    // Sets in progress / complete — walk DATA grouped by set.
+    const setCounts = {};
+    for(const d of DATA){
+      if(!setCounts[d.set]) setCounts[d.set] = {owned: 0, total: 0};
+      setCounts[d.set].total++;
+      if(collection.has(d.key)) setCounts[d.set].owned++;
+    }
+    let inProgress = 0, complete = 0;
+    for(const s of Object.values(setCounts)){
+      if(s.owned === 0) continue;
+      if(s.owned === s.total) complete++;
+      else inProgress++;
+    }
+    document.getElementById('ams-figs').textContent   = figs;
+    document.getElementById('ams-grails').textContent = grails;
+    document.getElementById('ams-worth').textContent  = worth;
+    document.getElementById('ams-prog').textContent   = inProgress;
+    document.getElementById('ams-done').textContent   = complete;
+    statsEl.hidden = false;
+  }
+  function open(){
+    img.src = pick();
+    populateProfile();
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => close && close.focus(), 0);
+  }
+  function dismiss(){
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    img.src = ''; // free the bitmap
+  }
+  logo.addEventListener('click', e => { e.preventDefault(); open(); });
+  logo.setAttribute('title', 'Click for a Toriyama surprise');
+  if(close) close.addEventListener('click', dismiss);
+  modal.addEventListener('click', dismiss);
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && !modal.hidden) dismiss();
+  });
+})();
+
+// ── Achievement toast API ─────────────────────────────────────────────
+// Globally-callable showAchievement({title, sub, art}) — used by the
+// collection trigger hooks in renderSetCompletion + the milestone
+// triggers in toggleOwn/setOwnedCount (wired in later phases).
+//
+// Behavior:
+//   - Populates the toast markup with the payload's title/sub/art.
+//   - Slides in (or fades, under prefers-reduced-motion) bottom-right.
+//   - Auto-dismisses after 3.5s.
+//   - If called while another toast is showing, queues sequentially
+//     with an 800ms gap so multiple milestone fires don't squash each
+//     other (e.g. a single owned-toggle that crosses both a figure-
+//     count AND a value milestone).
+//   - Dedupes consecutive calls with the same title (e.g. double-
+//     toggling) to avoid stutter.
+(function setupAchievementToast(){
+  const toast = document.getElementById('achievement-toast');
+  if(!toast) return;
+  const artEl   = document.getElementById('achievement-art');
+  const titleEl = document.getElementById('achievement-title');
+  const subEl   = document.getElementById('achievement-sub');
+  const queue = [];
+  let active = false;
+  let lastTitle = null;
+  let currentAnim = null;
+
+  const reducedMotion = () =>
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function animate(frames, duration){
+    if(currentAnim) currentAnim.cancel();
+    currentAnim = toast.animate(frames, {
+      duration: reducedMotion() ? 200 : duration,
+      easing: 'ease-out',
+      fill: 'forwards',
+    });
+    return currentAnim;
+  }
+
+  function show(payload){
+    artEl.src   = payload.art || '';
+    artEl.alt   = payload.title || '';
+    titleEl.textContent = payload.title || '';
+    subEl.textContent   = payload.sub   || '';
+    toast.setAttribute('aria-hidden', 'false');
+    // Web Animations API — sidesteps CSS-transition cascade weirdness.
+    // Slides up + fades in over 350ms.
+    animate([
+      { opacity: 0, transform: 'translateY(20px) scale(0.96)' },
+      { opacity: 1, transform: 'translateY(0) scale(1)'      },
+    ], 350);
+    lastTitle = payload.title;
+    setTimeout(hide, 3500);
+  }
+  function hide(){
+    // Fade-out animation (350ms) then teardown.
+    animate([
+      { opacity: 1, transform: 'translateY(0) scale(1)'      },
+      { opacity: 0, transform: 'translateY(10px) scale(0.98)' },
+    ], 350);
+    setTimeout(() => {
+      toast.setAttribute('aria-hidden', 'true');
+      artEl.src = ''; // free the bitmap
+      active = false;
+      // 800ms breather before showing the next queued toast — gives
+      // the user a moment to register one milestone before the next.
+      if(queue.length){
+        const next = queue.shift();
+        setTimeout(() => { active = true; show(next); }, 800);
+        active = true;
+      }
+    }, 380); // matches the 350ms hide animation + small buffer
+  }
+  window.showAchievement = function(payload){
+    if(!payload || !payload.title) return;
+    // Dedupe consecutive identical fires.
+    if(payload.title === lastTitle && active) return;
+    if(active){ queue.push(payload); return; }
+    active = true;
+    show(payload);
+  };
+})();
+
 // ── Backup buttons (Export + Import in the footer) ────────────────────
 document.getElementById('export-data-btn').addEventListener('click', exportBackupData);
 document.getElementById('import-data-input').addEventListener('change', e => {
@@ -4613,10 +5203,14 @@ function syncCompareRowButtons(id){
     b.classList.toggle('is-comparing', on);
     b.setAttribute('aria-pressed', on);
     if(b.classList.contains('fig-action-btn')){
-      b.textContent = on ? '⇄' : '+⇄';
+      // Icon-only table button — scale glyph stays the same; the
+      // .is-comparing class provides the cyan active state.
+      b.textContent = '⚖';
       b.title = on ? 'Remove from compare' : 'Add to compare';
     } else {
-      b.textContent = on ? '⇄ Comparing' : '+ Compare';
+      // Labeled compare button (mobile card + lightbox actions) —
+      // text label changes between Compare / Comparing.
+      b.textContent = on ? '⚖ Comparing' : '⚖ Compare';
     }
   });
 }
