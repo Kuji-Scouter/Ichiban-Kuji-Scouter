@@ -97,6 +97,20 @@
   --edited-bg:#2a2000;
   --purple:#bb88ff;
   --cyan:#6edcff;
+  /* ── Capsule Corp palette ──
+     One accent colour per filter "capsule" so the controls strip
+     reads as a variety of labelled Capsule Corp capsules (mirrors
+     the anime-canon plate of yellow/purple/pink/blue/green pills). */
+  --cap-search:    #ffc107;
+  --cap-year:      #22c55e;
+  --cap-set:       #ec4899;
+  --cap-saga:      #3b82f6;
+  --cap-anime:     #a855f7;
+  --cap-lop:       #FFD700;
+  --cap-grail:     #ff6b3d;
+  --cap-view:      #FF6B00;
+  --cap-reset:     #888888;
+  --cap-currency:  #6edcff;
   --green:#88dd88;
 }
 html{scroll-behavior:smooth;font-size:clamp(14px,0.55vw + 11.2px,18px)}
@@ -363,15 +377,17 @@ body.below-fold #corner-watermark{
    rows have the same visual rhythm. */
 .ctrl-search    {flex:3 1 0}
 .ctrl-character {flex:2.4 1 0}
-.ctrl-year      {flex:1 1 0}
+/* Bumped — "All Years" / "All Anime" need usable width with the
+   wider gaps eating row space. */
+.ctrl-year      {flex:1.8 1 0}
 .ctrl-kuji-set  {flex:2.2 1 0}
-.prize-filter-group {flex:1.6 1 0;min-width:0}
-.view-tab-group {flex:1.8 1 0;min-width:0}
+.prize-filter-group {flex:2.4 1 0;min-width:0}
+.view-tab-group {flex:2.6 1 0;min-width:0}
 .ctrl-saga      {flex:1.6 1 0}
-.ctrl-anime     {flex:1.4 1 0}
+.ctrl-anime     {flex:1.8 1 0}
 .ctrl-set-type  {flex:1.6 1 0}
-.range-group    {flex:2.4 1 0}
-.reset-group    {flex:1.5 1 0;min-width:0}
+.range-group    {flex:3.0 1 0}
+.reset-group    {flex:2.2 1 0;min-width:0}
 
 /* ── Shared control sizing ──
    Every input, select, and button in the controls strip uses the
@@ -466,6 +482,443 @@ body.below-fold #corner-watermark{
   display:inline-block;min-width:18px;padding:0 6px;
   background:#000;border:1px solid #2a2a3a;border-radius:10px;
   font-size:10px;color:var(--grey);font-weight:700;line-height:14px;text-align:center;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ── CAPSULE CORP RESTYLE ──
+   Every search / filter control is treated as a Dragon Ball Capsule
+   Corp capsule: pill body, brushed-silver fill, a coloured "label
+   band" stripe across the top of the body identifying the filter
+   type, and a small cylindrical knob protruding from the right end
+   (the canonical Capsule Corp release-button).
+
+   Each filter wrapper sets its own --capsule-color via the
+   per-filter assignments below; the shared visual block reads from
+   that variable for the band, the knob's accent, and the active-
+   filter glow.
+
+   Layout note: knobs protrude ~14px to the right of each capsule,
+   so the surrounding flex gaps (#controls, button clusters, toolbar)
+   are bumped to clear the protrusion. The vertical-divider rule on
+   .ctrl-group is removed — the capsule shapes themselves separate
+   the controls visually now.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Per-wrapper capsule colour assignments. Each ctrl-group (or button)
+   sets --capsule-color which the shared block below consumes.
+
+   Extra colours for the secondary-row filters (Character, Set Type,
+   Price ranges) — keep the row visually distinct from the primary
+   row by tinting them with secondary-spectrum hues (red, orange,
+   teal) so the strip still reads as a rainbow of capsule types. */
+.ctrl-search    { --capsule-color: var(--cap-search); }
+.ctrl-character { --capsule-color: #ef4444; }   /* red */
+.ctrl-year      { --capsule-color: var(--cap-year); }
+.ctrl-kuji-set  { --capsule-color: var(--cap-set); }
+.ctrl-saga      { --capsule-color: var(--cap-saga); }
+.ctrl-anime     { --capsule-color: var(--cap-anime); }
+.ctrl-set-type  { --capsule-color: #f97316; }   /* orange */
+.range-group    { --capsule-color: #14b8a6; }   /* teal */
+.reset-group    { --capsule-color: var(--cap-reset); }
+#lop-toggle     { --capsule-color: var(--cap-lop); }
+#grail-toggle   { --capsule-color: var(--cap-grail); }
+.view-tab       { --capsule-color: var(--cap-view); }
+#reset-btn      { --capsule-color: var(--cap-reset); }
+#toolbar        { --capsule-color: var(--cap-currency); }
+
+/* Drop the old vertical divider between groups — capsules separate
+   the controls visually now. Tightened gap so the row has more
+   pixels to spend on the capsule bodies themselves (giving text
+   labels room to read clearly). Still wide enough that the
+   ~25px knob protrusion clears the next capsule's left cap with
+   ~8-10px visible breathing room. */
+.ctrl-group:not(:last-child){padding-right:0;border-right:none}
+/* row-gap kept much tighter (16px) than column-gap (34px) so the
+   top row of filters sits close to the bottom row vertically while
+   capsules within a row still get clear horizontal breathing room. */
+#controls{gap:16px 34px}
+.prize-filter-buttons,
+.view-tab-buttons,
+.reset-buttons{gap:34px}
+/* Range input internal spacing — Min↔Max paired close. */
+#controls .range-group .price-range{gap:20px}
+#controls .range-group .price-range > span[aria-hidden="true"]{display:none}
+
+/* ── Capsule body ──
+   Anime-canon Capsule Corp colouring: GREY cylindrical body with
+   TWO vertical colour stripes flanking the central label area. The
+   text label sits in the clear grey middle between the stripes,
+   centred. Range-input wrappers (.range-cap) share the same body
+   styling so each Min / Max input reads as its own capsule. */
+#controls input[type=text],
+#controls select,
+#controls input[type=number],
+#controls .prize-filter-buttons button,
+#controls .view-tab,
+#controls .reset-buttons button,
+#toolbar #currency-select,
+#controls .range-cap{
+  border-radius:999px;
+  /* SYMMETRIC padding + symmetric stripe positions so the text
+     label is genuinely centred between the two stripes. Stripes
+     at x=14 / calc(100%-19), padding 28px on both sides — leaves
+     a comfortable 9px buffer between each text edge and the
+     nearest stripe. With the tighter inter-capsule gap (34px) this
+     extra padding fits without truncating labels. */
+  padding:0 28px;
+  border:1px solid rgba(0,0,0,.50);
+  background:
+    /* Left vertical colour stripe — 10px wide (another 50% thicker
+       for substantially heavier visual weight). */
+    linear-gradient(to right, var(--capsule-color), var(--capsule-color))
+      14px 0 / 10px 100% no-repeat,
+    /* Right vertical colour stripe — symmetric to the left */
+    linear-gradient(to right, var(--capsule-color), var(--capsule-color))
+      calc(100% - 24px) 0 / 10px 100% no-repeat,
+    /* Grey cylindrical body — cylindrical highlight + edge dim. */
+    linear-gradient(180deg, #909090 0%, #c0c0c0 35%, #c8c8c8 60%, #888888 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -2px 4px rgba(0,0,0,.18),
+    0 2px 6px rgba(0,0,0,.50);
+  color:#0d0d15;
+  font-weight:700;
+  text-align:center;
+  position:relative;
+}
+/* Placeholder readable on the grey centre. */
+#controls input[type=text]::placeholder,
+#controls input[type=number]::placeholder{color:#3a3a3a}
+
+/* Range input wrappers — each Min / Max gets its own capsule body.
+   The actual <input> inside is transparent so the wrapper's gradient
+   shows through, and the input is centred and fills the wrapper. */
+#controls .range-cap{
+  flex:1 1 0;
+  min-width:0;
+  height:36px;
+  display:inline-flex;align-items:center;
+  box-sizing:border-box;
+}
+#controls .range-cap input[type=number]{
+  flex:1 1 0;min-width:0;
+  height:100%;width:100%;
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  text-align:center;
+  color:#0d0d15;
+  font-family:'Nunito',sans-serif;
+  font-size:13px;font-weight:700;
+}
+
+/* Narrow buttons (LOP, Grail, View tabs, Reset) — same two-stripe
+   pattern at symmetric offsets. Stripes 3px wide, padding 18px each
+   side for a 7px buffer between icon/text and the nearest stripe. */
+#controls .prize-filter-buttons button,
+#controls .view-tab,
+#controls .reset-buttons button{
+  padding:0 18px;
+  background:
+    /* Stripes 6px (another 50% thicker — substantially heavier). */
+    linear-gradient(to right, var(--capsule-color), var(--capsule-color))
+      8px 0 / 6px 100% no-repeat,
+    linear-gradient(to right, var(--capsule-color), var(--capsule-color))
+      calc(100% - 14px) 0 / 6px 100% no-repeat,
+    linear-gradient(180deg, #909090 0%, #c0c0c0 35%, #c8c8c8 60%, #888888 100%);
+}
+
+/* Override the legacy "color: var(--white) !important" inactive
+   rules at lines 450 + 465–468 — those were correct for a dark-body
+   button but our capsules are now white-bodied so text must be dark. */
+#controls #lop-toggle,
+#controls #grail-toggle,
+#controls .view-tab[data-view="watchlist"],
+#controls .view-tab[data-view="collection"],
+#controls .view-tab,
+#controls .prize-filter-buttons button,
+#controls .reset-buttons button{
+  color:#1a1a22 !important;
+}
+/* Native select — drop the dropdown chevron entirely. The canonical
+   Capsule Corp prop has nothing past the right stripe except the
+   rounded cap + knob, so we match. The flanking stripes + the knob
+   already read as "interactive capsule"; clicking the body opens
+   the native dropdown as expected. Frees up the cramped text space
+   so labels like "All Years" no longer truncate to "All Yr". */
+#controls select{
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
+  /* Background inherits the two-stripe + white-body from the shared
+     block above; no extra layers here. */
+}
+
+/* The colour-top + white-bottom body gradient handles the colour
+   identification job that the ::before band used to do; no separate
+   stripe needed. Just ensure the .ctrl-group / button wrappers are
+   positioned so the knob ::after below can anchor to them. */
+.ctrl-group{position:relative}
+#controls .prize-filter-buttons button,
+#controls .view-tab,
+#controls .reset-buttons button,
+#toolbar #currency-select{position:relative}
+
+/* ── Knob — two-part press button ──
+   The canonical Capsule Corp release button is a two-piece shape: a
+   narrow STEM/neck connecting the body to a wider CAP/button-face.
+   That's what makes it look like hardware you can press.
+     ::before = stem (narrow connecting piece, attached to body)
+     ::after  = cap  (wider press-button face, at the far end)
+   Both pieces are silver-metallic with strong highlights / shadows
+   so the assembly reads as a 3D press button. The cap face has an
+   inset ring that suggests "press me". */
+
+/* STEM — narrow connecting piece between body and cap. */
+.ctrl-search::before,
+.ctrl-character::before,
+.ctrl-year::before,
+.ctrl-kuji-set::before,
+.ctrl-saga::before,
+.ctrl-anime::before,
+.ctrl-set-type::before,
+#controls .range-cap::before,
+#lop-toggle::before,
+#grail-toggle::before,
+#controls .view-tab::before,
+#reset-btn::before{
+  content:"";
+  position:absolute;
+  right:-10px;
+  width:11px;
+  height:18px;
+  background:linear-gradient(180deg,
+    #606060 0%,
+    #c8c8c8 25%,
+    #d8d8d8 50%,
+    #a0a0a0 75%,
+    #555555 100%);
+  border-top:1px solid rgba(0,0,0,.6);
+  border-bottom:1px solid rgba(0,0,0,.6);
+  pointer-events:none;
+  z-index:1;
+  transition:filter .15s;
+}
+
+/* CAP — wider press-button face at the far end of the stem. */
+.ctrl-search::after,
+.ctrl-character::after,
+.ctrl-year::after,
+.ctrl-kuji-set::after,
+.ctrl-saga::after,
+.ctrl-anime::after,
+.ctrl-set-type::after,
+#controls .range-cap::after,
+#lop-toggle::after,
+#grail-toggle::after,
+#controls .view-tab::after,
+#reset-btn::after{
+  content:"";
+  position:absolute;
+  right:-25px;
+  width:16px;
+  height:28px;
+  border-radius:4px;
+  border:1px solid rgba(0,0,0,.65);
+  background:linear-gradient(180deg,
+    #707070 0%,
+    #f8f8f8 18%,
+    #ffffff 45%,
+    #c8c8c8 75%,
+    #606060 100%);
+  box-shadow:
+    /* inner ring = button-face affordance ("press here") */
+    inset 0 0 0 1px rgba(255,255,255,.45),
+    /* sharp crown highlight */
+    inset 0 2px 1px rgba(255,255,255,.95),
+    /* deep bottom inner shadow for the rounded cylinder feel */
+    inset 0 -2px 2px rgba(0,0,0,.35),
+    /* drop shadow under the whole cap — raised "I'm a button" */
+    0 4px 6px rgba(0,0,0,.6),
+    0 1px 2px rgba(0,0,0,.50);
+  cursor:pointer;
+  pointer-events:none; /* reserved for future click functionality */
+  z-index:2;
+  transition:filter .15s, box-shadow .15s;
+}
+
+/* Wrapper-mounted knobs (selects/inputs) — bottom-anchored so they
+   align with the 36px control row below the label. */
+.ctrl-search::before, .ctrl-search::after,
+.ctrl-character::before, .ctrl-character::after,
+.ctrl-year::before, .ctrl-year::after,
+.ctrl-kuji-set::before, .ctrl-kuji-set::after,
+.ctrl-saga::before, .ctrl-saga::after,
+.ctrl-anime::before, .ctrl-anime::after,
+.ctrl-set-type::before, .ctrl-set-type::after{
+  bottom:9px; /* stem */
+}
+.ctrl-search::after,
+.ctrl-character::after,
+.ctrl-year::after,
+.ctrl-kuji-set::after,
+.ctrl-saga::after,
+.ctrl-anime::after,
+.ctrl-set-type::after{
+  bottom:4px; /* cap (taller, so lower offset) */
+}
+
+/* Range-cap and buttons — vertically centered on their own element. */
+#controls .range-cap::before,
+#lop-toggle::before,
+#grail-toggle::before,
+#controls .view-tab::before,
+#reset-btn::before,
+#controls .range-cap::after,
+#lop-toggle::after,
+#grail-toggle::after,
+#controls .view-tab::after,
+#reset-btn::after{
+  top:50%;
+  transform:translateY(-50%);
+}
+
+/* Knob hover effect via parent :hover — both stem and cap brighten,
+   cap gains a coloured glow in the filter's accent. */
+.ctrl-search:hover::before,
+.ctrl-character:hover::before,
+.ctrl-year:hover::before,
+.ctrl-kuji-set:hover::before,
+.ctrl-saga:hover::before,
+.ctrl-anime:hover::before,
+.ctrl-set-type:hover::before,
+#controls .range-cap:hover::before,
+#lop-toggle:hover::before,
+#grail-toggle:hover::before,
+#controls .view-tab:hover::before,
+#reset-btn:hover::before{
+  filter:brightness(1.12);
+}
+.ctrl-search:hover::after,
+.ctrl-character:hover::after,
+.ctrl-year:hover::after,
+.ctrl-kuji-set:hover::after,
+.ctrl-saga:hover::after,
+.ctrl-anime:hover::after,
+.ctrl-set-type:hover::after,
+#controls .range-cap:hover::after,
+#lop-toggle:hover::after,
+#grail-toggle:hover::after,
+#controls .view-tab:hover::after,
+#reset-btn:hover::after{
+  filter:brightness(1.12);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.55),
+    inset 0 2px 1px rgba(255,255,255,.95),
+    inset 0 -2px 2px rgba(0,0,0,.35),
+    0 5px 8px rgba(0,0,0,.75),
+    0 1px 2px rgba(0,0,0,.50),
+    0 0 12px color-mix(in srgb, var(--capsule-color) 70%, transparent);
+}
+
+/* ── Currency picker capsule (toolbar) ──
+   The currency select sits in #toolbar and was already pill-shaped.
+   It gets the knob via #toolbar::after — toolbar wraps just the
+   currency picker so this is safe. */
+#toolbar{position:relative;padding-right:36px}
+/* Currency picker — two-part stem + cap matching the filter
+   capsules. ::before stem touches the body, ::after cap is the
+   wider press-button face at the far right. */
+#toolbar::before{
+  content:"";
+  position:absolute;
+  right:25px;
+  top:50%;
+  transform:translateY(-50%);
+  width:11px;height:18px;
+  background:linear-gradient(180deg,
+    #606060 0%, #c8c8c8 25%, #d8d8d8 50%, #a0a0a0 75%, #555555 100%);
+  border-top:1px solid rgba(0,0,0,.6);
+  border-bottom:1px solid rgba(0,0,0,.6);
+  pointer-events:none;
+}
+#toolbar::after{
+  content:"";
+  position:absolute;
+  right:8px;
+  top:50%;
+  transform:translateY(-50%);
+  width:16px;height:28px;
+  border-radius:4px;
+  border:1px solid rgba(0,0,0,.65);
+  background:linear-gradient(180deg,
+    #707070 0%, #f8f8f8 18%, #ffffff 45%, #c8c8c8 75%, #606060 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.45),
+    inset 0 2px 1px rgba(255,255,255,.95),
+    inset 0 -2px 2px rgba(0,0,0,.35),
+    0 4px 6px rgba(0,0,0,.6),
+    0 1px 2px rgba(0,0,0,.50);
+  cursor:pointer;
+  pointer-events:none;
+}
+
+/* ── Focused / hovered state ──
+   Subtle brighten + dark border emphasis. Each capsule already
+   shows its colour identity at rest via the top-half tint; on
+   interaction the border darkens and the body brightens slightly. */
+#controls input[type=text]:focus,
+#controls select:focus,
+#controls input[type=number]:focus,
+#controls .prize-filter-buttons button:hover,
+#controls .view-tab:hover,
+#controls .reset-buttons button:hover{
+  border-color:#000;
+  filter:brightness(1.05);
+}
+
+/* ── Active-state (filter engaged) ──
+   The capsule's centre fills with its accent colour (replacing the
+   white middle), so an active filter reads as a fully-coloured pill
+   while inactive filters keep the white centre + flanking stripes.
+   Distinct at a glance. Specificity boosted to `#controls #...`
+   !important to override the earlier flat-pill active rules at
+   lines 436–476. */
+#controls #lop-toggle.active,
+#controls #grail-toggle.active,
+#controls .view-tab.active,
+#controls .view-tab[data-view="watchlist"].active,
+#controls .view-tab[data-view="collection"].active{
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.30) 0%,
+      rgba(255,255,255,0)   30%,
+      rgba(0,0,0,.10)       70%,
+      rgba(0,0,0,.18)       100%),
+    linear-gradient(180deg,
+      var(--capsule-color) 0%,
+      color-mix(in srgb, var(--capsule-color) 86%, black) 100%) !important;
+  border-color:rgba(0,0,0,.55) !important;
+  color:#1a1a22 !important;
+  font-weight:800 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.45),
+    inset 0 -1px 0 rgba(0,0,0,.20),
+    0 0 12px color-mix(in srgb, var(--capsule-color) 50%, transparent),
+    0 2px 6px rgba(0,0,0,.40) !important;
+}
+
+/* ── Mobile adjustments ──
+   On narrower viewports controls stack vertically. Knobs still
+   protrude on the right; add margin-right to each ctrl-group so the
+   knob doesn't push the body off-screen. */
+@media (max-width:600px){
+  #controls{gap:28px}
+  .prize-filter-buttons,
+  .view-tab-buttons,
+  .reset-buttons{gap:28px}
+  .ctrl-group{margin-right:24px}
+  #toolbar{padding-right:42px}
+  #controls .range-group .price-range{gap:16px}
 }
 .view-tab.active .view-count{border-color:var(--orange);color:var(--orange)}
 
@@ -1197,14 +1650,27 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
    width. The select's selected value (e.g. "$ USD") fits comfortably
    inside the cap. */
 #toolbar #currency-select{
-  background:#0d0d15;border:1px solid #2a2a3a;border-radius:20px;
-  color:var(--white);font-family:'Nunito',sans-serif;font-size:12px;
-  font-weight:700;padding:5px 14px;cursor:pointer;outline:none;
-  transition:border-color .15s,color .15s;
-  width:auto;max-width:140px;
+  /* Anime-canon capsule: grey body with cyan stripes flanking the
+     central currency-code text. Padding clears both stripes. */
+  border:1px solid rgba(0,0,0,.50);border-radius:999px;
+  color:#0d0d15;font-family:'Nunito',sans-serif;font-size:12px;
+  font-weight:700;padding:5px 24px 5px 20px;cursor:pointer;outline:none;
+  transition:border-color .15s,color .15s,filter .15s;
+  width:auto;max-width:170px;
+  background:
+    linear-gradient(to right, var(--cap-currency), var(--cap-currency))
+      10px 0 / 8px 100% no-repeat,
+    linear-gradient(to right, var(--cap-currency), var(--cap-currency))
+      calc(100% - 18px) 0 / 8px 100% no-repeat,
+    linear-gradient(180deg, #909090 0%, #c0c0c0 35%, #c8c8c8 60%, #888888 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -2px 4px rgba(0,0,0,.18),
+    0 2px 6px rgba(0,0,0,.50);
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
 }
 #toolbar #currency-select:hover,
-#toolbar #currency-select:focus{border-color:var(--orange);color:var(--orange)}
+#toolbar #currency-select:focus{border-color:#000;filter:brightness(1.05)}
 @media(max-width:600px){
   #toolbar{padding:6px 12px}
   #toolbar #currency-select{font-size:11px;padding:4px 12px;max-width:120px}
@@ -1237,7 +1703,12 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
    pattern across the controls strip. */
 /* (View/Reset cluster flex weights are defined in the Controls block above.) */
 .view-tab-buttons, .reset-buttons{
-  display:flex;gap:6px;flex-wrap:nowrap;align-items:center;
+  display:flex;flex-wrap:nowrap;align-items:center;
+  /* Gap intentionally inherited from the capsule-corp block at the
+     top of the file (gap:56px) — duplicating it here led to it
+     winning the cascade and overriding the desired 56px, leaving a
+     tight 6px gap that made the protruding capsule knob overlap
+     the next button's body. */
 }
 .view-tab,
 .reset-buttons #reset-btn{
@@ -2625,17 +3096,17 @@ tr.set-header:hover .set-badge,
   <div class="ctrl-group range-group">
     <label class="ctrl-label" id="label-secondary">Secondary Market <span class="range-cur" id="cur-secondary">($)</span></label>
     <div class="price-range">
-      <input type="number" id="min-secondary" placeholder="Min" min="0" aria-labelledby="label-secondary"/>
+      <span class="range-cap"><input type="number" id="min-secondary" placeholder="Min" min="0" aria-labelledby="label-secondary"/></span>
       <span aria-hidden="true">–</span>
-      <input type="number" id="max-secondary" placeholder="Max" min="0" aria-labelledby="label-secondary"/>
+      <span class="range-cap"><input type="number" id="max-secondary" placeholder="Max" min="0" aria-labelledby="label-secondary"/></span>
     </div>
   </div>
   <div class="ctrl-group range-group">
     <label class="ctrl-label" id="label-msrp">MSRP <span class="range-cur" id="cur-msrp">($)</span></label>
     <div class="price-range">
-      <input type="number" id="min-msrp" placeholder="Min" min="0" aria-labelledby="label-msrp"/>
+      <span class="range-cap"><input type="number" id="min-msrp" placeholder="Min" min="0" aria-labelledby="label-msrp"/></span>
       <span aria-hidden="true">–</span>
-      <input type="number" id="max-msrp" placeholder="Max" min="0" aria-labelledby="label-msrp"/>
+      <span class="range-cap"><input type="number" id="max-msrp" placeholder="Max" min="0" aria-labelledby="label-msrp"/></span>
     </div>
   </div>
   <!-- Reset cluster at the right end of row 2 — mirrors the View
