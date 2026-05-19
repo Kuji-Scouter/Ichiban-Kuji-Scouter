@@ -1805,9 +1805,15 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .fig-action-btn .btn-icon{
   width:18px;height:18px;margin:0;vertical-align:middle;
 }
-/* LOP icon — 10% larger than the default .btn-icon size so the
-   LAST ONE artwork reads clearly inside the filter button. */
-#lop-toggle .btn-icon{width:16.5px;height:16.5px}
+/* Filter-bar button icons — bumped a further 10% so the LOP /
+   Grail / Wishlist / Collection brand-icons sit prominently
+   inside their capsules. */
+#lop-toggle .btn-icon{width:19.97px;height:19.97px}
+#controls #grail-toggle .btn-icon,
+#controls .view-tab[data-view="watchlist"] .btn-icon,
+#controls .view-tab[data-view="collection"] .btn-icon{
+  width:18.15px;height:18.15px;
+}
 /* Inactive (not watching / not owned): greyscale + dimmed */
 .watch-btn:not(.is-watching) .btn-icon,
 .lb-watch:not(.is-on) .btn-icon{
@@ -6275,6 +6281,7 @@ const GRAIL_FIGURES = {
   "Dragon Ball vs Omnibus Cross": ["D"],
   "SMSP — The Vegeta": ["02 The Original","03 The Tones"],
   "SMSP — The Son Goku": ["01 The Brush","02 The Original","04 Two Dimensions","1.5 Original II"],
+  "Dragon Ball Genkidamatsuri": ["Goku SSJ","Vegeta SSJ","Goku Ultra Instinct"],
 };
 
 const RAW_SETS = [
@@ -6390,7 +6397,7 @@ const RAW_SETS = [
     ["LOP","Porunga",1101105,null,53851,525,"Namek Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_LO_694eac07f13eb.jpg",{"ebayHistory":[{"date":"2026-02-13","price":387.26},{"date":"2026-02-27","price":264.99},{"date":"2026-03-03","price":232.5},{"date":"2026-03-19","price":225},{"date":"2026-03-26","price":240},{"date":"2026-04-05","price":236.2},{"date":"2026-04-12","price":245},{"date":"2026-04-15","price":216.19},{"date":"2026-04-23","price":302.93},{"date":"2026-05-02","price":310.67}],"ebayUpdated":"2026-05-03","mercariUpdated":"2026-05-01"}],
     ["Goku Day Ver.","Super Saiyan Goku",1101110,null,11775,null,"Namek Saga","Dragon Ball Z",null,"https://static.myfigurecollection.net/upload/items/2/1101110-30516.jpg",{"mercariUpdated":"2026-05-17"}],
   ]},
-  {set:"EX: Super Decisive Battle of the World", setNameJP:"一番くじ ドラゴンボール EX 天下分け目の超決戦!!", dateStr:"July 2021", type:"masterlise", saga:"Saiyan Saga", anime:"Dragon Ball Z", prizes:[
+  {set:"EX: Super Decisive Battle of the World", setNameJP:"一番くじ ドラゴンボール EX 天下分け目の超決戦!!", dateStr:"July 2021", type:"masterlise", saga:"Saiyan Saga", anime:"Dragon Ball Z", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_jpg/media/lottery/dragon-ball/ichiban-kuji-dragon-ball-ex-l-ultime-combat-decisif/main_694eab9125e75.jpg", prizes:[
     ["Prize A","Vegeta",1146802,null,19939,140,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-ex-l-ultime-combat-decisif/main_A_694eab9126e78.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Prize B","Nappa",1147343,null,10362,120,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-ex-l-ultime-combat-decisif/main_B_694eab91277c1.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Prize C","Kaioken Goku",1145988,null,13816,135,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-ex-l-ultime-combat-decisif/main_C_694eab9127ed7.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
@@ -6659,6 +6666,14 @@ const RAW_SETS = [
   {set:"Masterlise Outside", dateStr:"July 2026", type:"masterlise", saga:"Movies Saga", anime:"Dragon Ball Super", prizes:[
     ["Prize A","Ultra Instinct Son Goku & Son Gohan Beast",2878584,null,null,null,null,null,null,"https://static.myfigurecollection.net/upload/items/1/2878584-71967.jpg",null],
   ]},
+  {set:"Spirit of the Saiyan", setNameJP:"一番くじ ドラゴンボール SPIRIT OF THE SAIYAN", dateStr:"October 2026", type:"masterlise", saga:"Saiyan Saga?", anime:"Dragon Ball Z", setImg:"https://www.kuji-collection.com/media/cache/resolve/lottery_hero_desktop_jpg/media/lottery/dragon-ball/yi-fankuji-doragonboru-spirit-of-the-saiyan/main_6a0be11e3b270.webp", prizes:[
+    ["Prize A","Son Goku",3502495,null,null,null,"Saiyan Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/yi-fankuji-doragonboru-spirit-of-the-saiyan/main_A_6a0be11e3ba23.webp",null],
+    ["Prize B","Super Saiyan Gohan",3502497,null,null,null,"Cell Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/yi-fankuji-doragonboru-spirit-of-the-saiyan/main_B_6a0be11e3c047.webp",null],
+    ["Prize C","Son Goten",3502500,null,null,null,"Buu Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/yi-fankuji-doragonboru-spirit-of-the-saiyan/main_C_6a0be11e3c641.webp",null],
+    ["Prize D","Bardock",3502502,null,null,null,"Bardock Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/yi-fankuji-doragonboru-spirit-of-the-saiyan/main_D_6a0be11e3cc3e.webp",null],
+    ["Prize E","Raditz",3502504,null,null,null,"Saiyan Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/yi-fankuji-doragonboru-spirit-of-the-saiyan/main_E_6a0be11e3d260.webp",null],
+    ["LOP","Son Goku & Son Gohan",3502506,null,null,null,"Cell Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/yi-fankuji-doragonboru-spirit-of-the-saiyan/main_LO_6a0be11e3d8a0.webp",null],
+  ]},
   {set:"Battle of the Super Saiyan", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_avif/media/lottery/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_6971a751970fe.jpg", setNameJP:"一番くじ ドラゴンボール BATTLE OF THE SUPER SAIYAN", dateStr:"January 2026", type:"masterlise", saga:"Buu Saga?", anime:"Dragon Ball Z", prizes:[
     ["Prize A","Super Saiyan 3 Goku",3007380,69.99,17270,246,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/Product/VariationDetails/334384?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_A_6971a75198494.webp",{"ebayHistory":[{"date":"2026-02-07","price":167.35},{"date":"2026-02-15","price":134.26},{"date":"2026-02-20","price":196.15},{"date":"2026-03-01","price":132.2},{"date":"2026-03-08","price":149.97},{"date":"2026-03-15","price":203.34},{"date":"2026-03-22","price":109.5},{"date":"2026-03-24","price":144.51},{"date":"2026-04-05","price":131.98},{"date":"2026-04-12","price":163.86},{"date":"2026-04-18","price":148.26},{"date":"2026-04-21","price":137.77}],"ebayUpdated":"2026-05-03"}],
     ["Prize B","Super Saiyan Goku",3007381,69.99,7065,114,"Namek Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-goku-battle-super-saiyan-figure-169192?variation=334387&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-battle-of-the-super-saiyan/main_B_6971a75199347.webp",{"ebayUpdated":"2026-05-01"}],
@@ -6730,19 +6745,22 @@ const RAW_SETS = [
     ["Prize G","Upa",2755256,null,785,null,"Red Ribbon Army Saga",null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-assemble-collection-arc-son-goku-enfant/main_G_6929b307b9acd.jpg",{"mercariUpdated":"2026-05-09"}],
     ["LOP","Dragon Ball Logo (GIGANT NAME)",2755257,null,14915,null,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-assemble-collection-arc-son-goku-enfant/main_LO_6929b307ba132.jpg",{"mercariUpdated":"2026-05-09"}],
   ]},
+  {set:"Dragon Ball Genkidamatsuri", setNameJP:"ドラゴンボール 40周年 ゲンキダマツリ", dateStr:"March 2026", type:"smsp", saga:null, anime:"Dragon Ball Super", prizes:[
+    ["Goku SSJ","Super Saiyan Goku",3120345,null,12566,200,"Namek Saga","Dragon Ball Z",null,"https://static.myfigurecollection.net/upload/items/0/3120345-0bf49.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
+    ["Vegeta SSJ","Vegeta SSJ",3120354,null,12566,200,"Android Saga","Dragon Ball Z",null,"https://static.myfigurecollection.net/upload/items/0/3120354-5f101.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
+    ["Goku Ultra Instinct","Ultra Instinct Goku",3120335,null,null,null,"Tournament of Power Saga","Dragon Ball Super",null,"https://static.myfigurecollection.net/upload/pictures/2026/01/25/4712117.jpeg",null],
+  ]},
   {set:"SMSP — The Vegeta", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_avif/media/lottery/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_695937b75548f.jpg", setNameJP:"アミューズメント一番くじ DRAGONBALL超 SUPER MASTER STARS PIECE THE VEGETA", dateStr:"April 2017", type:"smsp", saga:"Namek Saga", anime:"Dragon Ball Z", prizes:[
     ["01 The Brush","Vegeta SSJ",516079,null,47124,340,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20BRUSH_695937b756e2f.jpg",{"ebayHistory":[{"date":"2026-02-05","price":201.67},{"date":"2026-02-12","price":187.36},{"date":"2026-02-19","price":131.11},{"date":"2026-03-01","price":205.83},{"date":"2026-03-03","price":185},{"date":"2026-03-14","price":258.3},{"date":"2026-03-21","price":174.74},{"date":"2026-03-29","price":195.09},{"date":"2026-04-05","price":251.7},{"date":"2026-04-12","price":163.42},{"date":"2026-04-18","price":174.83},{"date":"2026-05-02","price":174.46}],"ebayUpdated":"2026-05-03","mercariUpdated":"2026-05-01"}],
     ["02 The Original","Vegeta SSJ",517546,null,237976,null,"Android Saga",null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20ORIGINAL_695937b757d93.jpg",{"mercariUpdated":"2026-05-01"}],
     ["03 The Tones","Vegeta SSJ",517549,null,209702,null,"Android Saga",null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_THE%20TONES_695937b758faf.jpg",{"mercariUpdated":"2026-05-01"}],
     ["04 Two Dimensions","Vegeta SSJ",517550,null,84823,null,"Android Saga",null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-vegeta/main_TWO%20DIMENSIONS_695937b759fb7.jpg",{"mercariUpdated":"2026-05-01"}],
-    ["Genkidamatsuri Ver.","Vegeta SSJ",3120354,null,12566,200,"Android Saga",null,null,"https://static.myfigurecollection.net/upload/items/0/3120354-5f101.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
   ]},
   {set:"SMSP — The Son Goku", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_avif/media/lottery/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_695937df3fce4.jpg", setNameJP:"アミューズメント一番くじ DRAGON BALL超 SUPER MASTER STARS PIECE THE SON GOKOU ver.1.5", dateStr:"April 2016", type:"smsp", saga:"Namek Saga", anime:"Dragon Ball Z", prizes:[
     ["01 The Brush","Super Saiyan Goku",379918,null,94248,null,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20BRUSH_695937df426e4.jpg",{"mercariUpdated":"2026-05-01"}],
     ["02 The Original","Super Saiyan Goku",379919,null,144514,null,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20ORIGINAL_695937df4360f.jpg",{"mercariUpdated":"2026-05-01"}],
     ["03 The Tones","Super Saiyan Goku",379920,null,84038,null,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_THE%20TONES_695937df43f65.jpg",{"mercariUpdated":"2026-05-01"}],
     ["04 Two Dimensions","Super Saiyan Goku",379921,null,105244,300,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-super-super-master-stars-piece-the-son-goku/main_TWO%20DIMENSIONS_695937df4449d.jpg",{"ebayHistory":[{"date":"2026-03-02","price":100},{"date":"2026-04-11","price":299.97}],"ebayUpdated":"2026-05-03","mercariUpdated":"2026-05-01"}],
-    ["Genkidamatsuri Ver.","Super Saiyan Goku",3120345,null,12566,200,null,null,null,"https://static.myfigurecollection.net/upload/items/0/3120345-0bf49.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Lunar New Year Ver.","Super Saiyan Goku",478993,null,66759,null,null,null,null,"https://static.myfigurecollection.net/upload/items/0/478993-684c8.jpg",{"mercariUpdated":"2026-05-01"}],
     ["Xenoverse 2 Collectors Edition","Super Saiyan Goku",457270,null,47124,150,null,null,null,"https://static.myfigurecollection.net/upload/items/0/457270-5ed90.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["1.5 Original II","Super Saiyan Goku",440902,null,188496,null,null,null,null,"https://static.myfigurecollection.net/upload/items/0/440902-194fe.jpg",{"mercariUpdated":"2026-05-01"}],
