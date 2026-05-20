@@ -385,8 +385,14 @@ body.below-fold #corner-watermark{
 /* Bumped — "All Years" / "All Anime" need usable width with the
    wider gaps eating row space. */
 .ctrl-year      {flex:1.8 1 0}
-.ctrl-kuji-set  {flex:2.2 1 0}
-.prize-filter-group {flex:2.4 1 0;min-width:0}
+/* Trimmed from 2.2 to 1.75 to feed a little extra width into the
+   Prize Filter cluster. "All Sets" still fits comfortably. */
+.ctrl-kuji-set  {flex:1.75 1 0}
+/* Bumped modestly from 2.4 to 2.85 — paired with the tightened
+   inner padding/stripe geometry on the narrow buttons below, this
+   keeps the LOP + Grail capsule pair small without their text or
+   icon crashing into the orange stripes. */
+.prize-filter-group {flex:2.85 1 0;min-width:0}
 /* Bumped from 2.6 to 3.4 — "Wishlist" and "Collection" are the
    longest labels of any narrow-button cluster, and at 2.6 their text
    was crashing into the inner colour stripes. Stealing the 0.8 from
@@ -623,18 +629,20 @@ body.below-fold #corner-watermark{
 }
 
 /* Narrow buttons (LOP, Grail, View tabs, Reset) — same two-stripe
-   pattern at symmetric offsets. Stripes 3px wide, padding 18px each
-   side for a 7px buffer between icon/text and the nearest stripe. */
+   pattern at symmetric offsets. Stripes 6px wide, padding 12px each
+   side with the stripes nudged in to x=4 / x=(width-10). That gives
+   ~2px breathing room between each stripe and the nearest text edge
+   without inflating the button width — needed so the smaller Prize
+   Filter capsules still keep LOP / Grail text clear of the colour. */
 #controls .prize-filter-buttons button,
 #controls .view-tab,
 #controls .reset-buttons button{
-  padding:0 18px;
+  padding:0 12px;
   background:
-    /* Stripes 6px (another 50% thicker — substantially heavier). */
     linear-gradient(to right, var(--capsule-color), var(--capsule-color))
-      8px 0 / 6px 100% no-repeat,
+      4px 0 / 6px 100% no-repeat,
     linear-gradient(to right, var(--capsule-color), var(--capsule-color))
-      calc(100% - 14px) 0 / 6px 100% no-repeat,
+      calc(100% - 10px) 0 / 6px 100% no-repeat,
     linear-gradient(180deg, #909090 0%, #c0c0c0 35%, #c8c8c8 60%, #888888 100%);
 }
 
@@ -1511,11 +1519,13 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 }
 /* Ensure all footer columns / links render ABOVE the watermark. */
 #footer > *{position:relative;z-index:1}
-/* On phones, soften both watermarks slightly so they don't crowd the
-   narrower footer layout — matches the phone-only dim on the Cell
-   overlay. */
+/* On phones, drop the bottom-left Capsule Corp ink entirely so the
+   narrower footer doesn't get the two watermarks crashing into the
+   text columns. Bottom-right Original-gang vignette stays (dimmed)
+   as the lone footer watermark, mirroring the desktop-only Shenron
+   pattern up top. */
 @media(max-width:600px){
-  #footer::before{opacity:.05;background-size:auto 90%}
+  #footer::before{display:none}
   #footer::after{opacity:.15;background-size:auto 90%}
 }
 .footer-section{margin-bottom:14px}
