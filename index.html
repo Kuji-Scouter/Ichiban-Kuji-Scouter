@@ -167,13 +167,18 @@ body{
    opening the lightbox as a modal). */
 body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(#about-modal):not(#art-modal):not(#achievement-toast):not(.skip-link){position:relative;z-index:1}
 
-/* Phone widths get fainter watermarks so the smaller viewport
-   doesn't feel claustrophobic. Both Cell (right) and Shenron (left)
-   drop from .07 → .04 — same treatment Shenron always had on
-   mobile, now applied to its mirror pair. */
+/* Below ~900px the Cell + Shenron pair starts to overlap in the
+   middle of the screen (their combined character widths exceed the
+   viewport once height-bound to a shorter screen). Drop Shenron
+   entirely so Cell carries the watermark alone — keeps the
+   asymmetric-but-uncluttered feel rather than letting two pieces of
+   line-art cross over each other. Cell also dims slightly on phones
+   so the narrower viewport doesn't feel claustrophobic. */
+@media(max-width:900px){
+  #corner-watermark{display:none}
+}
 @media(max-width:600px){
   #page-watermark{opacity:.04}
-  #corner-watermark{opacity:.04}
 }
 /* Fade both watermarks out once the user reaches the manga-spine art
    so they never overlap with the Capsule Corp footer ink or the
@@ -1503,7 +1508,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 /* Ensure all footer columns / links render ABOVE the watermark. */
 #footer > *{position:relative;z-index:1}
 /* On phones, soften both watermarks slightly so they don't crowd the
-   narrower footer layout — matches the phone-only dim on the Shenron
+   narrower footer layout — matches the phone-only dim on the Cell
    overlay. */
 @media(max-width:600px){
   #footer::before{opacity:.05;background-size:auto 90%}
@@ -4066,7 +4071,7 @@ function _checkSetTriggers(setName, prev, now, total){
     window.showAchievement && window.showAchievement({
       title: 'Set complete!',
       sub: `${setName} — every figure collected`,
-      art: 'img/art-f1-car.jpg',
+      art: 'img/art-goku-f1-victory.jpg',
     });
   }
 }
@@ -5437,8 +5442,10 @@ window.addEventListener('popstate', () => {
   // gets a home), the un-painted "gang with Roshi" piece (sister of
   // the painted footer-right image), the Z-fighters lineup, the
   // Capsule Corp racing car (Trunks + Bulma + Bulla), and Goku riding
-  // the red dragon-bird. All four new pieces extracted fresh from
-  // ~/Desktop/Art.zip in this round.
+  // the red dragon-bird. Latest additions: kid-Goku + bunny-Bulma on
+  // the Capsule Corp AF4029 bike and Goku in WWII US-Army sergeant
+  // kit on a wartime Harley — both straight from Toriyama's color
+  // motorcycle series, reducing repetition in the rotation.
   const gallery = [
     'img/art-pirate-goku.jpg',
     'img/art-gt-trio.jpg',
@@ -5452,6 +5459,8 @@ window.addEventListener('popstate', () => {
     'img/art-z-fighters-lineup.jpg',
     'img/art-capsule-corp-race.jpg',
     'img/art-goku-dragon-bird.jpg',
+    'img/art-bulma-bike-color.jpg',
+    'img/art-goku-army-bike.jpg',
   ];
   let lastIdx = -1;
   function pick(){
