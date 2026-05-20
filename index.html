@@ -380,14 +380,18 @@ body.below-fold #corner-watermark{
    Weights tuned so each row fills proportionally without any single
    group dwarfing the others. Row totals are roughly equal so both
    rows have the same visual rhythm. */
-.ctrl-search    {flex:3 1 0}
-.ctrl-character {flex:2.4 1 0}
+.ctrl-search    {flex:2.2 1 0}
+.ctrl-character {flex:2.2 1 0}
 /* Bumped — "All Years" / "All Anime" need usable width with the
    wider gaps eating row space. */
 .ctrl-year      {flex:1.8 1 0}
 .ctrl-kuji-set  {flex:2.2 1 0}
 .prize-filter-group {flex:2.4 1 0;min-width:0}
-.view-tab-group {flex:2.6 1 0;min-width:0}
+/* Bumped from 2.6 to 3.4 — "Wishlist" and "Collection" are the
+   longest labels of any narrow-button cluster, and at 2.6 their text
+   was crashing into the inner colour stripes. Stealing the 0.8 from
+   ctrl-search since the search input has comfortable headroom. */
+.view-tab-group {flex:3.4 1 0;min-width:0}
 .ctrl-saga      {flex:1.6 1 0}
 .ctrl-anime     {flex:1.8 1 0}
 .ctrl-set-type  {flex:1.6 1 0}
@@ -1810,14 +1814,14 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .fig-action-btn .btn-icon{
   width:18px;height:18px;margin:0;vertical-align:middle;
 }
-/* Filter-bar button icons — bumped a further 10% so the LOP /
-   Grail / Wishlist / Collection brand-icons sit prominently
-   inside their capsules. */
-#lop-toggle .btn-icon{width:19.97px;height:19.97px}
+/* Filter-bar button icons — bumped a further 15% on top of the
+   previous boost so the LOP / Grail / Wishlist / Collection brand
+   icons sit prominently inside their capsules. */
+#lop-toggle .btn-icon{width:22.97px;height:22.97px}
 #controls #grail-toggle .btn-icon,
 #controls .view-tab[data-view="watchlist"] .btn-icon,
 #controls .view-tab[data-view="collection"] .btn-icon{
-  width:18.15px;height:18.15px;
+  width:21.91px;height:21.91px;
 }
 /* Inactive (not watching / not owned): greyscale + dimmed */
 .watch-btn:not(.is-watching) .btn-icon,
