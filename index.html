@@ -1555,21 +1555,86 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
 @media (prefers-reduced-motion: reduce){
   .refresh-badge .refresh-dot{animation:none}
 }
+/* ── Site-status strip (top of footer) ────────────────────────────────
+   Replaces the older single-pill refresh-badge. Two refresh pills
+   (Mercari JP + eBay) plus a small meta row (Latest set + Site
+   updated). Dot color is set inline from JS based on staleness tier:
+   --green ≤3d, --cyan ≤7d, --orange ≤14d, --red beyond. */
+.site-status{
+  display:flex;flex-wrap:wrap;gap:14px 28px;align-items:center;
+  margin-bottom:20px;
+  padding-bottom:16px;
+  border-bottom:1px solid #1e1e2e;
+}
+.status-pills{display:flex;gap:10px;flex-wrap:wrap}
+.status-pill{
+  display:inline-flex;align-items:baseline;gap:8px;
+  padding:6px 14px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;
+  font-family:'Nunito',sans-serif;
+}
+.status-pill .status-dot{
+  font-size:11px;line-height:1;
+  /* color set inline by JS; default fallback in case JS is delayed */
+  color:var(--cyan);
+  animation:refreshPulse 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce){
+  .status-pill .status-dot{animation:none}
+}
+.status-pill .status-label{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:12px;letter-spacing:.8px;color:var(--white);text-transform:uppercase;
+}
+.status-pill .status-value{color:#bbb;font-size:12px}
+.status-meta{
+  display:flex;gap:18px;flex-wrap:wrap;
+  font-size:11px;color:#9a9a9a;
+}
+.status-meta-item{display:inline-flex;align-items:baseline;gap:4px}
+.status-meta-label{
+  color:var(--orange);text-transform:uppercase;letter-spacing:.6px;
+  font-size:10px;font-family:'Bebas Neue',sans-serif;
+}
+.status-meta-item > span:last-child{color:var(--white);font-weight:600}
 .footer-links{display:flex;flex-wrap:wrap;gap:8px}
 .footer-link{
-  display:inline-block;padding:5px 12px;background:var(--surface);
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 12px;background:var(--surface);
   border:1px solid #2a2a3a;border-radius:5px;
   color:var(--white);text-decoration:none;font-size:12px;font-weight:600;
   transition:all .2s;
 }
 .footer-link:hover{border-color:var(--orange);color:var(--orange)}
+/* Tiny site favicon prefix on each external link. Loaded from
+   img/favicons/; onerror in the markup hides the broken img cleanly
+   so layout doesn't shift if a favicon file is missing. */
+.link-favicon{
+  width:14px;height:14px;flex:0 0 auto;
+  object-fit:contain;opacity:.85;
+  transition:opacity .15s;
+}
+.footer-link:hover .link-favicon{opacity:1}
+/* Affiliate marker — small orange star after the link text. Used on
+   any link the FTC affiliate-disclosure paragraph below covers (BBTS
+   today; add the is-affiliate class to additional links as they
+   appear). */
+.footer-link.is-affiliate::after{
+  content:" ★";
+  font-size:9px;
+  color:var(--orange);
+  vertical-align:super;
+  margin-left:2px;
+}
 /* Buttons / labels styled to match .footer-link so the Export and
    Import controls visually match the other footer "links" without
    needing a separate look. */
 button.footer-link,label.footer-link{cursor:pointer;font-family:'Nunito',sans-serif}
 button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 .footer-action:focus{outline:2px solid var(--orange);outline-offset:2px}
-.disclaimer{font-size:11px;color:#555;margin-top:16px;padding-top:12px;border-top:1px solid #1e1e2e;line-height:1.6}
+.disclaimer{font-size:11px;color:#9a9a9a;margin-top:16px;padding-top:12px;border-top:1px solid #1e1e2e;line-height:1.6}
  
 /* ── Result count ── */
 #result-info{max-width:var(--container-max);margin:0 auto 8px;padding:0 clamp(12px,1.2vw,28px);font-size:clamp(11px,0.7vw + 7px,14px);color:var(--grey)}
@@ -1769,9 +1834,28 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   display:flex;align-items:flex-start;flex-wrap:wrap;gap:10px;
   margin-bottom:14px;
 }
-.footer-utility-row > #legend-details{margin-bottom:0;flex:0 0 auto}
+.footer-utility-row > #legend-details{margin-bottom:0;flex:0 0 auto;min-width:0;max-width:100%}
 #backup-section{
   display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;
+}
+/* Site-meta cluster — sits at the right edge of the utility row,
+   pulling the About trigger out of the data-action group so users
+   don't conflate "manage my data" with "site info". Visually
+   quieter than the Export/Import pills: smaller, dimmer, plainer. */
+#site-meta{
+  display:inline-flex;gap:6px;align-items:center;
+  margin-left:auto;
+}
+.site-meta-link{
+  background:none;border:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:11px;letter-spacing:.5px;
+  color:#9a9a9a;
+  padding:5px 8px;border-radius:4px;
+  transition:color .15s, background .15s;
+}
+.site-meta-link:hover, .site-meta-link:focus{
+  color:var(--orange); background:rgba(255,107,0,.08);
+  outline:none;
 }
 
 /* ── Legend & column key (lives in footer) ─────────────────────────── */
@@ -1787,11 +1871,66 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 #legend-details summary::-webkit-details-marker{display:none}
 #legend-details summary::before{content:"ⓘ ";opacity:.85}
 #legend-details[open] summary{border-color:var(--orange)}
-#legend-details .legend-body{padding:12px 4px 0;line-height:1.5;max-width:900px}
+#legend-details .legend-body{padding:12px 4px 0;line-height:1.5;max-width:min(960px, calc(100vw - 80px));}
 #legend-details .legend-body p{margin-bottom:8px}
 .legend-up{color:#4caf50;font-weight:700}
 .legend-down{color:#ff4444;font-weight:700}
 .legend-flat{color:#666}
+/* Legend symbol→meaning grids — three side-by-side columns on desktop
+   (Trend arrows / Set types / Save figures), stack on narrower
+   viewports. Each grid uses a dl with auto-sized symbol column and
+   flexible meaning column so the symbols line up vertically. */
+.legend-grids{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:18px 28px;
+  margin-bottom:14px;
+}
+.legend-grid{min-width:0}
+.legend-grid h4{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:13px;
+  letter-spacing:1px;
+  color:var(--orange);
+  margin:0 0 8px;
+  text-transform:uppercase;
+}
+.legend-grid dl{
+  display:grid;
+  grid-template-columns:28px minmax(0, 1fr);
+  gap:6px 12px;
+  margin:0;
+  align-items:center;
+}
+.legend-grid dt{
+  text-align:center;
+  font-size:14px;
+  line-height:1;
+}
+.legend-grid dt img.copy-icon{
+  width:18px;height:18px;
+  vertical-align:middle;
+  object-fit:contain;
+}
+.legend-grid dd{
+  margin:0;
+  font-size:12px;
+  color:var(--white);
+  line-height:1.4;
+}
+.set-swatch{
+  display:inline-block;
+  width:14px;height:14px;
+  border-radius:3px;
+  vertical-align:middle;
+}
+.legend-notes p{
+  font-size:12px;
+  color:#bbb;
+  margin:6px 0;
+  line-height:1.5;
+}
+.legend-notes p strong{color:var(--white)}
 
 /* ── 2.1 / 2.9 Watchlist + Collection star/own buttons ────────────────── */
 .col-actions{
@@ -3206,31 +3345,55 @@ tr.set-header:hover .set-badge,
 
 <!-- Footer -->
 <footer id="footer" role="contentinfo">
+  <!-- Site status — promoted to the top of the footer so visitors see
+       data freshness immediately. Mercari and eBay refresh dates are
+       computed separately from DATA, dot color tier shifts by
+       staleness (green ≤3d → cyan ≤7d → orange ≤14d → red beyond).
+       Latest set and the site build date round out the strip so the
+       site reads as actively maintained. Populated by JS in
+       renderRefreshBadge(); hidden until at least one field resolves. -->
+  <div id="site-status" class="site-status" role="status" aria-live="polite" hidden>
+    <div class="status-pills">
+      <span class="status-pill" id="status-mercari" hidden>
+        <span class="status-dot" aria-hidden="true">●</span>
+        <span class="status-label">Mercari JP</span>
+        <span class="status-value" id="status-mercari-text"></span>
+      </span>
+      <span class="status-pill" id="status-ebay" hidden>
+        <span class="status-dot" aria-hidden="true">●</span>
+        <span class="status-label">eBay</span>
+        <span class="status-value" id="status-ebay-text"></span>
+      </span>
+    </div>
+    <div class="status-meta">
+      <span class="status-meta-item"><span class="status-meta-label">Site updated</span> <span id="status-build-date">&mdash;</span></span>
+    </div>
+  </div>
   <div class="footer-section">
     <div class="footer-title">Buy Direct</div>
     <div class="footer-links">
-      <a class="footer-link" href="https://www.bigbadtoystore.com/Search?SearchText=ichiban+kuji+dragon+ball&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches" target="_blank">Big Bad Toy Store</a>
-      <a class="footer-link" href="https://www.amazon.com/s?k=ichiban+kuji+dragon+ball" target="_blank">Amazon</a>
-      <a class="footer-link" href="https://www.baitme.com/collectibles?p=9" target="_blank">Bait Me</a>
-      <a class="footer-link" href="https://jumpichiban.com/en-us" target="_blank">Jump Ichiban</a>
+      <a class="footer-link is-affiliate" href="https://www.bigbadtoystore.com/Search?SearchText=ichiban+kuji+dragon+ball&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches" target="_blank"><img class="link-favicon" src="img/favicons/bbts.png" alt="" onerror="this.style.display='none'"/>Big Bad Toy Store</a>
+      <a class="footer-link" href="https://www.amazon.com/s?k=ichiban+kuji+dragon+ball" target="_blank"><img class="link-favicon" src="img/favicons/amazon.png" alt="" onerror="this.style.display='none'"/>Amazon</a>
+      <a class="footer-link" href="https://www.baitme.com/collectibles?p=9" target="_blank"><img class="link-favicon" src="img/favicons/baitme.png" alt="" onerror="this.style.display='none'"/>Bait Me</a>
+      <a class="footer-link" href="https://jumpichiban.com/en-us" target="_blank"><img class="link-favicon" src="img/favicons/jumpichiban.png" alt="" onerror="this.style.display='none'"/>Jump Ichiban</a>
     </div>
   </div>
   <div class="footer-section">
     <div class="footer-title">Reference Catalogues</div>
     <div class="footer-links">
-      <a class="footer-link" href="https://db-kuji.com/" target="_blank">DB-Kuji Catalogue</a>
-      <a class="footer-link" href="https://www.kuji-collection.com/en/ichiban-kuji/dragon-ball" target="_blank">Kuji Collection</a>
-      <a class="footer-link" href="https://myfigurecollection.net/browse.v4.php?rootId=21&keywords=ichiban+kuji+dragon+ball" target="_blank">MyFigureCollection</a>
+      <a class="footer-link" href="https://db-kuji.com/" target="_blank"><img class="link-favicon" src="img/favicons/dbkuji.png" alt="" onerror="this.style.display='none'"/>DB-Kuji Catalogue</a>
+      <a class="footer-link" href="https://www.kuji-collection.com/en/ichiban-kuji/dragon-ball" target="_blank"><img class="link-favicon" src="img/favicons/kujicollection.png" alt="" onerror="this.style.display='none'"/>Kuji Collection</a>
+      <a class="footer-link" href="https://myfigurecollection.net/browse.v4.php?rootId=21&keywords=ichiban+kuji+dragon+ball" target="_blank"><img class="link-favicon" src="img/favicons/mfc.png" alt="" onerror="this.style.display='none'"/>MyFigureCollection</a>
     </div>
   </div>
   <div class="footer-section">
     <div class="footer-title">Secondary Market</div>
     <div class="footer-links">
-      <a class="footer-link" href="https://zenmarket.jp" target="_blank">ZenMarket</a>
-      <a class="footer-link" href="https://buyee.jp" target="_blank">Buyee</a>
-      <a class="footer-link" href="https://jp.mercari.com/search?keyword=%E4%B8%80%E7%95%AA%E3%81%8F%E3%81%98%20%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%9C%E3%83%BC%E3%83%AB" target="_blank">Mercari Japan</a>
-      <a class="footer-link" href="https://www.ebay.com/sch/i.html?_nkw=ichiban+kuji+dragon+ball&LH_Sold=1&LH_Complete=1" target="_blank">eBay (Sold)</a>
-      <a class="footer-link" href="https://www.mercari.com/search/?keyword=ichiban+kuji+dragon+ball" target="_blank">Mercari US</a>
+      <a class="footer-link" href="https://zenmarket.jp" target="_blank"><img class="link-favicon" src="img/favicons/zenmarket.png" alt="" onerror="this.style.display='none'"/>ZenMarket</a>
+      <a class="footer-link" href="https://buyee.jp" target="_blank"><img class="link-favicon" src="img/favicons/buyee.png" alt="" onerror="this.style.display='none'"/>Buyee</a>
+      <a class="footer-link" href="https://jp.mercari.com/search?keyword=%E4%B8%80%E7%95%AA%E3%81%8F%E3%81%98%20%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%9C%E3%83%BC%E3%83%AB" target="_blank"><img class="link-favicon" src="img/favicons/mercarijp.png" alt="" onerror="this.style.display='none'"/>Mercari Japan</a>
+      <a class="footer-link" href="https://www.ebay.com/sch/i.html?_nkw=ichiban+kuji+dragon+ball&LH_Sold=1&LH_Complete=1" target="_blank"><img class="link-favicon" src="img/favicons/ebay.png" alt="" onerror="this.style.display='none'"/>eBay (Sold)</a>
+      <a class="footer-link" href="https://www.mercari.com/search/?keyword=ichiban+kuji+dragon+ball" target="_blank"><img class="link-favicon" src="img/favicons/mercariusa.png" alt="" onerror="this.style.display='none'"/>Mercari US</a>
     </div>
   </div>
   <!-- Legend & column key — moved here from above the table so it lives
@@ -3244,34 +3407,65 @@ tr.set-header:hover .set-badge,
     <details id="legend-details" class="footer-section">
       <summary>Legend &amp; column key</summary>
       <div class="legend-body">
-        <p><strong>Trend arrows</strong>: <span class="legend-up">▲</span> last 30-day avg ≥ +2% vs prior 60-day avg · <span class="legend-down">▼</span> last 30-day avg ≤ -2% vs prior 60-day avg · <span class="legend-flat">—</span> flat or insufficient history.</p>
-        <p><strong>Set type colour key</strong>: <span style="color:var(--orange)">Masterlise</span> · <span style="color:var(--purple)">Non-Masterlise</span> · <span style="color:var(--cyan)">SMSP</span> · <span style="color:var(--green)">40th Anniversary</span>. Grails are flagged with a 💎 next to the prize letter.</p>
-        <p><strong>Prices</strong>: Mercari Japan and eBay show the rolling 3-month average sold price; MSRP is the original retail price. Switch the displayed currency (USD / JPY / EUR / GBP / AUD) with the picker at the top-right of the page — every price column converts in real time. Click 🔍 next to a Mercari or eBay price to open a fresh sold-listings search on that marketplace.</p>
-        <p><strong>Prize Filter</strong>: ★ LOP shows only Last-One-Prize figures (the consolation prize for the last ticket in a sealed set); ★ Grail shows only the rare-value figures flagged with 💎. Toggling both shows the union.</p>
-        <p><strong>Save figures</strong>: <img class="copy-icon" src="img/radar.png" alt="Wishlist"/> on a row adds it to your Wishlist; <img class="copy-icon" src="img/dragonball.png" alt="Collection"/> marks it as Owned. Switch to the <img class="copy-icon" src="img/radar.png" alt=""/> Wishlist or <img class="copy-icon" src="img/dragonball.png" alt=""/> Collection view (top-right of the filter strip) to see only your saved figures. Saved data lives in this browser only — use ↓ Export to back it up as a JSON file (the file contains only your save list) and ↑ Import on another browser to restore.</p>
-        <p><strong>Set pages</strong>: click any Kuji set name (in the table or the set-header rows) to open a focused page for that set, with all its prizes plus an EV-per-ticket calculator comparing average secondary value to average MSRP.</p>
+        <div class="legend-grids">
+          <div class="legend-grid">
+            <h4>Trend arrows</h4>
+            <dl>
+              <dt><span class="legend-up" role="img" aria-label="upward trend">&#9650;</span></dt>
+              <dd>30-day avg &ge; +2% vs prior 60-day avg</dd>
+              <dt><span class="legend-down" role="img" aria-label="downward trend">&#9660;</span></dt>
+              <dd>30-day avg &le; -2% vs prior 60-day avg</dd>
+              <dt><span class="legend-flat" role="img" aria-label="flat trend">&mdash;</span></dt>
+              <dd>flat or insufficient history</dd>
+            </dl>
+          </div>
+          <div class="legend-grid">
+            <h4>Set types</h4>
+            <dl>
+              <dt><span class="set-swatch" style="background:var(--orange)" role="img" aria-label="Masterlise color"></span></dt>
+              <dd><span style="color:var(--orange);font-weight:700">Masterlise</span> &mdash; premium articulated line</dd>
+              <dt><span class="set-swatch" style="background:var(--purple)" role="img" aria-label="Non-Masterlise color"></span></dt>
+              <dd><span style="color:var(--purple);font-weight:700">Non-Masterlise</span> &mdash; standard line</dd>
+              <dt><span class="set-swatch" style="background:var(--cyan)" role="img" aria-label="SMSP color"></span></dt>
+              <dd><span style="color:var(--cyan);font-weight:700">SMSP</span> &mdash; Super Master Stars Piece</dd>
+              <dt><span class="set-swatch" style="background:var(--green)" role="img" aria-label="40th Anniversary color"></span></dt>
+              <dd><span style="color:var(--green);font-weight:700">40th Anniversary</span> &mdash; commemorative line</dd>
+              <dt><span role="img" aria-label="grail">💎</span></dt>
+              <dd>Grail &mdash; rare-value figure</dd>
+            </dl>
+          </div>
+          <div class="legend-grid">
+            <h4>Save figures</h4>
+            <dl>
+              <dt><img class="copy-icon" src="img/radar.png" alt="Wishlist icon"/></dt>
+              <dd>Add to Wishlist (row toggle, or use the Wishlist view)</dd>
+              <dt><img class="copy-icon" src="img/dragonball.png" alt="Collection icon"/></dt>
+              <dd>Mark as Owned (row toggle, or use the Collection view)</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="legend-notes">
+          <p><strong>Prices</strong>: Mercari Japan and eBay show the rolling 3-month average sold price; MSRP is the original retail. Use the currency picker (top right) to switch USD / JPY / EUR / GBP / AUD. Click <span role="img" aria-label="zoom to marketplace search">🔍</span> next to a price to open a fresh sold-listings search on that marketplace.</p>
+          <p><strong>Prize Filter</strong>: LOP shows only Last-One-Prize figures (the consolation prize for the last sealed ticket); Grail shows only the rare-value figures. Toggling both shows the union.</p>
+          <p><strong>Set pages</strong>: click any Kuji set name to open a focused page with all its prizes plus an EV-per-ticket calculator comparing average secondary value to average MSRP.</p>
+          <p><strong>Backups</strong>: saved Wishlist and Collection data lives in this browser only. Use &darr; Export to back it up as a JSON file; &uarr; Import to restore on another browser.</p>
+        </div>
       </div>
     </details>
-    <div id="backup-section">
+    <div id="backup-section" aria-label="Your saved data">
       <button id="export-data-btn" type="button" class="footer-link footer-action">↓ Export</button>
       <label class="footer-link footer-action" for="import-data-input" tabindex="0">↑ Import</label>
       <input id="import-data-input" type="file" accept="application/json,.json" hidden/>
-      <button id="about-btn" type="button" class="footer-link footer-action" aria-haspopup="dialog">✦ About</button>
+    </div>
+    <div id="site-meta" aria-label="Site info">
+      <button id="about-btn" type="button" class="site-meta-link" aria-haspopup="dialog">✦ About</button>
     </div>
   </div>
 
-  <!-- Tier 3 — data freshness badge. Populated by renderRefreshBadge();
-       hidden until at least one figure carries an ebayUpdated date. -->
-  <div id="refresh-badge" class="refresh-badge" hidden>
-    <span class="refresh-dot" aria-hidden="true">●</span>
-    <span id="refresh-badge-text"></span>
-  </div>
   <div class="disclaimer">
     <p>Mercari Japan and eBay prices are <strong>read-only snapshots</strong> of recent sold-listing averages, not live data. BBTS cells link to the live product page when the figure is currently listed and otherwise show MSRP as plain text; cells without a recorded MSRP are left blank. Reference data originally compiled by Myk; figure-image catalogue courtesy of <a href="http://db-kuji.com" style="color:var(--orange)" target="_blank">db-kuji.com</a>.</p>
     <p>Some links on this site (notably to Big Bad Toy Store) are affiliate links. If you click through and make a purchase, MatchesPeaches may earn a small commission at no extra cost to you. This helps support the channel and keeps this tracker free.</p>
-    <p>This is an unofficial, fan-made site. It is not affiliated with, endorsed by, sponsored by, or otherwise associated with Bandai Co., Ltd., BANDAI SPIRITS Co., Ltd., BANPRESTO, Bird Studio, Shueisha Inc., Toei Animation Co., Ltd., or any of their subsidiaries or licensees.</p>
-    <p><em>Dragon Ball</em>, <em>Dragon Ball Z</em>, <em>Dragon Ball Super</em>, and all related characters, names, logos, and indicia are trademarks of their respective owners. <em>Ichiban Kuji</em> is a trademark of BANDAI SPIRITS Co., Ltd. All character artwork, prize images, and box art shown on this site are &copy; their respective copyright holders and are reproduced here for identification and informational purposes only.</p>
-    <p><a href="disclaimer.html" style="color:var(--orange)">Full disclaimer</a> &middot; <a href="privacy.html" style="color:var(--orange)">Privacy policy</a></p>
+    <p>Unofficial fan site &mdash; not affiliated with Bandai, BANDAI SPIRITS, BANPRESTO, Toei, Shueisha, or Bird Studio. All character art and trademarks remain &copy; their respective owners. <a href="disclaimer.html" style="color:var(--orange)">Full disclaimer</a> &middot; <a href="privacy.html" style="color:var(--orange)">Privacy policy</a></p>
   </div>
 </footer>
 
@@ -6975,27 +7169,59 @@ fetch('data/ebay-prices.json', {cache: 'no-cache'})
   })
   .catch(() => { renderRefreshBadge(); /* graceful: keep in-HTML data */ });
 
-// Tier 3 — populate the footer "last refreshed" badge from the latest
-// ebayUpdated date across DATA. Hidden if nothing has a date.
+// Manually-bumped on each deploy so visitors see when the static site
+// itself was last refreshed (distinct from the price-data refresh,
+// which comes from DATA's per-prize ebayUpdated / mercariUpdated).
+const SITE_BUILD_DATE = '2026-05-19';
+
+// Populate the footer "Site status" strip: Mercari JP + eBay refresh
+// pills with staleness-tiered dot color, plus the latest set name
+// and the site build date. Replaces the older single-pill
+// refresh-badge. Each pill is hidden individually if its source
+// has no dates; the whole strip is hidden if nothing resolves at all.
 function renderRefreshBadge(){
-  const el = document.getElementById('refresh-badge');
-  const text = document.getElementById('refresh-badge-text');
-  if(!el || !text) return;
-  let latest = '';
+  const block = document.getElementById('site-status');
+  if(!block) return;
+  // Compute most-recent date per source in a single DATA pass.
+  let latestEbay = '';
+  let latestMercari = '';
   for(const d of DATA){
-    if(typeof d.ebayUpdated === 'string' && d.ebayUpdated > latest) latest = d.ebayUpdated;
+    if(typeof d.ebayUpdated === 'string' && d.ebayUpdated > latestEbay) latestEbay = d.ebayUpdated;
+    if(typeof d.mercariUpdated === 'string' && d.mercariUpdated > latestMercari) latestMercari = d.mercariUpdated;
   }
-  if(!latest){ el.hidden = true; return; }
-  const parsed = new Date(latest + 'T00:00:00Z');
-  if(isNaN(parsed.getTime())){ el.hidden = true; return; }
-  const diffDays = Math.max(0, Math.floor((Date.now() - parsed.getTime()) / 86400000));
-  let when;
-  if(diffDays === 0) when = 'today';
-  else if(diffDays === 1) when = 'yesterday';
-  else if(diffDays < 14) when = `${diffDays} days ago`;
-  else when = parsed.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
-  text.textContent = `eBay prices last refreshed ${when}`;
-  el.hidden = false;
+  function renderPill(prefix, dateStr){
+    const pill = document.getElementById(prefix);
+    const valueEl = document.getElementById(prefix + '-text');
+    const dotEl = pill && pill.querySelector('.status-dot');
+    if(!pill || !valueEl || !dotEl) return false;
+    if(!dateStr){ pill.hidden = true; return false; }
+    const parsed = new Date(dateStr + 'T00:00:00Z');
+    if(isNaN(parsed.getTime())){ pill.hidden = true; return false; }
+    const diffDays = Math.max(0, Math.floor((Date.now() - parsed.getTime()) / 86400000));
+    let when;
+    if(diffDays === 0) when = 'today';
+    else if(diffDays === 1) when = 'yesterday';
+    else if(diffDays < 14) when = `${diffDays}d ago`;
+    else when = parsed.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+    // Staleness color tier.
+    let dotColor;
+    if(diffDays <= 3)       dotColor = 'var(--green)';
+    else if(diffDays <= 7)  dotColor = 'var(--cyan)';
+    else if(diffDays <= 14) dotColor = 'var(--orange)';
+    else                    dotColor = 'var(--red)';
+    dotEl.style.color = dotColor;
+    valueEl.textContent = when;
+    pill.title = `Last refresh: ${dateStr}`;
+    pill.hidden = false;
+    return true;
+  }
+  const hasEbay     = renderPill('status-ebay', latestEbay);
+  const hasMercari  = renderPill('status-mercari', latestMercari);
+  // Site build date.
+  const buildEl = document.getElementById('status-build-date');
+  if(buildEl) buildEl.textContent = SITE_BUILD_DATE;
+  // Reveal the strip if at least one field is populated.
+  block.hidden = !(hasEbay || hasMercari || SITE_BUILD_DATE);
 }
 // First paint uses in-HTML data; the fetch then re-renders with fresh
 // dates once data/ebay-prices.json arrives.
