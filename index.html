@@ -2947,6 +2947,19 @@ tr.set-header:hover .set-badge,
 .lc-area{opacity:.18}
 .lc-line{fill:none;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
 .lc-point{stroke:rgba(13,13,21,.9);stroke-width:1}
+/* Baseline points lack click-through provenance (no url+title yet).
+   Dim them so the chart visibly distinguishes verified scrapes from
+   migrated baseline estimates. */
+.lc-point-baseline{opacity:.45}
+.lc-disclaimer{
+  margin:6px auto 0;max-width:min(640px, 88vw);
+  font-size:11px;color:var(--grey);font-style:italic;
+  text-align:center;line-height:1.4;
+  padding:6px 10px;
+  background:rgba(255,255,255,.03);
+  border-radius:3px;
+  border-left:2px solid rgba(255,215,0,.35);
+}
 .lightbox-chart svg.lc-up    .lc-line,
 .lightbox-chart svg.lc-up    .lc-point{stroke:#4caf50}
 .lightbox-chart svg.lc-up    .lc-area,
@@ -6090,7 +6103,13 @@ function _historyPointsInWindow(history, days){
     if(isNaN(t) || t < cutoff) continue;
     const p = +s.price;
     if(!isFinite(p)) continue;
-    out.push({t, p, date: s.date});
+    // Carry provenance through. A point is "verified" if it has a
+    // listing url AND a real title (not the migration baseline marker).
+    // For inline data that only has {date, price}, every point is baseline.
+    const url = s.url || null;
+    const title = s.title || null;
+    const verified = !!(url && title && title !== '(from index.html baseline)');
+    out.push({t, p, date: s.date, url, title, verified});
   }
   out.sort((a,b) => a.t - b.t);
   return out;
@@ -6176,8 +6195,9 @@ function ebayChartSvg(history, opts){
     xTickStr += '<text class="lc-axis-label" x="' + x.toFixed(1) + '" y="' + (H - padB + 16) + '" text-anchor="middle">' + _fmtChartDate(new Date(t).toISOString().slice(0,10)) + '</text>';
   }
 
-  // Line + filled area.
-  const xs = points.map(pt => ({x: xPx(pt.t), y: yPx(pt.p)}));
+  // Line + filled area. Carry the `verified` flag through so the
+  // per-point circle can be styled differently for baseline samples.
+  const xs = points.map(pt => ({x: xPx(pt.t), y: yPx(pt.p), verified: pt.verified}));
   const linePath = xs.map((pt,i) => (i===0?'M':'L') + pt.x.toFixed(2) + ' ' + pt.y.toFixed(2)).join(' ');
   const areaPath = linePath
     + ' L ' + xs[xs.length-1].x.toFixed(2) + ' ' + (H - padB)
@@ -6201,7 +6221,11 @@ function ebayChartSvg(history, opts){
 
   let pts = '';
   for(const pt of xs){
-    pts += '<circle class="lc-point" cx="' + pt.x.toFixed(2) + '" cy="' + pt.y.toFixed(2) + '" r="3"/>';
+    // Baseline points (no verified eBay listing URL) render dimmed so
+    // the user can see at a glance which samples have click-through
+    // provenance. Real scraped entries get full opacity.
+    const ptCls = pt.verified ? 'lc-point' : 'lc-point lc-point-baseline';
+    pts += '<circle class="' + ptCls + '" cx="' + pt.x.toFixed(2) + '" cy="' + pt.y.toFixed(2) + '" r="3"/>';
   }
 
   // Invisible hit-area for mouse/touch hover tracking, plus the
@@ -6299,8 +6323,19 @@ function renderLightboxChart(figureId, history){
       '<button type="button" data-range="' + r.key + '" class="' + (r.key === state.range ? 'is-active' : '') + '" aria-pressed="' + (r.key === state.range) + '">' + r.label + '</button>'
     ).join('');
     const stats = _lightboxChartStats(history);
+    // Render a provenance disclaimer if any sample in the visible window
+    // lacks click-through (i.e. is a baseline estimate rather than a
+    // verified eBay listing). Currently every inline-data sample is
+    // baseline; future real scrapes will carry url+title and render at
+    // full opacity, distinguishing themselves visually.
+    const visiblePts = _historyPointsInWindow(history, days);
+    const hasBaseline = visiblePts.some(p => !p.verified);
+    const disclaimer = hasBaseline
+      ? '<div class="lc-disclaimer" role="note">Some early data points are baseline estimates pending re-verification.</div>'
+      : '';
     return '<div class="lc-range" role="group" aria-label="Chart time range">' + rangeBtns + '</div>'
       + chart
+      + disclaimer
       + '<div class="lc-stats">' + _renderLightboxChartStats(stats) + '</div>'
       + '<div class="chart-tooltip" role="tooltip" aria-hidden="true"><div class="ct-date"></div><div class="ct-price"></div></div>';
   }
@@ -7153,7 +7188,7 @@ const RAW_SETS = [
     ["Prize E","Super Saiyan Goku",1101099,null,3454,65,"Movies Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_E_694eac07eec49.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["Prize F","Dende",1101104,null,7222,110,"Namek Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_F_694eac07ef274.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
     ["LOP","Porunga",1101105,null,53851,525,"Namek Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-z/main_LO_694eac07f13eb.jpg",{"ebayHistory":[{"date":"2026-02-13","price":387.26},{"date":"2026-02-27","price":264.99},{"date":"2026-03-03","price":232.5},{"date":"2026-03-19","price":225},{"date":"2026-03-26","price":240},{"date":"2026-04-05","price":236.2},{"date":"2026-04-12","price":245},{"date":"2026-04-15","price":216.19},{"date":"2026-04-23","price":302.93},{"date":"2026-05-02","price":310.67}],"ebayUpdated":"2026-05-03","mercariUpdated":"2026-05-01"}],
-    ["Goku Day Ver.","Super Saiyan Goku",1101110,null,11775,null,"Namek Saga","Dragon Ball Z",null,"https://static.myfigurecollection.net/upload/items/2/1101110-30516.jpg",{"mercariUpdated":"2026-05-17"}],
+    ["Goku Day Ver.","Super Saiyan Goku",1101110,null,11775,130,"Namek Saga","Dragon Ball Z",null,"https://static.myfigurecollection.net/upload/items/2/1101110-30516.jpg",{"ebayHistory":[{"date":"2026-05-18","price":130,"title":"Dragon Ball Super Son Goku Figure Ichiban Kuji vs Omnibus Z","url":"https://www.ebay.com/itm/406855171435"}],"ebayUpdated":"2026-05-23","ebayProxy":true}],
   ]},
   {set:"EX: Super Decisive Battle of the World", setNameJP:"一番くじ ドラゴンボール EX 天下分け目の超決戦!!", dateStr:"July 2021", type:"masterlise", saga:"Saiyan Saga", anime:"Dragon Ball Z", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_jpg/media/lottery/dragon-ball/ichiban-kuji-dragon-ball-ex-l-ultime-combat-decisif/main_694eab9125e75.jpg", prizes:[
     ["Prize A","Vegeta",1146802,null,19939,140,null,null,null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-ex-l-ultime-combat-decisif/main_A_694eab9126e78.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
@@ -7389,13 +7424,13 @@ const RAW_SETS = [
     ["LOP","Cell Explosion",2598651,null,7850,110,"Android Saga","Dragon Ball Z",null,"https://www.kuji-collection.com/media/cache/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-vs-omnibus-cross/main_LO_6929b308a4558.jpg",{"mercariUpdated":"2026-05-01","ebayUpdated":"2026-05-01"}],
   ]},
   {set:"The Chronicle of Goku", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_avif/media/lottery/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_69fcfd5880bb0.webp", setNameJP:"一番くじ ドラゴンボール THE CHRONICLE OF GOKU", dateStr:"May 2026", type:"masterlise", saga:"Namek Saga?", anime:"Dragon Ball Z", prizes:[
-    ["Prize A","Kid Goku",3180345,39.99,2355,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-masterlise-ichibansho-goku-chronicle-goku-figure-178284?variation=350075&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_A_69f7d376558ae.webp",{"mercariUpdated":"2026-05-17"}],
-    ["Prize B","Bulma",3180346,44.99,10990,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/Product/VariationDetails/350082?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_B_69f7d37655ffc.webp",{"mercariUpdated":"2026-05-17"}],
+    ["Prize A","Kid Goku",3180345,39.99,2355,58,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-masterlise-ichibansho-goku-chronicle-goku-figure-178284?variation=350075&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_A_69f7d376558ae.webp",{"ebayHistory":[{"date":"2026-05-19","price":50.5,"title":"Ichiban Kuji Dragon Ball The Chronicle of Goku Son Goku Figure Prize A","url":"https://www.ebay.com/itm/236806665509"},{"date":"2026-05-08","price":58,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE OF GOKU A Prize Son Goku Figure","url":"https://www.ebay.com/itm/397925477506"},{"date":"2026-05-12","price":49,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE OF GOKU A Prize Son Goku Figure","url":"https://www.ebay.com/itm/397924778736"},{"date":"2026-05-08","price":73.99,"title":"Ichiban Kuji Dragon Ball The Chronicle of Goku Son Goku Figure Prize A","url":"https://www.ebay.com/itm/389991310263"},{"date":"2026-05-03","price":75.45,"title":"Ichiban Kuji Dragon Ball The Chronicle of Goku Son Goku Figure Prize A","url":"https://www.ebay.com/itm/157843788588"}],"ebayUpdated":"2026-05-23","ebayProxy":true}],
+    ["Prize B","Bulma",3180346,44.99,10990,165,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/Product/VariationDetails/350082?utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_B_69f7d37655ffc.webp",{"ebayHistory":[{"date":"2026-05-14","price":165.29,"title":"Ichiban kuji Dragon Ball THE CHRONICLE OF GOKU Bulma MASTERLISE Figure","url":"https://www.ebay.com/itm/358533007751"}],"ebayUpdated":"2026-05-23","ebayProxy":true}],
     ["Prize C","Super Saiyan Goku",3180348,64.99,10205,85,"Namek Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-goku-chronicle-goku-figure-178286?variation=350085&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_C_69efce7d88cd9.webp",{"ebayUpdated":"2026-05-01","mercariUpdated":"2026-05-17"}],
-    ["Prize D","Super Saiyan 2 Goku",3180349,64.99,13345,null,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-2-goku-chronicle-goku-figure-178287?variation=350088&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_D_69f7d37656c23.webp",{"mercariUpdated":"2026-05-17"}],
-    ["Prize E","Majin Vegeta",3180350,64.99,3925,null,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-majin-vegeta-chronicle-goku-figure-178288?variation=350090&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_E_69f7d3765720f.webp",{"mercariUpdated":"2026-05-17"}],
-    ["Prize F","Ultra Instinct Goku",3180351,64.99,3925,null,"Tournament of Power Saga","Dragon Ball Super","https://www.bigbadtoystore.com/product/dragon-ball-super-masterlise-ichibansho-goku-ultra-instinct-chronicle-goku-figure-178289?variation=350092&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_F_69f7d3765781a.webp",{"mercariUpdated":"2026-05-17"}],
-    ["LOP","Great Ape Goku (SOFVICS)",3180355,114.99,10205,null,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-sofvics-great-ape-goku-chronicle-goku-figure-178290?variation=350094&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_LO_69f7d3765997f.webp",{"mercariUpdated":"2026-05-17"}],
+    ["Prize D","Super Saiyan 2 Goku",3180349,64.99,13345,167,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-super-saiyan-2-goku-chronicle-goku-figure-178287?variation=350088&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_D_69f7d37656c23.webp",{"ebayHistory":[{"date":"2026-05-15","price":179,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE OF GOKU Super Saiyan 2 Son Goku","url":"https://www.ebay.com/itm/389990724535"},{"date":"2026-05-12","price":155,"title":"Ichiban Kuji Dragon Ball Chronicle of Goku Super Saiyan Goku 2 Figure ","url":"https://www.ebay.com/itm/157849153595"}],"ebayUpdated":"2026-05-23","ebayProxy":true}],
+    ["Prize E","Majin Vegeta",3180350,64.99,3925,75,"Buu Saga","Dragon Ball Z","https://www.bigbadtoystore.com/product/dragon-ball-z-masterlise-ichibansho-majin-vegeta-chronicle-goku-figure-178288?variation=350090&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_E_69f7d3765720f.webp",{"ebayHistory":[{"date":"2026-05-21","price":69.99,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE OF GOKU Majin Vegeta Figure Pri","url":"https://www.ebay.com/itm/236815345349"},{"date":"2026-05-10","price":79.99,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE OF GOKU Majin Vegeta Figure Pri","url":"https://www.ebay.com/itm/298302616128"},{"date":"2026-05-08","price":86,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE OF GOKU Majin Vegeta Figure Pri","url":"https://www.ebay.com/itm/389990719486"},{"date":"2026-05-19","price":52.8,"title":"Ichiban Kuji Dragon Ball The Chronicle of Goku Prize E Figure Vegeta M","url":"https://www.ebay.com/itm/147312161271"}],"ebayUpdated":"2026-05-23","ebayProxy":true}],
+    ["Prize F","Ultra Instinct Goku",3180351,64.99,3925,71,"Tournament of Power Saga","Dragon Ball Super","https://www.bigbadtoystore.com/product/dragon-ball-super-masterlise-ichibansho-goku-ultra-instinct-chronicle-goku-figure-178289?variation=350092&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_F_69f7d3765781a.webp",{"ebayHistory":[{"date":"2026-05-18","price":73.8,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE OF GOKU Ultra Instinc","url":"https://www.ebay.com/itm/147312165691"},{"date":"2026-05-14","price":65,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE F Prize Son Goku Ultr","url":"https://www.ebay.com/itm/397924778758"},{"date":"2026-05-14","price":71.25,"title":"Ichiban Kuji DRAGON BALL CHRONICLE OF SON GOKU Prize F ULTRA","url":"https://www.ebay.com/itm/127854562359"}],"ebayUpdated":"2026-05-23","ebayProxy":true}],
+    ["LOP","Great Ape Goku (SOFVICS)",3180355,114.99,10205,161,"Dragon Ball Saga","Dragon Ball","https://www.bigbadtoystore.com/product/dragon-ball-ichibansho-sofvics-great-ape-goku-chronicle-goku-figure-178290?variation=350094&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/ichiban-kuji-dragon-ball-the-chronicle-of-goku/main_LO_69f7d3765997f.webp",{"ebayHistory":[{"date":"2026-05-22","price":182,"title":"The Chronicle Great Ape Son Goku Ichiban Kuji Figure Last On","url":"https://www.ebay.com/itm/358531991210"},{"date":"2026-05-19","price":139.99,"title":"The Chronicle Great Ape Son Goku Ichiban Kuji Figure Last On","url":"https://www.ebay.com/itm/198344037830"},{"date":"2026-05-10","price":110,"title":"Dragon Ball Ichiban Kuji CHRONICLE OF GOKU Last One Prize Gr","url":"https://www.ebay.com/itm/318279021818"},{"date":"2026-05-08","price":189,"title":"Ichiban Kuji Dragon Ball THE CHRONICLE OF GOKU Last One Figu","url":"https://www.ebay.com/itm/397925524567"}],"ebayUpdated":"2026-05-23","ebayProxy":true}],
   ]},
   {set:"Dragon Ball GT", setImg:"https://www.kuji-collection.com/media/cache/lottery_hero_desktop_avif/media/lottery/dragon-ball/yi-fankuji-doragonborugt/main_6a0921680db81.webp", setNameJP:"一番くじ ドラゴンボールGT", dateStr:"August 2026", type:"masterlise", saga:"Black Star Dragon Ball Saga?", anime:"Dragon Ball GT", prizes:[
     ["Prize A","Super Saiyan 4 Goku",3412183,64.99,null,null,"Super 17 Saga","Dragon Ball GT","https://www.bigbadtoystore.com/product/dragon-ball-gt-ichibansho-super-saiyan-4-goku-figure-187093?variation=366370&utm_source=advertiser&utm_medium=link+&utm_campaign=Ad+program+&utm_content=matchespeaches","https://www.kuji-collection.com/media/cache/resolve/prize_main_desktop_jpg/media/prize/dragon-ball/yi-fankuji-doragonborugt/main_A_69f7e21da2184.webp",null],
