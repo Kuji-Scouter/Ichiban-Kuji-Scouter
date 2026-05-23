@@ -1221,6 +1221,7 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   padding:18px;text-align:center;cursor:default;
   display:flex;flex-direction:column;align-items:center;gap:10px;
   position:relative;
+  overflow-y:auto;
 }
 #lightbox-img{
   max-width:100%;max-height:60vh;
@@ -2907,6 +2908,145 @@ tr.set-header:hover .set-badge,
   display:block;margin:3px 0 0;width:100%;height:18px;
 }
 
+/* Clickable sparkline — when ebaySparkSvg() is called with a figure id,
+   it adds data-fig-id and a role=button so the row sparkline becomes an
+   alternate entry point into the lightbox chart. */
+.sparkline[data-fig-id]{
+  cursor:pointer;border-radius:3px;outline:none;
+  transition:box-shadow .12s ease-out, transform .12s ease-out;
+}
+.sparkline[data-fig-id]:hover{
+  box-shadow:0 0 0 1px var(--accent-cyan), 0 0 8px rgba(127,230,255,.35);
+  transform:translateY(-1px);
+}
+.sparkline[data-fig-id]:focus-visible{
+  box-shadow:0 0 0 2px var(--orange);
+}
+
+/* ── Lightbox interactive eBay price chart ──
+   Larger SVG chart rendered inside #lightbox-chart when a figure has ≥2
+   history points. Companion of the inline row sparkline, but with axes,
+   tooltips, range selector, and stat strip. */
+.lightbox-chart{
+  position:relative;
+  width:min(680px, 88vw);
+  margin:10px auto 0;
+  padding:10px 8px 6px;
+  background:rgba(13,13,21,.55);
+  border:1px solid rgba(127,230,255,.18);
+  border-radius:6px;
+}
+.lightbox-chart[hidden]{display:none}
+.lightbox-chart svg.lc-svg{
+  width:100%;height:auto;display:block;
+  font-family:'Nunito', system-ui, sans-serif;
+}
+.lc-grid-line{stroke:rgba(255,255,255,.08);stroke-width:1}
+.lc-axis-label{fill:var(--grey);font-size:10px}
+.lc-axis-tick{stroke:rgba(255,255,255,.18);stroke-width:1}
+.lc-area{opacity:.18}
+.lc-line{fill:none;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.lc-point{stroke:rgba(13,13,21,.9);stroke-width:1}
+.lightbox-chart svg.lc-up    .lc-line,
+.lightbox-chart svg.lc-up    .lc-point{stroke:#4caf50}
+.lightbox-chart svg.lc-up    .lc-area,
+.lightbox-chart svg.lc-up    .lc-point{fill:#4caf50}
+.lightbox-chart svg.lc-down  .lc-line,
+.lightbox-chart svg.lc-down  .lc-point{stroke:#ff4444}
+.lightbox-chart svg.lc-down  .lc-area,
+.lightbox-chart svg.lc-down  .lc-point{fill:#ff4444}
+.lightbox-chart svg.lc-flat  .lc-line,
+.lightbox-chart svg.lc-flat  .lc-point{stroke:#aaa}
+.lightbox-chart svg.lc-flat  .lc-area,
+.lightbox-chart svg.lc-flat  .lc-point{fill:#aaa}
+.lc-annot{stroke-dasharray:2 4;opacity:.45}
+.lc-annot-max{stroke:#ff8a65}
+.lc-annot-min{stroke:#7fe6ff}
+.lc-annot-median{stroke:#ffd54f}
+.lc-annot-label{
+  font-size:9px;letter-spacing:.4px;text-transform:uppercase;
+  font-weight:700;font-family:'Bebas Neue', system-ui, sans-serif;
+}
+.lc-annot-label.lc-lab-max{fill:#ff8a65}
+.lc-annot-label.lc-lab-min{fill:#7fe6ff}
+.lc-annot-label.lc-lab-median{fill:#ffd54f}
+.lc-hit{fill:transparent;cursor:crosshair}
+.lc-guide{stroke:var(--accent-cyan);stroke-width:1;stroke-dasharray:3 3;opacity:0;pointer-events:none}
+.lc-guide.is-visible{opacity:.7}
+.lc-hover-point{
+  fill:var(--accent-cyan);stroke:rgba(13,13,21,.9);stroke-width:1.2;
+  opacity:0;pointer-events:none;
+}
+.lc-hover-point.is-visible{opacity:1}
+
+.lc-range{
+  display:flex;gap:4px;justify-content:center;margin:0 0 8px;
+  flex-wrap:wrap;
+}
+.lc-range button{
+  background:transparent;color:var(--grey);
+  border:1px solid rgba(255,255,255,.18);border-radius:3px;
+  padding:4px 10px;font-size:11px;letter-spacing:.6px;
+  font-family:'Bebas Neue', system-ui, sans-serif;
+  cursor:pointer;transition:border-color .12s, color .12s;
+}
+.lc-range button:hover{border-color:var(--orange);color:var(--orange)}
+.lc-range button.is-active{
+  border-color:var(--orange);color:var(--orange);
+  background:rgba(255,140,40,.08);
+}
+
+.lc-stats{
+  display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+  margin:8px 0 2px;
+}
+.lc-stat{
+  display:flex;flex-direction:column;align-items:center;
+  padding:4px 10px;min-width:64px;
+  background:rgba(13,13,21,.6);border:1px solid rgba(255,255,255,.10);
+  border-radius:4px;
+}
+.lc-stat .lc-stat-label{
+  font-size:9px;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--grey);font-weight:700;
+}
+.lc-stat .lc-stat-value{
+  font-family:'Bebas Neue', system-ui, sans-serif;
+  font-size:15px;color:var(--gold);margin-top:1px;
+}
+.lc-stat.lc-stat-up    .lc-stat-value{color:#4caf50}
+.lc-stat.lc-stat-down  .lc-stat-value{color:#ff4444}
+
+.chart-tooltip{
+  position:absolute;pointer-events:none;
+  background:rgba(13,13,21,.96);
+  border:1px solid var(--accent-cyan);
+  padding:6px 10px;border-radius:4px;
+  font-size:12px;color:var(--white);
+  white-space:nowrap;
+  transform:translate(-50%, calc(-100% - 10px));
+  box-shadow:0 4px 14px rgba(0,0,0,.5);
+  opacity:0;transition:opacity .08s ease-out;
+  z-index:2;
+}
+.chart-tooltip.is-visible{opacity:1}
+.chart-tooltip .ct-date{
+  font-size:10px;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--grey);font-weight:700;
+}
+.chart-tooltip .ct-price{
+  font-family:'Bebas Neue', system-ui, sans-serif;
+  font-size:16px;color:var(--gold);margin-top:1px;
+}
+
+@media (max-width:700px){
+  .lightbox-chart{width:min(94vw, 680px);padding:8px 4px 4px}
+  .lc-range button{padding:8px 12px;font-size:12px;min-height:36px}
+  .lc-stat{padding:3px 8px;min-width:56px}
+  .lc-stat .lc-stat-value{font-size:14px}
+  .lc-annot-label{display:none}
+}
+
 /* ── Compare: persistent bottom bar + side-by-side modal ── */
 #compare-bar{
   position:fixed;left:0;right:0;bottom:0;z-index:9000;
@@ -3536,6 +3676,7 @@ tr.set-header:hover .set-badge,
     <div id="lightbox-caption"></div>
     <div id="lightbox-sub"></div>
     <div id="lightbox-stats" class="lightbox-stats"></div>
+    <div id="lightbox-chart" class="lightbox-chart" hidden></div>
     <div id="lightbox-actions" class="lightbox-actions"></div>
   </div>
 </div>
@@ -4833,7 +4974,7 @@ function buildFigureCard(d, hideSet){
         <div><div class="k">MSRP</div><div class="v">${msrpDisp}</div></div>
         <div><div class="k">Year</div><div class="v">${d.year}</div></div>
         <div><div class="k">Mercari ${mTrend==='up'?'▲':mTrend==='down'?'▼':''}</div><div class="v ${mTrend==='up'?'up':mTrend==='down'?'down':''}">${mDisp}</div></div>
-        <div><div class="k">eBay ${eTrend==='up'?'▲':eTrend==='down'?'▼':''}</div><div class="v ${eTrend==='up'?'up':eTrend==='down'?'down':''}">${eDisp}${ebaySparkSvg(d.ebayHistory)}</div></div>
+        <div><div class="k">eBay ${eTrend==='up'?'▲':eTrend==='down'?'▼':''}</div><div class="v ${eTrend==='up'?'up':eTrend==='down'?'down':''}">${eDisp}${ebaySparkSvg(d.ebayHistory, d.id)}</div></div>
       </div>
       <div class="fc-actions">
         <a href="${mfcUrl(d)}" target="_blank" rel="noopener">MFC ↗</a>
@@ -4997,7 +5138,7 @@ function renderTable(){
     // Chunk 2: 60-day eBay sparkline. ebaySparkSvg() returns '' when
     // there are fewer than 2 in-window points so rows with no history
     // don't sprout an empty box.
-    const ebayCell = `${ebayArrow}${ebayDisplay}${ebaySparkSvg(d.ebayHistory)}<a class="price-search-btn" title="Search eBay (sold + completed listings)" href="${ebaySearchUrl(d)}" target="_blank" rel="noopener" aria-label="Search eBay for ${esc(d.character)}">🔍</a><span class="price-avg-note">Last 3-mo avg (eBay)</span>${ebayNativeNote}${updatedNoteHtml(d.ebayUpdated)}`;
+    const ebayCell = `${ebayArrow}${ebayDisplay}${ebaySparkSvg(d.ebayHistory, d.id)}<a class="price-search-btn" title="Search eBay (sold + completed listings)" href="${ebaySearchUrl(d)}" target="_blank" rel="noopener" aria-label="Search eBay for ${esc(d.character)}">🔍</a><span class="price-avg-note">Last 3-mo avg (eBay)</span>${ebayNativeNote}${updatedNoteHtml(d.ebayUpdated)}`;
 
     // 2.1/2.9 actions cell — star + own toggle. Pressing either one
     // updates the in-memory Set, persists to localStorage, and re-renders
@@ -5323,6 +5464,8 @@ function openLightbox(e){
     <div class="lightbox-stat"><div class="ls-label">Year</div><div class="ls-value">${d.year}</div></div>
   `;
 
+  renderLightboxChart(id, d.ebayHistory);
+
   const watchOn = isWatching(id);
   const ownOn = isOwned(id);
   const cmpOn = isComparing(id);
@@ -5386,6 +5529,9 @@ function closeLightbox(){
   lb.classList.remove('open');
   lb.setAttribute('aria-hidden','true');
   document.getElementById('lightbox-img').src = '';
+  _disposeLightboxChartListeners();
+  const chartEl = document.getElementById('lightbox-chart');
+  if(chartEl){ chartEl.innerHTML = ''; chartEl.hidden = true; }
   _lightboxFigureId = null;
   if(_lastFocusBeforeLightbox && _lastFocusBeforeLightbox.focus){
     try{ _lastFocusBeforeLightbox.focus(); }catch(e){}
@@ -5871,7 +6017,7 @@ document.querySelector('label[for="import-data-input"]').addEventListener('keydo
 // first-vs-last delta. Returns '' for figures with <2 in-window points
 // so rows without history don't sprout an empty box.
 const SPARKLINE_WINDOW_DAYS = 60;
-function ebaySparkSvg(history){
+function ebaySparkSvg(history, figId){
   if(!Array.isArray(history) || history.length < 2) return '';
   const cutoff = Date.now() - SPARKLINE_WINDOW_DAYS * 86400000;
   const points = [];
@@ -5905,12 +6051,404 @@ function ebaySparkSvg(history){
   const cls = Math.abs(delta) < 0.02 ? 'sl-flat' : (delta > 0 ? 'sl-up' : 'sl-down');
   const endX = xs[xs.length-1].x.toFixed(2);
   const endY = xs[xs.length-1].y.toFixed(2);
-  return '<svg class="sparkline ' + cls + '" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">'
+  // When called with a figure id, the sparkline becomes an alternate
+  // entry point into the lightbox chart: keyboard-focusable, exposed
+  // as a button to assistive tech, and routed through a global click
+  // delegate that finds the matching thumbnail.
+  const interactive = (figId != null && !isNaN(+figId));
+  const a11y = interactive
+    ? 'role="button" tabindex="0" data-fig-id="' + (+figId) + '" aria-label="Open price history"'
+    : 'aria-hidden="true"';
+  return '<svg class="sparkline ' + cls + '" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" ' + a11y + '>'
     + '<path class="sl-area" d="' + areaPath + '"/>'
     + '<path class="sl-line" d="' + linePath + '"/>'
     + '<circle class="sl-end" cx="' + endX + '" cy="' + endY + '"/>'
     + '</svg>';
 }
+
+// ── Lightbox interactive eBay price chart ──
+// Rendered inside #lightbox-chart when a figure is opened. Hand-rolled
+// inline SVG (no library) to keep the site a single static file. Reads
+// the same {date,price} history as the row sparkline but with real
+// axes, hover tooltips, range selector, and stat strip.
+const LIGHTBOX_CHART_RANGES = [
+  {key: '30',  label: '30D', days: 30},
+  {key: '60',  label: '60D', days: 60},
+  {key: '90',  label: '90D', days: 90},
+  {key: 'all', label: 'ALL', days: Infinity},
+];
+const LIGHTBOX_CHART_DEFAULT_RANGE = '60';
+let _lightboxChartState = null;
+
+function _historyPointsInWindow(history, days){
+  if(!Array.isArray(history)) return [];
+  const cutoff = (days === Infinity) ? -Infinity : (Date.now() - days * 86400000);
+  const out = [];
+  for(const s of history){
+    if(!s || s.price == null || !s.date) continue;
+    const t = new Date(s.date).getTime();
+    if(isNaN(t) || t < cutoff) continue;
+    const p = +s.price;
+    if(!isFinite(p)) continue;
+    out.push({t, p, date: s.date});
+  }
+  out.sort((a,b) => a.t - b.t);
+  return out;
+}
+
+// Round a value up/down to a "nice" axis boundary so the y-axis labels
+// land on readable numbers (e.g. 137 → 150, not 137.42).
+function _niceCeil(n){
+  if(!isFinite(n) || n <= 0) return 1;
+  const mag = Math.pow(10, Math.floor(Math.log10(n)));
+  const f = n / mag;
+  const nice = f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10;
+  return nice * mag;
+}
+function _niceFloor(n){
+  if(!isFinite(n) || n <= 0) return 0;
+  const mag = Math.pow(10, Math.floor(Math.log10(n)));
+  const f = n / mag;
+  const nice = f >= 5 ? 5 : f >= 2.5 ? 2.5 : f >= 2 ? 2 : 1;
+  return nice * mag;
+}
+
+// eBay history prices are stored in USD; respect the user's display
+// currency just like the row prices do.
+function _fmtChartCurrency(usdPrice){
+  try{
+    const converted = convertFromTo(+usdPrice, 'USD', displayCurrency);
+    return formatCurrency(converted, displayCurrency);
+  }catch(e){
+    return '$' + (+usdPrice).toFixed(0);
+  }
+}
+function _fmtChartDate(iso, opts){
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return iso || '';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const m = months[d.getMonth()], day = d.getDate();
+  if(opts && opts.withYear) return m + ' ' + day + ', ' + d.getFullYear();
+  return m + ' ' + day;
+}
+
+// Returns SVG markup or '' if the window has <2 points (caller hides).
+function ebayChartSvg(history, opts){
+  opts = opts || {};
+  const W = 720, H = 280;
+  const padL = 56, padR = 16, padT = 16, padB = 36;
+  const days = opts.days != null ? opts.days : 60;
+  const points = _historyPointsInWindow(history, days);
+  if(points.length < 2) return '';
+  let pMin = Infinity, pMax = -Infinity;
+  for(const pt of points){ if(pt.p < pMin) pMin = pt.p; if(pt.p > pMax) pMax = pt.p; }
+  const span = Math.max(1, pMax - pMin);
+  const yLo = Math.max(0, _niceFloor(pMin - span * 0.08));
+  const yHi = _niceCeil(pMax + span * 0.08);
+  const yRange = Math.max(1, yHi - yLo);
+  const tMin = points[0].t, tMax = points[points.length-1].t;
+  const tSpan = Math.max(1, tMax - tMin);
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const xPx = t => padL + ((t - tMin)/tSpan) * innerW;
+  const yPx = p => padT + (1 - (p - yLo)/yRange) * innerH;
+  const first = points[0].p, last = points[points.length-1].p;
+  const delta = (last - first) / Math.max(0.01, first);
+  const cls = Math.abs(delta) < 0.02 ? 'lc-flat' : (delta > 0 ? 'lc-up' : 'lc-down');
+
+  // Y-axis: 4 evenly spaced gridlines.
+  let yTickStr = '';
+  const yTickN = 4;
+  for(let i = 0; i <= yTickN; i++){
+    const v = yLo + (yRange * i/yTickN);
+    const y = yPx(v);
+    yTickStr += '<line class="lc-grid-line" x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y.toFixed(1) + '"/>';
+    yTickStr += '<text class="lc-axis-label" x="' + (padL - 6) + '" y="' + (y + 3.5).toFixed(1) + '" text-anchor="end">' + _fmtChartCurrency(v) + '</text>';
+  }
+
+  // X-axis: 5 evenly spaced date ticks.
+  let xTickStr = '';
+  const xTickN = 4;
+  for(let i = 0; i <= xTickN; i++){
+    const t = tMin + (tSpan * i/xTickN);
+    const x = xPx(t);
+    xTickStr += '<line class="lc-axis-tick" x1="' + x.toFixed(1) + '" y1="' + (H - padB) + '" x2="' + x.toFixed(1) + '" y2="' + (H - padB + 4) + '"/>';
+    xTickStr += '<text class="lc-axis-label" x="' + x.toFixed(1) + '" y="' + (H - padB + 16) + '" text-anchor="middle">' + _fmtChartDate(new Date(t).toISOString().slice(0,10)) + '</text>';
+  }
+
+  // Line + filled area.
+  const xs = points.map(pt => ({x: xPx(pt.t), y: yPx(pt.p)}));
+  const linePath = xs.map((pt,i) => (i===0?'M':'L') + pt.x.toFixed(2) + ' ' + pt.y.toFixed(2)).join(' ');
+  const areaPath = linePath
+    + ' L ' + xs[xs.length-1].x.toFixed(2) + ' ' + (H - padB)
+    + ' L ' + xs[0].x.toFixed(2) + ' ' + (H - padB)
+    + ' Z';
+
+  // Min / median / max annotation lines.
+  const sortedP = points.map(pt => pt.p).slice().sort((a,b) => a - b);
+  const median = sortedP.length % 2 === 1
+    ? sortedP[(sortedP.length - 1) / 2]
+    : (sortedP[sortedP.length/2 - 1] + sortedP[sortedP.length/2]) / 2;
+  let annot = '';
+  function annotLine(value, kind, labelText){
+    const y = yPx(value);
+    annot += '<line class="lc-annot lc-annot-' + kind + '" x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y.toFixed(1) + '"/>';
+    annot += '<text class="lc-annot-label lc-lab-' + kind + '" x="' + (W - padR - 4) + '" y="' + (y - 3).toFixed(1) + '" text-anchor="end">' + labelText + ' ' + _fmtChartCurrency(value) + '</text>';
+  }
+  annotLine(pMax, 'max', 'Max');
+  annotLine(median, 'median', 'Med');
+  annotLine(pMin, 'min', 'Min');
+
+  let pts = '';
+  for(const pt of xs){
+    pts += '<circle class="lc-point" cx="' + pt.x.toFixed(2) + '" cy="' + pt.y.toFixed(2) + '" r="3"/>';
+  }
+
+  // Invisible hit-area for mouse/touch hover tracking, plus the
+  // vertical guideline + highlighted point that the JS toggles on.
+  const hit = '<rect class="lc-hit" x="' + padL + '" y="' + padT + '" width="' + innerW + '" height="' + innerH + '"/>';
+  const guide = '<line class="lc-guide" x1="0" y1="' + padT + '" x2="0" y2="' + (H - padB) + '"/>';
+  const hover = '<circle class="lc-hover-point" cx="0" cy="0" r="4"/>';
+
+  return '<svg class="lc-svg ' + cls + '" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="eBay sale price history">'
+    + yTickStr
+    + '<path class="lc-area" d="' + areaPath + '"/>'
+    + '<path class="lc-line" d="' + linePath + '"/>'
+    + annot
+    + pts
+    + '<line class="lc-axis-tick" x1="' + padL + '" y1="' + (H - padB) + '" x2="' + (W - padR) + '" y2="' + (H - padB) + '"/>'
+    + xTickStr
+    + guide
+    + hover
+    + hit
+    + '</svg>';
+}
+
+// Compact stats under the chart: latest sale, trailing 30-day average,
+// and 30d/60d Δ% vs. the prior equivalent window.
+function _lightboxChartStats(history){
+  const all = _historyPointsInWindow(history, Infinity);
+  if(all.length === 0) return null;
+  const now = Date.now();
+  const c30 = now - 30 * 86400000;
+  const c60 = now - 60 * 86400000;
+  const c120 = now - 120 * 86400000;
+  let s30 = 0, n30 = 0, s30p = 0, n30p = 0;
+  let s60 = 0, n60 = 0, s60p = 0, n60p = 0;
+  for(const pt of all){
+    if(pt.t >= c30){ s30 += pt.p; n30++; }
+    else if(pt.t >= c60){ s30p += pt.p; n30p++; }
+    if(pt.t >= c60){ s60 += pt.p; n60++; }
+    else if(pt.t >= c120){ s60p += pt.p; n60p++; }
+  }
+  const avg30 = n30 ? s30 / n30 : null;
+  const avg30p = n30p ? s30p / n30p : null;
+  const avg60 = n60 ? s60 / n60 : null;
+  const avg60p = n60p ? s60p / n60p : null;
+  const d30 = (avg30 != null && avg30p != null && avg30p > 0) ? (avg30 - avg30p) / avg30p * 100 : null;
+  const d60 = (avg60 != null && avg60p != null && avg60p > 0) ? (avg60 - avg60p) / avg60p * 100 : null;
+  return {latest: all[all.length-1].p, avg30, delta30Pct: d30, delta60Pct: d60};
+}
+
+function _renderLightboxChartStats(stats){
+  if(!stats) return '';
+  function chip(label, value, kind){
+    const cls = kind ? 'lc-stat lc-stat-' + kind : 'lc-stat';
+    return '<div class="' + cls + '"><div class="lc-stat-label">' + label + '</div><div class="lc-stat-value">' + value + '</div></div>';
+  }
+  function fmtDelta(d){
+    if(d == null) return {text: '—', kind: null};
+    const arrow = d > 0 ? '▲' : (d < 0 ? '▼' : '–');
+    const kind = Math.abs(d) < 2 ? null : (d > 0 ? 'up' : 'down');
+    const sign = d > 0 ? '+' : '';
+    return {text: arrow + ' ' + sign + d.toFixed(1) + '%', kind};
+  }
+  const d30 = fmtDelta(stats.delta30Pct);
+  const d60 = fmtDelta(stats.delta60Pct);
+  return chip('Latest', _fmtChartCurrency(stats.latest), null)
+    + chip('30D avg', stats.avg30 != null ? _fmtChartCurrency(stats.avg30) : '—', null)
+    + chip('30D Δ', d30.text, d30.kind)
+    + chip('60D Δ', d60.text, d60.kind);
+}
+
+function renderLightboxChart(figureId, history){
+  const container = document.getElementById('lightbox-chart');
+  if(!container) return;
+  _disposeLightboxChartListeners();
+  const allPts = _historyPointsInWindow(history, Infinity);
+  if(allPts.length < 2){
+    container.hidden = true;
+    container.innerHTML = '';
+    return;
+  }
+  container.hidden = false;
+  const state = {figId: figureId, range: LIGHTBOX_CHART_DEFAULT_RANGE, listeners: []};
+  _lightboxChartState = state;
+
+  function buildHtml(){
+    let days = (LIGHTBOX_CHART_RANGES.find(r => r.key === state.range) || {days: 60}).days;
+    let chart = ebayChartSvg(history, {days});
+    // If the requested window is empty, fall back to ALL so the chart
+    // still renders — e.g. a figure whose only sale was 90 days ago.
+    if(!chart && state.range !== 'all'){
+      state.range = 'all';
+      days = Infinity;
+      chart = ebayChartSvg(history, {days});
+    }
+    const rangeBtns = LIGHTBOX_CHART_RANGES.map(r =>
+      '<button type="button" data-range="' + r.key + '" class="' + (r.key === state.range ? 'is-active' : '') + '" aria-pressed="' + (r.key === state.range) + '">' + r.label + '</button>'
+    ).join('');
+    const stats = _lightboxChartStats(history);
+    return '<div class="lc-range" role="group" aria-label="Chart time range">' + rangeBtns + '</div>'
+      + chart
+      + '<div class="lc-stats">' + _renderLightboxChartStats(stats) + '</div>'
+      + '<div class="chart-tooltip" role="tooltip" aria-hidden="true"><div class="ct-date"></div><div class="ct-price"></div></div>';
+  }
+
+  function attach(){
+    const svg = container.querySelector('svg.lc-svg');
+    const tooltip = container.querySelector('.chart-tooltip');
+    const guide = container.querySelector('.lc-guide');
+    const hover = container.querySelector('.lc-hover-point');
+    const hit = container.querySelector('.lc-hit');
+    if(!svg || !hit || !tooltip || !guide || !hover) return;
+
+    const days = (LIGHTBOX_CHART_RANGES.find(r => r.key === state.range) || {days: 60}).days;
+    const pts = _historyPointsInWindow(history, days);
+    if(pts.length >= 2){
+      const W = 720, H = 280, padL = 56, padR = 16, padT = 16, padB = 36;
+      let pMin = Infinity, pMax = -Infinity;
+      for(const pt of pts){ if(pt.p < pMin) pMin = pt.p; if(pt.p > pMax) pMax = pt.p; }
+      const span = Math.max(1, pMax - pMin);
+      const yLo = Math.max(0, _niceFloor(pMin - span * 0.08));
+      const yHi = _niceCeil(pMax + span * 0.08);
+      const yRange = Math.max(1, yHi - yLo);
+      const tMin = pts[0].t, tMax = pts[pts.length-1].t;
+      const tSpan = Math.max(1, tMax - tMin);
+      const innerW = W - padL - padR, innerH = H - padT - padB;
+      const xPx = t => padL + ((t - tMin)/tSpan) * innerW;
+      const yPx = p => padT + (1 - (p - yLo)/yRange) * innerH;
+
+      function nearest(tx){
+        // Binary-search insertion point, then compare with neighbor.
+        let lo = 0, hi = pts.length - 1;
+        while(lo < hi){
+          const mid = (lo + hi) >> 1;
+          if(pts[mid].t < tx) lo = mid + 1; else hi = mid;
+        }
+        let best = pts[lo];
+        if(lo > 0 && Math.abs(pts[lo-1].t - tx) < Math.abs(best.t - tx)) best = pts[lo-1];
+        return best;
+      }
+      function onMove(ev){
+        const rect = svg.getBoundingClientRect();
+        if(rect.width <= 0 || rect.height <= 0) return;
+        const clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+        const xView = (clientX - rect.left) / rect.width * W;
+        const tx = tMin + ((xView - padL) / innerW) * tSpan;
+        const best = nearest(tx);
+        const sx = xPx(best.t), sy = yPx(best.p);
+        guide.setAttribute('x1', sx.toFixed(2));
+        guide.setAttribute('x2', sx.toFixed(2));
+        guide.classList.add('is-visible');
+        hover.setAttribute('cx', sx.toFixed(2));
+        hover.setAttribute('cy', sy.toFixed(2));
+        hover.classList.add('is-visible');
+        const cRect = container.getBoundingClientRect();
+        const scaleX = rect.width / W, scaleY = rect.height / H;
+        let pxX = rect.left - cRect.left + sx * scaleX;
+        let pxY = rect.top - cRect.top + sy * scaleY;
+        // Clamp tooltip horizontally so it doesn't overflow the container.
+        const minX = 60, maxX = cRect.width - 60;
+        if(pxX < minX) pxX = minX;
+        if(pxX > maxX) pxX = maxX;
+        tooltip.style.left = pxX + 'px';
+        tooltip.style.top = pxY + 'px';
+        tooltip.querySelector('.ct-date').textContent = _fmtChartDate(best.date, {withYear: true});
+        tooltip.querySelector('.ct-price').textContent = _fmtChartCurrency(best.p);
+        tooltip.classList.add('is-visible');
+        tooltip.setAttribute('aria-hidden', 'false');
+      }
+      function onLeave(){
+        tooltip.classList.remove('is-visible');
+        tooltip.setAttribute('aria-hidden', 'true');
+        guide.classList.remove('is-visible');
+        hover.classList.remove('is-visible');
+      }
+      hit.addEventListener('mousemove', onMove);
+      hit.addEventListener('mouseleave', onLeave);
+      hit.addEventListener('touchmove', onMove, {passive: true});
+      hit.addEventListener('touchend', onLeave);
+      state.listeners.push(
+        [hit, 'mousemove', onMove],
+        [hit, 'mouseleave', onLeave],
+        [hit, 'touchmove', onMove],
+        [hit, 'touchend', onLeave],
+      );
+    }
+
+    container.querySelectorAll('.lc-range button').forEach(b => {
+      const handler = () => {
+        const r = b.dataset.range;
+        if(!r || r === state.range) return;
+        state.range = r;
+        // Drop the old listeners before swapping HTML; new ones attach below.
+        _disposeListenersOnly(state);
+        container.innerHTML = buildHtml();
+        attach();
+      };
+      b.addEventListener('click', handler);
+      state.listeners.push([b, 'click', handler]);
+    });
+  }
+
+  container.innerHTML = buildHtml();
+  attach();
+}
+
+function _disposeListenersOnly(state){
+  if(!state) return;
+  for(const [el, ev, fn] of state.listeners){
+    try{ el.removeEventListener(ev, fn); }catch(_){}
+  }
+  state.listeners = [];
+}
+function _disposeLightboxChartListeners(){
+  if(!_lightboxChartState) return;
+  _disposeListenersOnly(_lightboxChartState);
+  _lightboxChartState = null;
+}
+
+// Global delegate so a clickable row sparkline opens its figure's
+// lightbox. The sparkline carries data-fig-id when ebaySparkSvg() is
+// called with an id; clicking it locates the corresponding thumbnail
+// (which already wires openLightbox via data-large) and triggers it.
+document.addEventListener('click', e => {
+  const sp = e.target.closest('.sparkline[data-fig-id]');
+  if(!sp) return;
+  e.stopPropagation();
+  const id = +sp.dataset.figId;
+  if(isNaN(id)) return;
+  // Prefer a thumbnail that has data-large (visible image) so the
+  // lightbox shows the figure photo; fall back to any element with
+  // matching data-fig-id that openLightbox can read.
+  const thumbWithLarge = document.querySelector(
+    '.thumb-box[data-fig-id="' + id + '"][data-large], .fc-thumb[data-fig-id="' + id + '"][data-large]'
+  );
+  const target = thumbWithLarge
+    || document.querySelector('.thumb-box[data-fig-id="' + id + '"], .fc-thumb[data-fig-id="' + id + '"]');
+  if(target) target.click();
+});
+document.addEventListener('keydown', e => {
+  if(e.key !== 'Enter' && e.key !== ' ') return;
+  const sp = e.target.closest && e.target.closest('.sparkline[data-fig-id]');
+  if(!sp) return;
+  e.preventDefault();
+  e.stopPropagation();
+  // SVGElement.click() is not implemented in all browsers, so dispatch
+  // a synthetic click that bubbles up to the global click delegate.
+  sp.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true}));
+});
 
 // ── Compare state ──
 // In-session only (sessionStorage). Survives a refresh inside the tab,
