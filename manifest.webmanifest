@@ -1,0 +1,13 @@
+{
+  "name": "Ichiban Kuji Scouter",
+  "short_name": "Kuji Scouter",
+  "description": "Dragon Ball Ichiban Kuji figure price tracker — live Mercari Japan and eBay averages.",
+  "start_url": "/Ichiban-Kuji-Scouter/",
+  "scope": "/Ichiban-Kuji-Scouter/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#FF6B00",
+  "icons": [
+    { "src": "logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

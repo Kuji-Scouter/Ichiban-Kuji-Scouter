@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kuji-scouter.github.io/Ichiban-Kuji-Scouter/sitemap.xml
