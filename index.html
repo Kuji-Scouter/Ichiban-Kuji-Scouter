@@ -105,6 +105,9 @@
 <link rel="preconnect" href="https://static.myfigurecollection.net" crossorigin/>
 <link rel="preconnect" href="https://www.kuji-collection.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<!-- Preload the Dragon-Ball-styled title font so the hero heading paints
+     in the right face on first frame instead of swapping mid-render. -->
+<link rel="preload" href="fonts/saiyan-sans.woff2" as="font" type="font/woff2" crossorigin/>
 <style id="font-flash-prevention">html:not(.fonts-loaded){visibility:hidden}</style>
 <script>
 (function(){
@@ -114,6 +117,7 @@
   if(document.fonts&&document.fonts.load){
     Promise.all([
       document.fonts.load("1em 'Bebas Neue'"),
+      document.fonts.load("1em 'Saiyan Sans'"),
       document.fonts.load("400 1em Nunito"),
       document.fonts.load("600 1em Nunito"),
       document.fonts.load("700 1em Nunito"),
@@ -155,6 +159,19 @@
   --cap-currency:  #6edcff;
   --green:#88dd88;
 }
+
+/* Dragon-Ball-styled display font, used by the hero title + subtitle.
+   Self-hosted (not on Google Fonts). `font-display: swap` renders with
+   the Bebas Neue fallback while the file loads so there's no invisible
+   text on first paint. Source: Saiyan Sans by Ben Palmer, freeware. */
+@font-face{
+  font-family:'Saiyan Sans';
+  src:url('fonts/saiyan-sans.woff2') format('woff2');
+  font-display:swap;
+  font-weight:400;
+  font-style:normal;
+}
+
 html{scroll-behavior:smooth;font-size:clamp(14px,0.55vw + 11.2px,18px)}
 body{
   font-family:'Nunito',sans-serif;
@@ -264,39 +281,45 @@ body.below-fold #corner-watermark{
 /* ── Hero ── */
 #hero{text-align:center;padding:clamp(20px,2.6vw,44px) clamp(12px,1.4vw,28px) clamp(14px,1.6vw,28px);background:linear-gradient(180deg,#0d0d15 0%,var(--bg) 100%)}
 #hero h1{
-  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:'Saiyan Sans','Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size:clamp(36px,6.4vw,96px);
-  letter-spacing:clamp(2px,0.4vw,6px);color:var(--white);line-height:1;
+  /* Tight letter-spacing mirrors the DBZ logo where the characters
+     nearly touch each other rather than the spaced-out art-deco look. */
+  letter-spacing:-0.01em;color:var(--white);line-height:1;
   display:inline-flex;align-items:center;justify-content:center;
   gap:clamp(8px,1.2vw,22px);flex-wrap:wrap;
 }
-/* Dragon-ball title treatment, per-letter spheres + iconic 4-star
-   replacement for the O in SCOUTER.
+/* DBZ logo treatment — solid yellow fill on the first word, solid
+   red fill on the second word, thick black outline simulated by an
+   8-direction text-shadow, plus an offset black drop-shadow for the
+   bottom-right depth that's iconic to the printed logo.
 
-   Outer aura sits on .hero-title-text so the whole title shares ONE
-   readable glow — putting filter on every nested span compounds the
-   effect and bleeds into the letterforms. */
-#hero h1 .hero-title-text{
-  filter:drop-shadow(0 0 16px rgba(255,120,0,.45));
-}
-/* Each character renders as its own miniature dragon-ball sphere.
-   Radial gradient centered upper-left (~30%/25%) places the specular
-   highlight at the same relative spot on every letter — that's the
-   trick that makes them all read as spheres rather than flat-shaded
-   text. Inline-block keeps the letter on the baseline like a normal
-   character; background-clip:text paints the gradient as the fill. */
+   No outer aura / filter — the printed DBZ logo is flat: solid colour
+   + outline + a hard offset shadow. The earlier glow + per-letter
+   sphere gradient have been removed to match. */
 .db-letter{
   display:inline-block;
-  color:transparent;
-  background:radial-gradient(circle at 30% 25%,
-    #fff5cc 0%,
-    #ffe5a0 8%,
-    #ffb840 22%,
-    #ff8a1c 50%,
-    #c44400 85%,
-    #7a1a00 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
+  color:#ffea00;  /* DBZ logo yellow */
+  /* Multi-stamp text-shadow simulates a thick black outline OUTSIDE
+     the letter (vs. -webkit-text-stroke which strokes inward and
+     thins the letter). The 9th stamp is the offset hard drop-shadow
+     that gives the DBZ logo its "raised" feel. */
+  text-shadow:
+    -3px -3px 0 #000,
+     3px -3px 0 #000,
+    -3px  3px 0 #000,
+     3px  3px 0 #000,
+    -3px  0   0 #000,
+     3px  0   0 #000,
+     0   -3px 0 #000,
+     0    3px 0 #000,
+     6px  6px 0 rgba(0,0,0,.55);
+}
+/* SCOUTER (second word) goes red to mirror the "BALL Z" red half of
+   the DBZ logo — yellow first word + red second word is the iconic
+   colour split. */
+#hero h1 .hero-title-text > span:nth-child(2) .db-letter{
+  color:#e2231a;  /* DBZ logo red */
 }
 /* The O in SCOUTER is swapped for an inline 4-star dragon-ball SVG.
    em-based sizing scales with the title's clamped font-size; the
@@ -315,6 +338,7 @@ body.below-fold #corner-watermark{
   filter:drop-shadow(0 0 18px rgba(255,107,0,.35));
 }
 #hero p{
+  font-family:'Saiyan Sans','Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size:clamp(11px,0.8vw + 6px,16px);color:var(--grey);letter-spacing:2px;
   text-transform:uppercase;margin-top:6px;
 }
