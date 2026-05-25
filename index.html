@@ -2063,6 +2063,11 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
   color:var(--grey);cursor:pointer;font-weight:800;font-size:14px;line-height:1;
   padding:0;
 }
+/* Re-assert UA [hidden] behaviour — the display:inline-flex above
+   beats the user-agent `[hidden]{display:none}` rule on specificity,
+   so a hidden `−` button was still rendering and pushing the actions
+   column wider whenever the user marked a figure as owned. */
+.own-plus[hidden], .own-minus[hidden]{display:none}
 .own-plus:hover, .own-minus:hover{border-color:#4caf50;color:#4caf50;background:rgba(76,175,80,.10)}
 .own-count{
   padding:2px 7px;border-radius:999px;
