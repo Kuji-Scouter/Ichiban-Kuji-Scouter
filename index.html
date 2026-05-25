@@ -3498,13 +3498,19 @@ tr.set-header:hover .set-badge,
   // so there's no flash of un-cycled state.
   (function pickStatBgs(){
     var POOL = [
+      // Original character cutouts (Krillin & Roshi dropped — replaced
+      // by the scouter-view versions of those characters below).
       'img/char-goku-gohan.png',
-      'img/char-krillin.png',
-      'img/char-roshi.png',
       'img/char-piccolo.png',
-      'img/scouter-bg-piccolo.jpg',
+      // Scouter POV screencaps — full-bleed, render via CSS background.
+      'img/scouter-bg-piccolo.jpg',          // Piccolo, bandaged turban
+      'img/scouter-bg-piccolo-arrival.jpg',  // Piccolo silhouette + sun
       'img/scouter-bg-kid-goku.jpg',
       'img/scouter-bg-fog-group.jpg',
+      'img/scouter-bg-reticle.jpg',
+      'img/scouter-bg-roshi.jpg',            // Roshi w/ "FIGHT" overlay
+      'img/scouter-bg-krillin.jpg',          // Krillin w/ "FIGHT -87"
+      'img/scouter-bg-vegeta.jpg',           // Vegeta, target-locked
     ];
     // Fisher-Yates shuffle in place, then take first 4.
     var s = POOL.slice();
