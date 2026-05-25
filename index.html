@@ -2383,7 +2383,12 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
   isolation:isolate;
   /* Yellow corner brackets — four inline-SVG corner-tick marks
      positioned at the four corners. Each SVG is the same "L" shape
-     rotated for its corner. */
+     rotated for its corner.
+     The optional --stat-scouter-bg CSS variable carries a rotating
+     scouter screencap (set by the inline picker right after the
+     #stats-bar markup). When present, it sits between the brackets
+     and the green fallback gradient, with a dark-green tint overlay
+     so the stat values stay readable on top. */
   background-image:
     /* TL bracket */
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M0 5 V0 H5' stroke='%23ffc400' stroke-width='2' fill='none'/></svg>"),
@@ -2393,11 +2398,19 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M0 9 V14 H5' stroke='%23ffc400' stroke-width='2' fill='none'/></svg>"),
     /* BR bracket */
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M9 14 H14 V9' stroke='%23ffc400' stroke-width='2' fill='none'/></svg>"),
-    /* the green card gradient lives below the SVGs */
+    /* Dark-green tint overlay so text stays readable on top of the
+       scouter image below. ~55% opacity = subject visible, text safe. */
+    linear-gradient(rgba(11,26,15,.55), rgba(6,16,8,.55)),
+    /* Rotating scouter screencap — picked once per page load by the
+       inline script right after the #stats-bar markup. When the var
+       is unset (e.g. var missing) the line silently collapses to the
+       fallback gradient below. */
+    var(--stat-scouter-bg, none),
+    /* Fallback green card gradient. */
     linear-gradient(180deg,#0b1a0f 0%,#061008 100%);
   background-repeat:no-repeat;
-  background-position:6px 6px, calc(100% - 6px) 6px, 6px calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), 0 0;
-  background-size:14px 14px, 14px 14px, 14px 14px, 14px 14px, 100% 100%;
+  background-position:6px 6px, calc(100% - 6px) 6px, 6px calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), 0 0, center center, 0 0;
+  background-size:14px 14px, 14px 14px, 14px 14px, 14px 14px, 100% 100%, cover, 100% 100%;
 }
 /* Scan-line + grid overlays disabled by user request — the card now
    relies on the green gradient + corner brackets + side arrows for
@@ -2426,6 +2439,11 @@ tr.set-header[data-saga="dbl"]        { --saga-color:var(--saga-dbl);       --sa
   filter:drop-shadow(0 0 2px rgba(255,196,0,.7)) saturate(.85);
   z-index:1;
 }
+/* Per-card .stat-char visibility is now controlled directly by the
+   picker script: it hides the <img> on cards that drew a scouter
+   screencap (because the screencap renders via the --stat-scouter-bg
+   CSS var instead), and leaves it visible on cards that drew a char
+   cutout (which still renders the old watermark way). */
 /* Side-arrow markers flanking the value on wider widths — the small
    ▶ ◀ targeting triangles seen in the reference photos. Hidden below
    700px to keep the cramped phone view readable. */
@@ -2719,92 +2737,107 @@ tr.set-header:hover .set-badge,
    so it still reads as a separate radar element next to the title. */
 .cp-header-row .cp-header .cp-chevron{margin-left:6px}
 
-/* ── Scouter Profile capsule ──
-   Same Capsule Corp pill treatment as the search/filter capsules
-   (#controls rules above): brushed-silver cylindrical body, two
-   coloured stripes flanking a centred label, knob nub protruding off
-   the right cap. Uses --capsule-color (orange) so it visually pairs
-   with the orange radar text next to it. */
-.cap-btn{
-  --capsule-color:var(--orange);
+/* ── Scouter HUD readout — Profile button ──
+   Reuses the same visual primitives as the #stats-bar .stat-card
+   panels above (green CRT body, yellow SVG corner brackets, scouter-
+   yellow glowing text, targeting-arrow flourishes) so the Profile
+   button reads as a sibling piece of "scouter hardware" to the stat
+   cards and the Dragon Radar collection bar next to it. */
+.scouter-btn{
   position:relative;
   display:inline-flex;align-items:center;justify-content:center;
-  height:36px;padding:0 36px;
-  /* Guarantee the centred label has clearance from the side stripes
-     even for very short labels like "Profile" (without min-width, a
-     7-char label sits ~5px from each stripe and reads as touching). */
+  height:36px;padding:0 28px;
   min-width:140px;
-  border-radius:999px;
-  border:1px solid rgba(0,0,0,.50);
-  font-family:'Nunito',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.3px;
-  color:#0d0d15;
+  border:1px solid #6a6a6a;border-radius:4px;
   cursor:pointer;
   white-space:nowrap;
-  background:
-    /* Left vertical colour stripe */
-    linear-gradient(to right, var(--capsule-color), var(--capsule-color))
-      14px 0 / 10px 100% no-repeat,
-    /* Right vertical colour stripe */
-    linear-gradient(to right, var(--capsule-color), var(--capsule-color))
-      calc(100% - 24px) 0 / 10px 100% no-repeat,
-    /* Brushed-silver cylindrical body */
-    linear-gradient(180deg, #909090 0%, #c0c0c0 35%, #c8c8c8 60%, #888888 100%);
+  /* Same four yellow corner-bracket SVGs + green gradient body as the
+     #stats-bar .stat-card rule (see ~L2387). Single source of truth
+     would be ideal, but the .stat-card rule includes positioning that
+     only makes sense at card scale — the brackets need to be slightly
+     repositioned at this smaller size. */
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M0 4 V0 H4' stroke='%23ffc400' stroke-width='1.5' fill='none'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M6 0 H10 V4' stroke='%23ffc400' stroke-width='1.5' fill='none'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M0 6 V10 H4' stroke='%23ffc400' stroke-width='1.5' fill='none'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M6 10 H10 V6' stroke='%23ffc400' stroke-width='1.5' fill='none'/></svg>"),
+    /* Dark-green tint overlay so the PROFILE label stays readable
+       on top of the scouter-cap image below. ~55% opacity = subject
+       still visible, text contrast preserved. */
+    linear-gradient(rgba(11,26,15,.55), rgba(6,16,8,.55)),
+    /* Three-Namekians scouter screencap. Picked because its
+       horizontal composition (three figures spread across the frame)
+       survives the heavy aspect-ratio crop on the wide-short button. */
+    url('img/scouter-bg-namekians.jpg'),
+    /* Final fallback gradient — only visible if the image 404s. */
+    linear-gradient(180deg, #0b1a0f 0%, #061008 100%);
+  background-repeat:no-repeat;
+  background-position:
+    4px 4px,
+    calc(100% - 4px) 4px,
+    4px calc(100% - 4px),
+    calc(100% - 4px) calc(100% - 4px),
+    0 0,
+    center center,
+    0 0;
+  background-size:10px 10px, 10px 10px, 10px 10px, 10px 10px, 100% 100%, cover, 100% 100%;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.6),
-    inset 0 -2px 4px rgba(0,0,0,.18),
-    0 2px 6px rgba(0,0,0,.50);
-  transition:transform .12s ease, box-shadow .12s ease;
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 0 10px rgba(0,0,0,.5),
+    0 2px 4px rgba(0,0,0,.4);
+  transition:filter .15s ease, box-shadow .15s ease;
 }
-.cap-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.7),
-    inset 0 -2px 4px rgba(0,0,0,.18),
-    0 4px 10px rgba(0,0,0,.55),
-    0 0 12px rgba(255,107,0,.35);
-}
-.cap-btn:active{transform:translateY(0)}
-.cap-btn:focus-visible{outline:2px solid #ffd680;outline-offset:3px}
-/* Two-part knob — matches the filter capsules. ::before is the narrow
-   stem that connects the body to the wider ::after press-button cap.
-   Same dimensions/gradients/shadows as the rule blocks at ~L735–805
-   above so the visual silhouette is identical to the other capsules. */
-.cap-btn::before{
-  content:'';
-  position:absolute;
-  right:-10px;top:50%;transform:translateY(-50%);
-  width:11px;height:18px;
-  background:linear-gradient(180deg,
-    #606060 0%,#c8c8c8 25%,#d8d8d8 50%,#a0a0a0 75%,#555555 100%);
-  border-top:1px solid rgba(0,0,0,.6);
-  border-bottom:1px solid rgba(0,0,0,.6);
-  pointer-events:none;
-  z-index:1;
-}
-.cap-btn::after{
-  content:'';
-  position:absolute;
-  right:-25px;top:50%;transform:translateY(-50%);
-  width:16px;height:28px;
-  border-radius:4px;
-  border:1px solid rgba(0,0,0,.65);
-  background:linear-gradient(180deg,
-    #707070 0%,#f8f8f8 18%,#ffffff 45%,#c8c8c8 75%,#606060 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.45),
-    inset 0 2px 1px rgba(255,255,255,.95),
-    inset 0 -2px 2px rgba(0,0,0,.35),
-    0 4px 6px rgba(0,0,0,.6),
-    0 1px 2px rgba(0,0,0,.50);
-  pointer-events:none;
+/* Label — scouter-yellow with the same double-glow stack used on the
+   stat-card .stat-value at line 2415. Bebas Neue uppercase keeps the
+   family resemblance to the .stat-label uppercase title. */
+.scouter-btn-label{
+  position:relative;
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:16px;letter-spacing:2px;font-weight:400;
+  color:#ffc400;
+  text-shadow:
+    0 0 6px rgba(255,196,0,.8),
+    0 0 14px rgba(255,196,0,.35),
+    0 1px 0 rgba(0,0,0,.4);
   z-index:2;
 }
-/* Narrow viewports: stack the radar bar and the capsule so neither
-   gets squeezed below readability. */
+/* ▶ ◀ targeting arrows — same glyphs and positioning pattern as
+   .stat-value::before / ::after at L2433–2441. Hidden on phones so the
+   label stays readable at narrow widths (mirrors the stat-card
+   responsive rule at L2442). */
+.scouter-btn-label::before,
+.scouter-btn-label::after{
+  color:#ffc400;font-size:.7em;font-weight:700;
+  text-shadow:0 0 4px rgba(255,196,0,.7);
+  position:absolute;top:50%;transform:translateY(-50%);
+  pointer-events:none;
+}
+.scouter-btn-label::before{content:"\25b6";left:-1.2em}
+.scouter-btn-label::after {content:"\25c0";right:-1.2em}
+.scouter-btn:hover{
+  filter:brightness(1.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 0 10px rgba(0,0,0,.5),
+    0 0 14px rgba(255,196,0,.35),
+    0 2px 4px rgba(0,0,0,.4);
+}
+.scouter-btn:hover .scouter-btn-label{
+  color:#ffd45a;
+  text-shadow:
+    0 0 9px rgba(255,210,90,1),
+    0 0 18px rgba(255,170,40,.6);
+}
+.scouter-btn:active{filter:brightness(1.05)}
+.scouter-btn:focus-visible{outline:2px solid #ffd680;outline-offset:3px}
+/* Narrow viewports: stack the radar bar and the scouter readout so
+   neither gets squeezed; also drop the side arrows so the centred
+   label has room (mirrors .stat-value::before/::after @ L2442). */
 @media(max-width:600px){
   .cp-header-row{flex-direction:column;align-items:stretch;gap:10px}
-  .cap-btn{align-self:center}
+  .scouter-btn{align-self:center}
+  .scouter-btn-label::before,
+  .scouter-btn-label::after{display:none}
 }
 .cp-section.collapsed .cp-chevron{transform:rotate(-90deg)}
 .cp-section.collapsed .cp-body{display:none}
@@ -3452,6 +3485,53 @@ tr.set-header:hover .set-badge,
     <div class="stat-value" id="stat-grails">—</div>
   </div>
 </section>
+<script>
+  // Stat-card image cycler — on every page load, shuffles a pool of
+  // 7 images (4 original character cutouts + 3 scouter POV screencaps)
+  // and assigns one to each of the 4 stat cards. Picks are unique per
+  // card so no two cards show the same image at once. Char-pngs render
+  // as the existing <img class="stat-char"> watermark (transparent
+  // cutouts at .32 opacity); scouter-jpgs render as a full-bleed CSS
+  // background with a dark-green tint overlay — each image type uses
+  // its best-suited rendering mode. (The 4th scouter cap, Namekians,
+  // is reserved for the Profile button only.) Runs inline pre-paint
+  // so there's no flash of un-cycled state.
+  (function pickStatBgs(){
+    var POOL = [
+      'img/char-goku-gohan.png',
+      'img/char-krillin.png',
+      'img/char-roshi.png',
+      'img/char-piccolo.png',
+      'img/scouter-bg-piccolo.jpg',
+      'img/scouter-bg-kid-goku.jpg',
+      'img/scouter-bg-fog-group.jpg',
+    ];
+    // Fisher-Yates shuffle in place, then take first 4.
+    var s = POOL.slice();
+    for(var i = s.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = s[i]; s[i] = s[j]; s[j] = t;
+    }
+    var picks = s.slice(0, 4);
+
+    var bar = document.getElementById('stats-bar');
+    if(!bar) return;
+    var cards = bar.querySelectorAll('.stat-card');
+    cards.forEach(function(card, idx){
+      var url = picks[idx];
+      var img = card.querySelector('.stat-char');
+      if(/\.png$/i.test(url)){
+        // Character cutout — use the <img> watermark path
+        if(img){ img.src = url; img.style.display = ''; }
+        card.style.removeProperty('--stat-scouter-bg');
+      } else {
+        // Scouter screencap — use CSS background path, hide the img
+        if(img) img.style.display = 'none';
+        card.style.setProperty('--stat-scouter-bg', "url('" + url + "')");
+      }
+    });
+  })();
+</script>
 
 <!-- ── Chunk 2: Collector panel (set-completion) ──
      Sits ABOVE the Top 10 section on the main view per user request;
@@ -3463,8 +3543,8 @@ tr.set-header:hover .set-badge,
         <span id="sc-title">Collection Progress</span>
         <span class="cp-chevron" aria-hidden="true">▼</span>
       </button>
-      <button type="button" id="scouter-profile-btn" class="cap-btn" aria-haspopup="dialog" aria-controls="art-modal" aria-label="Open profile">
-        <span class="cap-btn-label">Profile</span>
+      <button type="button" id="scouter-profile-btn" class="scouter-btn" aria-haspopup="dialog" aria-controls="art-modal" aria-label="Open profile">
+        <span class="scouter-btn-label">PROFILE</span>
       </button>
     </div>
     <div class="cp-body" id="sc-body">
