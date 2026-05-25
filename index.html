@@ -207,7 +207,7 @@ body{
    forced them into normal flow at the bottom of the page (which
    caused clicking a figure thumb to scroll to the bottom instead of
    opening the lightbox as a modal). */
-body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(#about-modal):not(#art-modal):not(#achievement-toast):not(.skip-link){position:relative;z-index:1}
+body > *:not(#page-watermark):not(#corner-watermark):not(#lightbox):not(#compare-modal):not(#compare-bar):not(#about-modal):not(#art-modal):not(#achievement-toast):not(.skip-link):not(.capsule-puff){position:relative;z-index:1}
 
 /* Below ~900px the Cell + Shenron pair starts to overlap in the
    middle of the screen (their combined character widths exceed the
@@ -802,7 +802,7 @@ body.below-fold #corner-watermark{
   cursor:pointer;
   pointer-events:none; /* reserved for future click functionality */
   z-index:2;
-  transition:filter .15s, box-shadow .15s;
+  transition:filter .15s, box-shadow .15s, transform 100ms ease-out;
 }
 
 /* Wrapper-mounted knobs (selects/inputs) — bottom-anchored so they
@@ -877,6 +877,41 @@ body.below-fold #corner-watermark{
     0 5px 8px rgba(0,0,0,.75),
     0 1px 2px rgba(0,0,0,.50),
     0 0 12px color-mix(in srgb, var(--capsule-color) 70%, transparent);
+}
+
+/* ── Press-down on :active ──
+   When a capsule is being clicked, slide its right-side cap inward
+   toward the body (~6px) and flatten the drop shadow — the knob
+   reads as actual hardware being pressed. Two parallel blocks so we
+   preserve each group's existing transform baseline:
+     • Wrapper capsules (.ctrl-*) have no baseline transform.
+     • Range / button capsules use translateY(-50%); preserve via
+       translate(x, -50%).  */
+.ctrl-search:active::after,
+.ctrl-character:active::after,
+.ctrl-year:active::after,
+.ctrl-kuji-set:active::after,
+.ctrl-saga:active::after,
+.ctrl-anime:active::after,
+.ctrl-set-type:active::after{
+  transform:translateX(6px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.30),
+    inset 0 1px 1px rgba(255,255,255,.50),
+    inset 0 -1px 1px rgba(0,0,0,.40),
+    0 1px 2px rgba(0,0,0,.55);
+}
+#controls .range-cap:active::after,
+#lop-toggle:active::after,
+#grail-toggle:active::after,
+#controls .view-tab:active::after,
+#reset-btn:active::after{
+  transform:translate(6px, -50%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.30),
+    inset 0 1px 1px rgba(255,255,255,.50),
+    inset 0 -1px 1px rgba(0,0,0,.40),
+    0 1px 2px rgba(0,0,0,.55);
 }
 
 /* ── Currency picker capsule (toolbar) ──
@@ -3411,6 +3446,34 @@ tr.set-header:hover .set-badge,
 /* ════════════════════════════════════════════════════════════════════════
    /CHUNK 2
    ════════════════════════════════════════════════════════════════════════ */
+
+/* ── Capsule "BOM!" puff ──
+   Spawned by the IIFE near setupAchievementToast — fires whenever the
+   user clicks any filter-row capsule, positioned next to its right-
+   side cap. Pops in with an overshoot bounce, holds briefly, scale-
+   fades out, then the JS removes the node. pointer-events:none so it
+   never blocks subsequent clicks; fixed position so scrolling during
+   the 600 ms life doesn't matter. */
+.capsule-puff{
+  position:fixed;
+  width:90px;height:90px;
+  pointer-events:none;
+  z-index:10001;
+  transform:translate(-50%, -50%) scale(0);
+  opacity:0;
+  animation:capsule-puff-pop 600ms cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+.capsule-puff svg{width:100%;height:100%;display:block;overflow:visible}
+@keyframes capsule-puff-pop{
+  0%   { transform:translate(-50%, -50%) scale(0.20); opacity:0; }
+  25%  { transform:translate(-50%, -50%) scale(1.15); opacity:1; }
+  100% { transform:translate(-50%, -50%) scale(1.55); opacity:0; }
+}
+/* Respect reduced-motion: keep the press-down (it's a static state
+   change, not an animation) but suppress the puff entirely. */
+@media (prefers-reduced-motion: reduce){
+  .capsule-puff{display:none}
+}
 
 </style>
 </head>
@@ -6297,6 +6360,50 @@ window.addEventListener('popstate', () => {
 //     count AND a value milestone).
 //   - Dedupes consecutive calls with the same title (e.g. double-
 //     toggling) to avoid stutter.
+
+// ── Capsule "BOM!" puff ─────────────────────────────────────────────
+// One delegated click listener on #controls — every filter-row
+// capsule (search, dropdowns, range inputs, prize toggles, view tabs,
+// reset) spawns a comic-book cloud puff next to its right-side press
+// button cap. CSS keyframes (defined near the end of the stylesheet
+// under `.capsule-puff`) handle the pop+fade; the node auto-removes
+// after 700 ms. Disabled visually via @media (prefers-reduced-motion)
+// — the JS still spawns the node but CSS hides it (display:none).
+(function setupCapsulePuff(){
+  const root = document.getElementById('controls');
+  if(!root) return;
+  const SEL = '.ctrl-search, .ctrl-character, .ctrl-year, .ctrl-kuji-set, .ctrl-saga, .ctrl-anime, .ctrl-set-type, #controls .range-cap, #lop-toggle, #grail-toggle, #controls .view-tab, #reset-btn';
+  // Inline cloud-burst SVG with "BOM!" text. White fill, cyan stroke
+  // for the cloud; scouter-yellow fill + red stroke for the text
+  // (paint-order: stroke so the red ring sits underneath the yellow).
+  const PUFF_SVG =
+    '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+  +   '<path d="M50,8 C58,5 65,12 70,8 C77,5 82,12 80,20 C90,22 95,30 90,38 C95,45 92,55 84,58 C90,68 82,78 72,75 C70,85 58,90 50,82 C42,90 30,85 28,75 C18,78 10,68 16,58 C8,55 5,45 10,38 C5,30 10,22 20,20 C18,12 23,5 30,8 C35,12 42,5 50,8 Z" '
+  +     'fill="#ffffff" stroke="#7fe5ff" stroke-width="4" stroke-linejoin="round"/>'
+  +   '<g transform="translate(50 56) rotate(-6)">'
+  +     '<text text-anchor="middle" dominant-baseline="central" '
+  +       'font-family="Bebas Neue, system-ui, sans-serif" font-size="30" font-weight="900" '
+  +       'fill="#ffc400" stroke="#dc2626" stroke-width="3" style="paint-order:stroke">BOM!</text>'
+  +   '</g>'
+  + '</svg>';
+  root.addEventListener('click', e => {
+    const cap = e.target.closest(SEL);
+    if(!cap) return;
+    const r = cap.getBoundingClientRect();
+    // Anchor just past the right-side knob (cap protrudes ~25 px past
+    // the capsule body — see ::after rule at top:50%; right:-25px).
+    const x = r.right + 14;
+    const y = r.top + r.height / 2;
+    const puff = document.createElement('div');
+    puff.className = 'capsule-puff';
+    puff.style.left = x + 'px';
+    puff.style.top  = y + 'px';
+    puff.innerHTML = PUFF_SVG;
+    document.body.appendChild(puff);
+    setTimeout(() => puff.remove(), 700);
+  });
+})();
+
 (function setupAchievementToast(){
   const toast = document.getElementById('achievement-toast');
   if(!toast) return;
