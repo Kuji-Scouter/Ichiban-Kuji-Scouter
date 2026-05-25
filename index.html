@@ -270,31 +270,45 @@ body.below-fold #corner-watermark{
   display:inline-flex;align-items:center;justify-content:center;
   gap:clamp(8px,1.2vw,22px);flex-wrap:wrap;
 }
-/* Dragon-ball material treatment on the orange portion of the hero
-   title. A top-to-bottom amber gradient (light highlight → mid orange
-   → deep red-orange shadow) approximates the way light falls on a
-   glassy dragon ball sphere, and three stacked filter:drop-shadows
-   give the letters a warm aura. background-clip:text + transparent
-   colour paints the gradient as the letter fill. drop-shadow is used
-   instead of text-shadow because text-shadow doesn't render through
-   a transparent text fill consistently across browsers. */
-#hero h1 span{
-  color:transparent;
-  background:linear-gradient(180deg,
-    #ffe5a0 0%,
-    #ffb840 22%,
-    #ff8a1c 50%,
-    #d54400 85%,
-    #a83400 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  /* Single moderate outer aura. Earlier stacked three drop-shadows
-     (tight 6 px + 18 px + 36 px), but each filter shadows the result
-     of the previous one, so the tight 6 px halo blurred the letter
-     edges and hurt readability. One wider, lower-opacity glow keeps
-     the dragon-ball aura without softening the letterforms. */
+/* Dragon-ball title treatment, per-letter spheres + iconic 4-star
+   replacement for the O in SCOUTER.
+
+   Outer aura sits on .hero-title-text so the whole title shares ONE
+   readable glow — putting filter on every nested span compounds the
+   effect and bleeds into the letterforms. */
+#hero h1 .hero-title-text{
   filter:drop-shadow(0 0 16px rgba(255,120,0,.45));
 }
+/* Each character renders as its own miniature dragon-ball sphere.
+   Radial gradient centered upper-left (~30%/25%) places the specular
+   highlight at the same relative spot on every letter — that's the
+   trick that makes them all read as spheres rather than flat-shaded
+   text. Inline-block keeps the letter on the baseline like a normal
+   character; background-clip:text paints the gradient as the fill. */
+.db-letter{
+  display:inline-block;
+  color:transparent;
+  background:radial-gradient(circle at 30% 25%,
+    #fff5cc 0%,
+    #ffe5a0 8%,
+    #ffb840 22%,
+    #ff8a1c 50%,
+    #c44400 85%,
+    #7a1a00 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+}
+/* The O in SCOUTER is swapped for an inline 4-star dragon-ball SVG.
+   em-based sizing scales with the title's clamped font-size; the
+   small negative vertical-align nudges the sphere onto the baseline
+   alongside the surrounding letters. */
+.db-letter-ball{
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  width:0.78em;height:0.78em;
+  vertical-align:-0.06em;
+}
+.db-letter-ball svg{width:100%;height:100%;display:block}
 .hero-logo{
   height:clamp(56px,8.4vw,128px);width:auto;
   display:inline-block;vertical-align:middle;flex-shrink:0;
@@ -3544,6 +3558,53 @@ tr.set-header:hover .set-badge,
      non-visual landmark hooks for a11y. -->
 <section id="hero" aria-labelledby="hero-heading">
   <h1 id="hero-heading"><img src="logo.png" alt="MatchesPeaches logo" class="hero-logo" fetchpriority="high" decoding="async"/><span class="hero-title-text"><span>ICHIBAN KUJI</span> <span>SCOUTER</span></span></h1>
+  <script>
+    // Wrap each character of the hero title in a .db-letter span so
+    // the radial-gradient + background-clip:text rule (in <style>)
+    // paints each letter as its own dragon-ball sphere. The O in
+    // SCOUTER is special-cased: it becomes a literal inline mini
+    // 4-star dragon ball (Goku's grandpa's ball — the iconic one).
+    // Runs synchronously here so it executes before the heading first
+    // paints — no flash of un-wrapped title.
+    (function wrapHeroLetters(){
+      var BALL_SVG =
+        '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+      +   '<defs><radialGradient id="db-ball-grad" cx="35%" cy="30%" r="75%">'
+      +     '<stop offset="0%" stop-color="#fff5cc"/>'
+      +     '<stop offset="12%" stop-color="#ffe5a0"/>'
+      +     '<stop offset="35%" stop-color="#ffb840"/>'
+      +     '<stop offset="65%" stop-color="#ff8a1c"/>'
+      +     '<stop offset="92%" stop-color="#c44400"/>'
+      +     '<stop offset="100%" stop-color="#7a1a00"/>'
+      +   '</radialGradient></defs>'
+      +   '<circle cx="50" cy="50" r="46" fill="url(#db-ball-grad)" stroke="#5a1a00" stroke-width="2"/>'
+      +   '<ellipse cx="34" cy="28" rx="13" ry="17" fill="#ffffff" opacity="0.78"/>'
+      +   '<g fill="#c41a1a">'
+      +     '<polygon points="50,28 52.5,35 60,35 54,40 56.5,47 50,43 43.5,47 46,40 40,35 47.5,35"/>'
+      +     '<polygon points="30,50 32.5,57 40,57 34,62 36.5,69 30,65 23.5,69 26,62 20,57 27.5,57"/>'
+      +     '<polygon points="70,50 72.5,57 80,57 74,62 76.5,69 70,65 63.5,69 66,62 60,57 67.5,57"/>'
+      +     '<polygon points="50,72 52.5,79 60,79 54,84 56.5,91 50,87 43.5,91 46,84 40,79 47.5,79"/>'
+      +   '</g>'
+      + '</svg>';
+      var words = document.querySelectorAll('#hero-heading .hero-title-text > span');
+      words.forEach(function(word){
+        var text = word.textContent;
+        var isScouter = text === 'SCOUTER';
+        var out = '';
+        for(var i = 0; i < text.length; i++){
+          var c = text.charAt(i);
+          if(c === ' '){
+            out += ' ';
+          } else if(c === 'O' && isScouter){
+            out += '<span class="db-letter db-letter-ball" aria-label="O">' + BALL_SVG + '</span>';
+          } else {
+            out += '<span class="db-letter">' + c + '</span>';
+          }
+        }
+        word.innerHTML = out;
+      });
+    })();
+  </script>
   <p>Dragon Ball Figure Price Tracker</p>
 </section>
 
