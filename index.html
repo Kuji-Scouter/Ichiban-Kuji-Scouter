@@ -267,11 +267,34 @@ body.below-fold #corner-watermark{
   font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size:clamp(36px,6.4vw,96px);
   letter-spacing:clamp(2px,0.4vw,6px);color:var(--white);line-height:1;
-  text-shadow:0 0 40px rgba(255,107,0,.4);
   display:inline-flex;align-items:center;justify-content:center;
   gap:clamp(8px,1.2vw,22px);flex-wrap:wrap;
 }
-#hero h1 span{color:var(--orange)}
+/* Dragon-ball material treatment on the orange portion of the hero
+   title. A top-to-bottom amber gradient (light highlight → mid orange
+   → deep red-orange shadow) approximates the way light falls on a
+   glassy dragon ball sphere, and three stacked filter:drop-shadows
+   give the letters a warm aura. background-clip:text + transparent
+   colour paints the gradient as the letter fill. drop-shadow is used
+   instead of text-shadow because text-shadow doesn't render through
+   a transparent text fill consistently across browsers. */
+#hero h1 span{
+  color:transparent;
+  background:linear-gradient(180deg,
+    #ffe5a0 0%,
+    #ffb840 22%,
+    #ff8a1c 50%,
+    #d54400 85%,
+    #a83400 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  /* Single moderate outer aura. Earlier stacked three drop-shadows
+     (tight 6 px + 18 px + 36 px), but each filter shadows the result
+     of the previous one, so the tight 6 px halo blurred the letter
+     edges and hurt readability. One wider, lower-opacity glow keeps
+     the dragon-ball aura without softening the letterforms. */
+  filter:drop-shadow(0 0 16px rgba(255,120,0,.45));
+}
 .hero-logo{
   height:clamp(56px,8.4vw,128px);width:auto;
   display:inline-block;vertical-align:middle;flex-shrink:0;
@@ -3520,7 +3543,7 @@ tr.set-header:hover .set-badge,
      heading is byte-identical. The wrapping <section> + id are
      non-visual landmark hooks for a11y. -->
 <section id="hero" aria-labelledby="hero-heading">
-  <h1 id="hero-heading"><img src="logo.png" alt="MatchesPeaches logo" class="hero-logo" fetchpriority="high" decoding="async"/><span class="hero-title-text">ICHIBAN KUJI <span>SCOUTER</span></span></h1>
+  <h1 id="hero-heading"><img src="logo.png" alt="MatchesPeaches logo" class="hero-logo" fetchpriority="high" decoding="async"/><span class="hero-title-text"><span>ICHIBAN KUJI</span> <span>SCOUTER</span></span></h1>
   <p>Dragon Ball Figure Price Tracker</p>
 </section>
 
