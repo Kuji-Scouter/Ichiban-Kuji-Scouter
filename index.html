@@ -196,7 +196,7 @@ body{
   inset:0;
   pointer-events:none;
   z-index:100;
-  background:url('img/shenron-watermark.png') left center / contain no-repeat;
+  background:url('img/shenron-watermark.png') left center / auto 110% no-repeat;
   mix-blend-mode:screen;
   opacity:.07;
 }
@@ -280,49 +280,6 @@ body.below-fold #corner-watermark{
 #hero p{
   font-size:clamp(11px,0.8vw + 6px,16px);color:var(--grey);letter-spacing:2px;
   text-transform:uppercase;margin-top:6px;
-}
-
-/* ── Onboarding card — first-visit only ── */
-.onboarding-card{
-  position:relative;
-  max-width:760px;margin:0 auto clamp(14px,1.6vw,28px) auto;
-  padding:18px 22px 20px;
-  background:linear-gradient(180deg, rgba(26,26,36,.95) 0%, rgba(18,18,26,.95) 100%);
-  border:1px solid rgba(255,107,0,.35);
-  border-left:3px solid var(--orange);
-  border-radius:10px;
-  box-shadow:0 6px 18px rgba(0,0,0,.35);
-  color:var(--white);
-  font-family:'Nunito',sans-serif;
-}
-.onboarding-card h2{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2vw,28px);
-  letter-spacing:.04em;color:var(--orange);margin-bottom:6px;
-}
-.onboarding-card p{font-size:14px;line-height:1.55;margin-bottom:10px;color:#e6e6ec}
-.onboarding-card strong{color:#fff}
-.onboarding-tips{list-style:none;padding:0;margin:0 0 14px 0;display:grid;gap:6px}
-.onboarding-tips li{
-  font-size:13px;line-height:1.5;color:#d6d6dc;
-  padding-left:4px;
-}
-.onboarding-tips .copy-icon{
-  width:14px;height:14px;vertical-align:-2px;margin-right:2px;
-}
-.onboarding-close{
-  position:absolute;top:8px;right:10px;background:transparent;border:0;color:var(--grey);
-  font-size:22px;line-height:1;cursor:pointer;padding:4px 8px;
-}
-.onboarding-close:hover{color:var(--white)}
-.onboarding-dismiss{
-  background:var(--orange);color:#0d0d15;border:0;border-radius:999px;
-  padding:7px 16px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;
-  font-size:13px;
-}
-.onboarding-dismiss:hover{filter:brightness(1.1)}
-@media(max-width:600px){
-  .onboarding-card{margin:0 12px clamp(14px,1.6vw,28px) 12px;padding:14px 16px 16px}
-  .onboarding-card h2{font-size:18px}
 }
 
 /* ── Stats Bar ── */
@@ -1405,6 +1362,20 @@ tr.data-row.lop-row td:first-child{border-left:3px solid var(--gold)}
   font-size:11px;color:var(--grey);letter-spacing:.4px;
   text-transform:uppercase;text-align:center;
 }
+/* Modal header — a Bebas Neue title above the random art so the modal
+   reads as "Your Scouter Profile" rather than an unlabeled image. */
+#art-modal-header{
+  font-family:'Bebas Neue', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:24px;letter-spacing:2px;color:var(--gold);
+  text-align:center;text-transform:uppercase;
+  text-shadow:0 0 12px rgba(255,196,0,.35);
+  margin-bottom:2px;
+}
+#art-modal-img{cursor:pointer}
+#art-modal-stats .ams-empty{
+  font-size:11px;color:var(--grey);text-align:center;
+  margin-top:4px;font-style:italic;
+}
 /* Collector profile panel inside the scouter easter-egg modal —
    rendered between the random Toriyama image and the caption.
    Hidden when collection is empty (handled by the IIFE on open). */
@@ -1769,7 +1740,7 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 @media(min-width:1700px){
   :root{--container-max:min(1900px, 94vw)}
 }
- 
+
 /* Ultrawide / 4K */
 @media(min-width:2200px){
   :root{--container-max:min(1900px, 84vw)}
@@ -1841,17 +1812,9 @@ button.footer-link{font-size:12px;font-weight:600;line-height:inherit}
 }
 #toolbar #currency-select:hover,
 #toolbar #currency-select:focus{border-color:#000;filter:brightness(1.05)}
-.fx-rates-stamp{
-  font-size:10px;font-weight:600;color:var(--grey);
-  letter-spacing:.04em;text-transform:uppercase;
-  margin-right:10px;align-self:center;
-  font-family:'Nunito',sans-serif;
-}
-.fx-rates-stamp.is-stale{color:var(--orange)}
 @media(max-width:600px){
   #toolbar{padding:6px 12px}
   #toolbar #currency-select{font-size:11px;padding:4px 12px;max-width:120px}
-  .fx-rates-stamp{display:none}
 }
 
 /* ── Set-detail link affordance ────────────────────────────────────────
@@ -2727,6 +2690,117 @@ tr.set-header:hover .set-badge,
   border:0;
   padding:0;
 }
+
+/* Header row: Collection Progress radar bar at its natural width
+   (no flex-grow) + Scouter Profile capsule sitting right next to it.
+   Empty space fills the rest of the row instead of stretching the
+   radar to the screen edge. The radar's existing top/bottom margins
+   are kept on the row so vertical layout matches the original. */
+.cp-header-row{
+  display:flex;align-items:center;gap:14px;
+  margin:14px -4px 14px;
+  flex-wrap:wrap;
+}
+.cp-header-row .cp-header{
+  flex:0 0 auto;
+  /* Sized to its content — Bebas-Neue "COLLECTION PROGRESS" + chevron.
+     The default display:flex on the <button> would otherwise make it
+     block-level and stretch to fill the row. */
+  width:auto;align-self:flex-start;
+  margin:0; /* margin lives on the row now */
+}
+/* When the bar is content-sized the chevron's `margin-left:auto`
+   has no extra space to push into; replace with a fixed left margin
+   so it still reads as a separate radar element next to the title. */
+.cp-header-row .cp-header .cp-chevron{margin-left:6px}
+
+/* ── Scouter Profile capsule ──
+   Same Capsule Corp pill treatment as the search/filter capsules
+   (#controls rules above): brushed-silver cylindrical body, two
+   coloured stripes flanking a centred label, knob nub protruding off
+   the right cap. Uses --capsule-color (orange) so it visually pairs
+   with the orange radar text next to it. */
+.cap-btn{
+  --capsule-color:var(--orange);
+  position:relative;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:36px;padding:0 36px;
+  /* Guarantee the centred label has clearance from the side stripes
+     even for very short labels like "Profile" (without min-width, a
+     7-char label sits ~5px from each stripe and reads as touching). */
+  min-width:140px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.50);
+  font-family:'Nunito',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:.3px;
+  color:#0d0d15;
+  cursor:pointer;
+  white-space:nowrap;
+  background:
+    /* Left vertical colour stripe */
+    linear-gradient(to right, var(--capsule-color), var(--capsule-color))
+      14px 0 / 10px 100% no-repeat,
+    /* Right vertical colour stripe */
+    linear-gradient(to right, var(--capsule-color), var(--capsule-color))
+      calc(100% - 24px) 0 / 10px 100% no-repeat,
+    /* Brushed-silver cylindrical body */
+    linear-gradient(180deg, #909090 0%, #c0c0c0 35%, #c8c8c8 60%, #888888 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -2px 4px rgba(0,0,0,.18),
+    0 2px 6px rgba(0,0,0,.50);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.cap-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.7),
+    inset 0 -2px 4px rgba(0,0,0,.18),
+    0 4px 10px rgba(0,0,0,.55),
+    0 0 12px rgba(255,107,0,.35);
+}
+.cap-btn:active{transform:translateY(0)}
+.cap-btn:focus-visible{outline:2px solid #ffd680;outline-offset:3px}
+/* Two-part knob — matches the filter capsules. ::before is the narrow
+   stem that connects the body to the wider ::after press-button cap.
+   Same dimensions/gradients/shadows as the rule blocks at ~L735–805
+   above so the visual silhouette is identical to the other capsules. */
+.cap-btn::before{
+  content:'';
+  position:absolute;
+  right:-10px;top:50%;transform:translateY(-50%);
+  width:11px;height:18px;
+  background:linear-gradient(180deg,
+    #606060 0%,#c8c8c8 25%,#d8d8d8 50%,#a0a0a0 75%,#555555 100%);
+  border-top:1px solid rgba(0,0,0,.6);
+  border-bottom:1px solid rgba(0,0,0,.6);
+  pointer-events:none;
+  z-index:1;
+}
+.cap-btn::after{
+  content:'';
+  position:absolute;
+  right:-25px;top:50%;transform:translateY(-50%);
+  width:16px;height:28px;
+  border-radius:4px;
+  border:1px solid rgba(0,0,0,.65);
+  background:linear-gradient(180deg,
+    #707070 0%,#f8f8f8 18%,#ffffff 45%,#c8c8c8 75%,#606060 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.45),
+    inset 0 2px 1px rgba(255,255,255,.95),
+    inset 0 -2px 2px rgba(0,0,0,.35),
+    0 4px 6px rgba(0,0,0,.6),
+    0 1px 2px rgba(0,0,0,.50);
+  pointer-events:none;
+  z-index:2;
+}
+/* Narrow viewports: stack the radar bar and the capsule so neither
+   gets squeezed below readability. */
+@media(max-width:600px){
+  .cp-header-row{flex-direction:column;align-items:stretch;gap:10px}
+  .cap-btn{align-self:center}
+}
 .cp-section.collapsed .cp-chevron{transform:rotate(-90deg)}
 .cp-section.collapsed .cp-body{display:none}
 .cp-body{padding-top:2px}
@@ -3330,7 +3404,6 @@ tr.set-header:hover .set-badge,
      rather than a filter input. The visible "Currency" label was
      dropped to keep the control no wider than the YouTube button. -->
 <div id="toolbar">
-  <span id="fx-rates-stamp" class="fx-rates-stamp" aria-live="polite" hidden></span>
   <select id="currency-select" aria-label="Display currency" title="Display currency">
     <option value="USD">$ USD</option>
     <option value="JPY">¥ JPY</option>
@@ -3348,18 +3421,6 @@ tr.set-header:hover .set-badge,
 <section id="hero" aria-labelledby="hero-heading">
   <h1 id="hero-heading"><img src="logo.png" alt="MatchesPeaches logo" class="hero-logo" fetchpriority="high" decoding="async"/><span class="hero-title-text">ICHIBAN KUJI <span>SCOUTER</span></span></h1>
   <p>Dragon Ball Figure Price Tracker</p>
-</section>
-
-<section id="onboarding-card" class="onboarding-card" hidden aria-labelledby="onboarding-title">
-  <button class="onboarding-close" type="button" aria-label="Dismiss welcome card">×</button>
-  <h2 id="onboarding-title">New here?</h2>
-  <p><strong>Ichiban Kuji</strong> are Japanese lottery-style figure boxes — every ticket wins something, with rarer "Last One" and grail prizes among the top tiers. This site tracks the <strong>average sold price</strong> for every Dragon Ball Ichiban Kuji figure across Mercari Japan and eBay so you can see what each prize is actually worth.</p>
-  <ul class="onboarding-tips">
-    <li><strong><img class="copy-icon" src="img/radar.png" alt=""> Wishlist</strong> figures you're chasing — they get their own tab.</li>
-    <li><strong><img class="copy-icon" src="img/dragonball.png" alt=""> Collection</strong> tracks what you own and your per-set completion.</li>
-    <li>Click any set name to open its page with an <strong>EV-per-ticket calculator</strong> — average secondary value vs. average MSRP per pull.</li>
-  </ul>
-  <button class="onboarding-dismiss" type="button">Got it — let me browse</button>
 </section>
 
 <!-- Stats Bar -->
@@ -3392,10 +3453,15 @@ tr.set-header:hover .set-badge,
      auto-hidden in set-detail mode or when the user owns nothing. -->
 <aside id="collector-panels" hidden aria-label="Your collection at a glance">
   <section id="set-completion-section" class="cp-section collapsed" hidden aria-labelledby="sc-title">
-    <button type="button" class="cp-header" id="sc-toggle" aria-expanded="false" aria-controls="sc-body">
-      <span id="sc-title">Collection Progress</span>
-      <span class="cp-chevron" aria-hidden="true">▼</span>
-    </button>
+    <div class="cp-header-row">
+      <button type="button" class="cp-header" id="sc-toggle" aria-expanded="false" aria-controls="sc-body">
+        <span id="sc-title">Collection Progress</span>
+        <span class="cp-chevron" aria-hidden="true">▼</span>
+      </button>
+      <button type="button" id="scouter-profile-btn" class="cap-btn" aria-haspopup="dialog" aria-controls="art-modal" aria-label="Open profile">
+        <span class="cap-btn-label">Profile</span>
+      </button>
+    </div>
     <div class="cp-body" id="sc-body">
       <div class="sc-summary" id="sc-summary">—</div>
       <div class="sc-controls" id="sc-controls" hidden>
@@ -3751,22 +3817,24 @@ tr.set-header:hover .set-badge,
      shows it large. Subtle hint via cursor:pointer + hover pulse on
      the logo. Same body-level placement as #about-modal so the fixed
      positioning isn't fought by the #footer > * rule. -->
-<div id="art-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Toriyama art surprise" hidden>
+<div id="art-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="art-modal-header" hidden>
   <div id="art-modal-inner" role="document" onclick="event.stopPropagation()">
     <button id="art-modal-close" type="button" aria-label="Close">✕</button>
-    <img id="art-modal-img" src="" alt=""/>
+    <div id="art-modal-header">Your Scouter Profile</div>
+    <img id="art-modal-img" src="" alt="" title="Click for another piece"/>
     <!-- Collector profile — populated from the user's collection on
-         every modal open. Hidden when collection is empty so a first-
-         time visitor still sees the art-only easter egg. -->
-    <div id="art-modal-stats" hidden>
+         every modal open. Shown even when the collection is empty so
+         first-time visitors see what the profile will look like. -->
+    <div id="art-modal-stats">
       <div class="ams-title">Your Collection</div>
-      <div class="ams-row"><span>Figures owned</span><b id="ams-figs">0</b></div>
-      <div class="ams-row"><span>Grails owned</span><b id="ams-grails">0</b></div>
+      <div class="ams-row"><span>Figures owned</span><b id="ams-figs">—</b></div>
+      <div class="ams-row"><span>Grails owned</span><b id="ams-grails">—</b></div>
       <div class="ams-row"><span>Total worth</span><b id="ams-worth">—</b></div>
-      <div class="ams-row"><span>Sets in progress</span><b id="ams-prog">0</b></div>
-      <div class="ams-row"><span>Sets complete</span><b id="ams-done">0</b></div>
+      <div class="ams-row"><span>Sets in progress</span><b id="ams-prog">—</b></div>
+      <div class="ams-row"><span>Sets complete</span><b id="ams-done">—</b></div>
+      <div class="ams-empty" id="ams-empty" hidden>Start collecting to fill in your scouter card.</div>
     </div>
-    <div id="art-modal-caption">A small piece of Toriyama's universe. Click the logo again for another.</div>
+    <div id="art-modal-caption">Tap the art for another piece. Stats above update with your collection.</div>
   </div>
 </div>
 
@@ -4270,7 +4338,6 @@ async function refreshFxRates(){
   if(cached){
     fxRates = cached.rates;
     fxRatesUpdated = new Date(cached.fetchedAt).toISOString().slice(0,10);
-    renderFxStamp();
     return;
   }
   // Default to fallback before the network call so the first paint is
@@ -4300,30 +4367,6 @@ async function refreshFxRates(){
     // open.er-api.com outage is noticeable rather than silently distorting prices.
     console.warn('FX rate fetch failed; using fallback rates.', e);
   }
-  renderFxStamp();
-}
-
-function renderFxStamp(){
-  const el = document.getElementById('fx-rates-stamp');
-  if(!el) return;
-  if(!fxRatesUpdated){
-    el.textContent = 'Rates: fallback';
-    el.classList.add('is-stale');
-    el.title = 'Live FX rates unavailable; using built-in fallback (1 USD ≈ 158 JPY).';
-    el.hidden = false;
-    return;
-  }
-  // Days since the cached rates were fetched. Stale once a week of network
-  // outages goes by — by then collectors deserve a visible "trust this less"
-  // signal next to the price column.
-  const days = Math.floor((Date.now() - new Date(fxRatesUpdated).getTime()) / 86400000);
-  const stale = days >= 7;
-  el.textContent = stale ? `Rates: ${fxRatesUpdated} (stale)` : `Rates: ${fxRatesUpdated}`;
-  el.classList.toggle('is-stale', stale);
-  el.title = stale
-    ? `FX rates last refreshed ${days} days ago — prices may be off.`
-    : `FX rates last refreshed ${days === 0 ? 'today' : days + ' days ago'}.`;
-  el.hidden = false;
 }
 
 // Convert a value from `from` currency to the display currency.
@@ -4608,9 +4651,10 @@ const FIG_MILESTONES = [
   { n: 100, title: '100 figures!',           sub: 'Genuine collector territory.' },
 ];
 const WORTH_MILESTONES = [
-  { n: 500,  title: '$500 collection!',  sub: 'Real value on the shelf.' },
-  { n: 1000, title: '$1,000 collection!', sub: "You're stacking grails." },
-  { n: 5000, title: '$5,000 collection!', sub: 'Serious dragon-ball hunter.' },
+  { n: 500,   title: '$500 collection!',    sub: 'Real value on the shelf.' },
+  { n: 1000,  title: '$1,000 collection!',  sub: "You're stacking grails." },
+  { n: 5000,  title: '$5,000 collection!',  sub: 'Serious dragon-ball hunter.' },
+  { n: 10000, title: '$10,000 collection!', sub: 'Eternal Dragon territory.', art: 'img/art-dragon-ride.jpg' },
 ];
 
 function _loadFiredMilestones(){
@@ -4651,14 +4695,16 @@ function _checkMilestoneTriggers(prev, now){
       });
     }
   }
-  // Worth milestones — same pattern, USD canonical.
+  // Worth milestones — same pattern, USD canonical. Each entry may
+  // carry its own `art` override; falls back to the shared sunburst
+  // art for the original tiers.
   for(const m of WORTH_MILESTONES){
     const id = `worth-${m.n}`;
     if(prev.worthUsd < m.n && now.worthUsd >= m.n && !fired[id]){
       _markMilestoneFired(id);
       window.showAchievement({
         title: m.title, sub: m.sub,
-        art: 'img/art-z-trio-sunburst.jpg',
+        art: m.art || 'img/art-z-trio-sunburst.jpg',
       });
     }
   }
@@ -6032,6 +6078,8 @@ window.addEventListener('popstate', () => {
     'img/art-goku-dragon-bird.jpg',
     'img/art-bulma-bike-color.jpg',
     'img/art-goku-army-bike.jpg',
+    'img/art-goku-astronaut.jpg',
+    'img/art-flying-formation-cyan.jpg',
   ];
   let lastIdx = -1;
   function pick(){
@@ -6049,11 +6097,23 @@ window.addEventListener('popstate', () => {
   // surrounding script scope.
   function populateProfile(){
     const statsEl = document.getElementById('art-modal-stats');
+    const emptyEl = document.getElementById('ams-empty');
     if(!statsEl) return;
-    if(!collection || collection.size === 0){
-      statsEl.hidden = true;
+    const isEmpty = !collection || collection.size === 0;
+    if(isEmpty){
+      // First-visit state: keep the panel visible so the user sees what
+      // their scouter card will look like once they start collecting.
+      // All numeric slots show "—" and a tiny prompt sits at the bottom.
+      document.getElementById('ams-figs').textContent   = '—';
+      document.getElementById('ams-grails').textContent = '—';
+      document.getElementById('ams-worth').textContent  = '—';
+      document.getElementById('ams-prog').textContent   = '—';
+      document.getElementById('ams-done').textContent   = '—';
+      if(emptyEl) emptyEl.hidden = false;
+      statsEl.hidden = false;
       return;
     }
+    if(emptyEl) emptyEl.hidden = true;
     const owned = DATA.filter(d => collection.has(d.key));
     const figs = owned.reduce((n, d) => n + getOwnedCount(d.key), 0);
     const grails = owned.filter(d => d.isGrail)
@@ -6092,6 +6152,9 @@ window.addEventListener('popstate', () => {
     modal.setAttribute('aria-hidden', 'false');
     setTimeout(() => close && close.focus(), 0);
   }
+  // Expose open() so the visible header button (and any future trigger)
+  // can re-use the exact same code path as the logo easter egg.
+  window.openScouterProfile = open;
   function dismiss(){
     modal.hidden = true;
     modal.setAttribute('aria-hidden', 'true');
@@ -6110,7 +6173,17 @@ window.addEventListener('popstate', () => {
   });
   img.addEventListener('load', () => { _failAttempts = 0; });
   logo.addEventListener('click', e => { e.preventDefault(); open(); });
-  logo.setAttribute('title', 'Click for a Toriyama surprise');
+  logo.setAttribute('title', 'Open your Scouter Profile');
+  // Visible header button — same handler as the logo easter egg so
+  // there's now a discoverable entry point alongside the hidden one.
+  const profileBtn = document.getElementById('scouter-profile-btn');
+  if(profileBtn) profileBtn.addEventListener('click', e => { e.preventDefault(); open(); });
+  // Clicking the art inside the modal cycles to the next piece so the
+  // caption's "Tap the art for another" promise actually works.
+  img.addEventListener('click', e => {
+    e.stopPropagation(); // don't bubble to the backdrop dismiss handler
+    img.src = pick();
+  });
   if(close) close.addEventListener('click', dismiss);
   modal.addEventListener('click', dismiss);
   document.addEventListener('keydown', e => {
@@ -6204,24 +6277,6 @@ window.addEventListener('popstate', () => {
 // ── Backup buttons (Export + Import in the footer) ────────────────────
 document.getElementById('export-data-btn').addEventListener('click', exportBackupData);
 document.getElementById('export-csv-btn').addEventListener('click', exportCollectionCsv);
-
-// ── First-visit onboarding card ────────────────────────────────────────
-// Shows once per browser, dismissible. Anything other than "1" in
-// localStorage (including a missing key) is treated as "not yet seen".
-const ONBOARDING_KEY = 'kuji.onboarding.v1';
-(function initOnboarding(){
-  const card = document.getElementById('onboarding-card');
-  if(!card) return;
-  let seen = false;
-  try { seen = localStorage.getItem(ONBOARDING_KEY) === '1'; } catch(_) { /* private mode */ }
-  if(!seen) card.hidden = false;
-  const dismiss = () => {
-    card.hidden = true;
-    try { localStorage.setItem(ONBOARDING_KEY, '1'); } catch(_) {}
-  };
-  card.querySelector('.onboarding-close').addEventListener('click', dismiss);
-  card.querySelector('.onboarding-dismiss').addEventListener('click', dismiss);
-})();
 document.getElementById('import-data-input').addEventListener('change', e => {
   const file = e.target.files && e.target.files[0];
   importBackupData(file);
