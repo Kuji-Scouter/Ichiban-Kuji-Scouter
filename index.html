@@ -942,7 +942,8 @@ body.below-fold #corner-watermark{
 #lop-toggle:active::after,
 #grail-toggle:active::after,
 #controls .view-tab:active::after,
-#reset-btn:active::after{
+#reset-btn:active::after,
+#toolbar:has(#currency-select:active)::after{
   transform:translate(6px, -50%);
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.30),
@@ -3993,7 +3994,7 @@ tr.set-header:hover .set-badge,
               <dd><span style="color:var(--cyan);font-weight:700">SMSP</span> &mdash; Super Master Stars Piece</dd>
               <dt><span class="set-swatch" style="background:var(--green)" role="img" aria-label="40th Anniversary color"></span></dt>
               <dd><span style="color:var(--green);font-weight:700">40th Anniversary</span> &mdash; commemorative line</dd>
-              <dt><span role="img" aria-label="grail">💎</span></dt>
+              <dt><span class="grail-mark" aria-label="grail figure" title="Grail figure"><img src="img/dbz-z.png" alt="" onerror="this.style.display='none'"></span></dt>
               <dd>Grail &mdash; rare-value figure</dd>
             </dl>
           </div>
@@ -4041,7 +4042,7 @@ tr.set-header:hover .set-badge,
     <button id="about-close" type="button" aria-label="Close about dialog">✕</button>
     <img id="about-hero" src="img/art-dragon-ball-promo.jpg" alt="Akira Toriyama's classic Dragon Ball promotional art"/>
     <h2 id="about-title">A small tribute</h2>
-    <p>This price tracker is built by a Dragon Ball collector for Dragon Ball collectors. Every figure here is a recreation of one of <strong>Akira Toriyama</strong>'s panels — without his decades of work there's no kuji to chase, no grail to grade, no ★ to mark on a wishlist. The art scattered across this site is a small bow to that.</p>
+    <p>This price tracker is built by a Dragon Ball collector for Dragon Ball collectors. Every figure here is a recreation of one of <strong>Akira Toriyama</strong>'s panels — without his decades of work there's no kuji to chase, no grail to grade, no <img class="copy-icon" src="img/radar.png" alt="" onerror="this.style.display='none'"/> to mark on a wishlist. The art scattered across this site is a small bow to that.</p>
     <p class="about-credits">
       <span>Figure catalogue + box-art image hosting · <a href="https://www.kuji-collection.com/en/ichiban-kuji/dragon-ball" target="_blank" rel="noopener">kuji-collection.com</a></span>
       <span>Reference data originally compiled by Myk · indexed via <a href="https://myfigurecollection.net/browse.v4.php?rootId=21&amp;keywords=ichiban+kuji+dragon+ball" target="_blank" rel="noopener">MyFigureCollection</a></span>
@@ -6531,6 +6532,17 @@ window.addEventListener('popstate', () => {
     }, INPUT_DEBOUNCE_MS);
     textTimers.set(cap, id);
   });
+
+  // 4. Toolbar currency picker — same dropdown semantics as the filter
+  //    selects above. It lives outside #controls (in #toolbar) so it
+  //    needs its own change listener. Puff is anchored on #toolbar so
+  //    the cloud appears next to the toolbar's right-side knob.
+  const toolbar = document.getElementById('toolbar');
+  if(toolbar){
+    toolbar.addEventListener('change', e => {
+      if(e.target.id === 'currency-select') spawn(toolbar);
+    });
+  }
 })();
 
 (function setupAchievementToast(){
@@ -7737,7 +7749,10 @@ RAW_SETS.forEach(s=>{
       dbKujiImg: dbKujiImg||null,
       setImg: s.setImg||null,
       isLOP: prizeName==='LOP',
-      isGrail: isGrailFigure(s.set, prizeName)
+      // Every SMSP figure is automatically a grail — the entire SMSP
+      // line is considered grail-tier on this site. All other set
+      // types fall back to the explicit GRAIL_FIGURES lookup table.
+      isGrail: s.type === 'smsp' || isGrailFigure(s.set, prizeName)
     });
   });
 });
