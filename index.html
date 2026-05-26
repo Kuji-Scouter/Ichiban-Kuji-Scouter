@@ -342,6 +342,22 @@ body.below-fold #corner-watermark{
   font-size:clamp(11px,0.8vw + 6px,16px);color:var(--grey);letter-spacing:2px;
   text-transform:uppercase;margin-top:6px;
 }
+/* Subtitle mirrors the Dragon Ball logo's blue/red colour split,
+   alternating word-by-word. Outline + small offset shadow at the
+   smaller subtitle scale (1 px / 2 px) keeps the colored text
+   legible against the dark hero background without feeling as
+   heavy as the main title's 3 px / 6 px stack. */
+#hero p .sub-blue { color:#1d8ec9; }   /* Dragon Ball logo blue */
+#hero p .sub-red  { color:#e2231a; }   /* Dragon Ball logo red  */
+#hero p .sub-blue,
+#hero p .sub-red{
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000,
+     2px  2px 0 rgba(0,0,0,.6);
+}
 
 /* ── Stats Bar ── */
 #stats-bar{
@@ -3630,7 +3646,7 @@ tr.set-header:hover .set-badge,
       });
     })();
   </script>
-  <p>Dragon Ball Figure Price Tracker</p>
+  <p><span class="sub-blue">Dragon Ball Fig</span><span class="sub-red">ure Price Tracker</span></p>
 </section>
 
 <!-- Stats Bar -->
