@@ -3691,14 +3691,18 @@ tr.set-header:hover .set-badge,
       'img/char-goku-gohan.png',
       'img/char-piccolo.png',
       // Scouter POV screencaps — full-bleed, render via CSS background.
-      'img/scouter-bg-piccolo.jpg',          // Piccolo, bandaged turban
-      'img/scouter-bg-piccolo-arrival.jpg',  // Piccolo silhouette + sun
+      'img/scouter-bg-piccolo.jpg',           // Piccolo, bandaged turban
+      'img/scouter-bg-piccolo-arrival.jpg',   // Piccolo silhouette + sun
       'img/scouter-bg-kid-goku.jpg',
       'img/scouter-bg-fog-group.jpg',
       'img/scouter-bg-reticle.jpg',
-      'img/scouter-bg-roshi.jpg',            // Roshi w/ "FIGHT" overlay
-      'img/scouter-bg-krillin.jpg',          // Krillin w/ "FIGHT -87"
-      'img/scouter-bg-vegeta.jpg',           // Vegeta, target-locked
+      'img/scouter-bg-roshi.jpg',             // Roshi w/ "FIGHT" overlay
+      'img/scouter-bg-krillin.jpg',           // Krillin w/ "FIGHT -87"
+      'img/scouter-bg-vegeta.jpg',            // Vegeta, target-locked
+      // Purple-background scouter caps — newer set, different palette.
+      'img/scouter-bg-purple-gohan.jpg',      // Kid Gohan w/ bandana
+      'img/scouter-bg-purple-piccolo.jpg',    // Piccolo, purple bg
+      'img/scouter-bg-purple-krillin.jpg',    // Krillin, purple bg
     ];
     // Fisher-Yates shuffle in place, then take first 4.
     var s = POOL.slice();
@@ -4924,10 +4928,13 @@ function _checkSetTriggers(setName, prev, now, total){
 
 const ACHIEVEMENTS_KEY = 'kuji.achievements.fired.v1';
 const FIG_MILESTONES = [
-  { n: 10,  title: '10 figures collected!',  sub: "You're on your way." },
-  { n: 25,  title: '25 figures collected!',  sub: 'A real shelf now.' },
-  { n: 50,  title: '50 figures!',            sub: 'Halfway to a hundred.' },
-  { n: 100, title: '100 figures!',           sub: 'Genuine collector territory.' },
+  // Each tier gets its own art (no longer shares a single image).
+  // Drawn from the existing achievement-art bucket as a temporary
+  // placeholder until purpose-made art is provided.
+  { n: 10,  title: '10 figures collected!',  sub: "You're on your way.",       art: 'img/art-bulma-nimbus.jpg' },
+  { n: 25,  title: '25 figures collected!',  sub: 'A real shelf now.',          art: 'img/art-z-trio-sunburst.jpg' },
+  { n: 50,  title: '50 figures!',            sub: 'Halfway to a hundred.',      art: 'img/art-reaching-for-grail.jpg' },
+  { n: 100, title: '100 figures!',           sub: 'Genuine collector territory.', art: 'img/art-dragon-ride.jpg' },
 ];
 const WORTH_MILESTONES = [
   { n: 500,   title: '$500 collection!',    sub: 'Real value on the shelf.' },
@@ -4970,7 +4977,10 @@ function _checkMilestoneTriggers(prev, now){
       _markMilestoneFired(id);
       window.showAchievement({
         title: m.title, sub: m.sub,
-        art: 'img/art-bulma-nimbus.jpg',
+        // Honour per-entry art override (same pattern as WORTH below);
+        // fall back to the original shared bulma-nimbus if a tier
+        // forgets to set its own.
+        art: m.art || 'img/art-bulma-nimbus.jpg',
       });
     }
   }
@@ -6359,6 +6369,24 @@ window.addEventListener('popstate', () => {
     'img/art-goku-army-bike.jpg',
     'img/art-goku-astronaut.jpg',
     'img/art-flying-formation-cyan.jpg',
+    'img/art-goku-frieza.jpg',
+    'img/art-bulma-cowboy.jpg',
+    'img/art-gohan-dino.jpg',
+    // Bulk Toriyama art bucket (art.zip — May 2026 drop).
+    'img/art-toriyama-23.jpg',
+    'img/art-toriyama-24.jpg',
+    'img/art-toriyama-41.jpg',
+    'img/art-toriyama-46.jpg',
+    'img/art-toriyama-50.jpg',
+    'img/art-toriyama-57.jpg',
+    'img/art-toriyama-58.jpg',
+    'img/art-toriyama-59.jpg',
+    'img/art-toriyama-74.jpg',
+    'img/art-toriyama-76.jpg',
+    'img/art-toriyama-83.jpg',
+    'img/art-toriyama-99.jpg',
+    'img/art-333992.jpg',
+    'img/art-img-6340.jpg',
   ];
   let lastIdx = -1;
   function pick(){
