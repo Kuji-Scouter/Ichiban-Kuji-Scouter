@@ -5602,11 +5602,18 @@ function renderTable(){
         </div>
       </div>`;
     } else {
+      // "Scouter recalibrating" — random pick between the two anime
+      // repair stills so a hot-filtered session shows variety across
+      // re-empty events. The narrative fit: the user's filters returned
+      // nothing → the scouter is busy being recalibrated.
+      const repairArt = Math.random() < 0.5
+        ? 'img/scouter-repair-1.jpg'
+        : 'img/scouter-repair-2.jpg';
       noRes.innerHTML = `<div class="empty-state-card">
-        <img src="img/art-trunks.jpg" alt=""/>
+        <img src="${repairArt}" alt=""/>
         <div class="empty-state-text">
-          <h2>No figures match your filters</h2>
-          <p>Try widening your saga, year, or set filter — or hit Reset to clear them all. The figure you're looking for is out there somewhere.</p>
+          <h2>Scouter recalibrating…</h2>
+          <p>No targets locked in this configuration. Widen your saga, year, or set filter — or hit Reset to clear them all.</p>
         </div>
       </div>`;
     }
@@ -6402,6 +6409,8 @@ window.addEventListener('popstate', () => {
     'img/art-goku-frieza.jpg',
     'img/art-bulma-cowboy.jpg',
     'img/art-gohan-dino.jpg',
+    'img/art-trunks.jpg',
+
     // Bulk Toriyama art bucket (art.zip — May 2026 drop).
     'img/art-toriyama-23.jpg',
     'img/art-toriyama-24.jpg',
